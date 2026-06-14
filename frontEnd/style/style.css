@@ -85,6 +85,7 @@
     border-radius: 5px;
     box-sizing: border-box;
     text-decoration: none;
+    font-family: 'Helvetica Now';
 }
 
 .login-container p {
@@ -120,7 +121,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
 }
 
 .toggle-button i {
@@ -129,3 +129,246 @@
 }
 
 /* REGISTRATION */
+.reg-body {
+    background-color: #9854cb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Now';
+}
+
+.reg-container {
+    background-color: #ffffff;
+    width: 90%;
+    max-width: 1000px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px #00000049;
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.reg-header {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 0px;
+    font-family: 'Bloc';
+    font-size: 30px;
+    align-items: center;
+}
+
+.reg-header img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.reg-container form {
+    display: flex;
+    gap: 30px;
+}
+
+.reg-col {
+    flex: 1;
+    min-width: 300px;
+}
+
+.reg-col:first-child {
+    padding-right: 30px;
+    border-right: 1px solid #d9d9d9;
+}
+
+.reg-col:last-child {
+    padding-left: 10px;
+}
+
+.reg-col h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.reg-container label {
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 1px;
+}
+
+.reg-container input,
+.reg-container select {
+    width: 100%;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 13px;
+    font-family: 'Helvetica Now';
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+.reg-container select {
+    cursor: pointer;
+}
+
+.reg-phone-feature {
+    display: flex;
+    gap: 10px;
+}
+
+#country_code {
+    width: 70px;
+    flex-shrink: 0;
+}
+
+#phone_number {
+    flex: 1;
+    min-width: 0;
+}
+
+.reg-password-feature {
+    position: relative;
+}
+
+.reg-password-feature input {
+    margin-bottom: 0px;
+    padding-right: 40px;
+}
+
+.reg-row {
+    display: flex;
+    gap: 15px;
+}
+
+.reg-row > div {
+    flex: 1;
+}
+
+.reg-driver-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.reg-driver-option input[type="checkbox"] {
+    width: auto;
+    margin-top: 3px;
+}
+
+.reg-driver-option label {
+    margin: 0;
+    cursor: pointer;
+}
+
+.reg-driver-option small {
+    color: #9854cb;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+.reg-footer {
+    flex-basis: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.reg-footer p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.reg-footer a {
+    color: #9854cb;
+}
+
+.reg-button {
+    width: 180px;
+    height: 40px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    font-family: 'Helvetica Now';
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.reg-button:hover {
+    background-color: #9854cb;
+}
+
+/* MOBILE RESPONSIVENESS FOR REGISTRATION */
+
+@media (max-width: 768px) {
+
+    .reg-body {
+        padding: 10px;
+    }
+
+    .reg-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .reg-header {
+        justify-content: center;
+        margin-bottom: 25px;
+    }
+
+    .reg-header h2 {
+        font-size: 40px;
+    }
+
+    .reg-header img {
+        width: 40px;
+        height: auto;
+        border: 0px;
+        border-radius: 5px;
+    }
+
+    .reg-container form {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .reg-col {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .reg-col:first-child {
+        border-right: none;
+        padding-right: 0;
+    }
+
+    .reg-col:last-child {
+        padding-left: 0;
+    }
+
+    .reg-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .reg-footer {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .reg-footer p {
+        text-align: center;
+    }
+
+    .reg-button {
+        width: 100%;
+    }
+}
