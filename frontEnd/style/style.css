@@ -105,10 +105,10 @@
 
 .login-password-feature input {
     padding-right: 35px;
-    margin-bottom: 0px;  /* Stops structural doubling layout issues */
+    margin-bottom: 0px;
 }
 
-.login-toggle-button {
+.toggle-button {
     position: absolute;
     right: 8px;
     top: 50%;
@@ -123,7 +123,9 @@
     
 }
 
-.login-toggle-button i {
+.toggle-button i {
     font-size: 16px;
     color: #666666;
 }
+
+/* REGISTRATION */

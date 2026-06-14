@@ -1,6 +1,6 @@
 const passwordInput = document.getElementById('password');
-const toggleButton = document.getElementById('login-toggle-button');
-const toggleIcon = document.getElementById('login-toggle-icon');
+const toggleButton = document.getElementById('toggle-button');
+const toggleIcon = document.getElementById('toggle-icon');
 
 toggleButton.addEventListener('click', function () {
     if (passwordInput.type === 'password') {
