@@ -148,6 +148,9 @@
     box-shadow: 0 10px 25px #00000049;
     padding: 30px;
     box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .reg-header {
@@ -167,6 +170,7 @@
 
 .reg-container form {
     display: flex;
+    flex-wrap: wrap;
     gap: 30px;
 }
 
@@ -310,7 +314,7 @@
 @media (max-width: 768px) {
 
     .reg-body {
-        padding: 10px;
+        background-color: #ffffff;
     }
 
     .reg-container {
