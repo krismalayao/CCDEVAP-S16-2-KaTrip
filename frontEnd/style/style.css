@@ -1221,7 +1221,7 @@ body {
     background-position: center;
 }
 
-.avatar-edit-btn {
+.avatar-edit-label {
     position: absolute;
     bottom: -2px;
     right: -2px;
@@ -1242,12 +1242,12 @@ body {
     transition: transform 0.2s ease;
 }
 
-.avatar-edit-btn::before {
-    font-size: 14px;
+.avatar-edit-label:hover {
+    transform: scale(1.1);
 }
 
-.avatar-edit-btn:hover {
-    transform: scale(1.1);
+#avatar-upload {
+    display: none;
 }
 
 .name-display h2 {
