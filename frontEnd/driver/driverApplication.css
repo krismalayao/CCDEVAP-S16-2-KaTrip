@@ -1,0 +1,279 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f3f0f9;
+    color: #1a1a2e;
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* SIDEBAR */
+/* Taken from admin-dashboard.css, change later if needed*/
+
+.sidebar {
+    width: 220px;
+    background: #6a0dad;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+}
+
+.sidebar .logo {
+    font-size: 22px;
+    font-weight: 700;
+    padding: 0 24px 28px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.sidebar .logo span { color: #d8b4fe; }
+
+.sidebar nav {
+    flex: 1;
+    padding-top: 20px;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.sidebar nav a .icon { font-size: 18px; }
+
+.sidebar .bottom {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar .bottom a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.sidebar .bottom a:hover { color: #fff; }
+
+
+/*  MAIN  */
+
+.main {
+    margin-left: 220px;
+    flex: 1;
+    padding: 32px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+}
+
+.topbar h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4a0080;
+}
+
+.topbar .admin-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.topbar .avatar {
+    width: 38px; height: 38px;
+    background: #6a0dad;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 700;
+    font-size: 13px;
+}
+
+
+/* ── FORM CARDS ── */
+/* Same card style as adminDashboard.css stat/chart cards */
+
+.form-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(106,13,173,0.08);
+    margin-bottom: 20px;
+}
+
+.form-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #4a0080;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0e6ff;
+}
+
+.form-note {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 18px;
+    margin-top: -8px;
+}
+
+
+/* ── FORM FIELDS ── */
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.form-group input,
+.form-group select {
+    padding: 9px 12px;
+    border: 1px solid #e0d6f5;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Segoe UI', sans-serif;
+    color: #1a1a2e;
+    background: #faf7ff;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #6a0dad;
+    background: #fff;
+}
+
+.form-group input::placeholder { color: #bbb; }
+
+
+/* ── UPLOAD BOXES ── */
+
+.upload-box {
+    border: 2px dashed #d8b4fe;
+    border-radius: 10px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    background: #faf7ff;
+}
+
+.upload-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #4a0080;
+    margin-bottom: 2px;
+}
+
+.upload-sub {
+    font-size: 11px;
+    color: #aaa;
+}
+
+.doc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+
+.hidden { display: none; }
+
+
+/*  FORM ACTIONS  */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+    margin-bottom: 32px;
+}
+
+.btn-cancel {
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1px solid #d8b4fe;
+    background: #fff;
+    color: #6a0dad;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.btn-cancel:hover { background: #f5f0ff; }
+
+.btn-submit {
+    padding: 9px 24px;
+    border-radius: 8px;
+    border: none;
+    background: #6a0dad;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover { background: #5a0a99; }
+
+
+/* SUCCESS MESSAGE */
+
+.success-msg {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 32px;
+    box-shadow: 0 2px 8px rgba(106,13,173,0.08);
+    border-left: 4px solid #22c55e;
+    font-size: 14px;
+    color: #15803d;
+    font-weight: 500;
+}

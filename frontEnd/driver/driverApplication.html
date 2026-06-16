@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang ="en">
+
+<head>
+<meta charset="UTF-8" />
+<title>KaTrip - Driver Application</title>
+<link rel="stylesheet" href="driverApplication.css" />
+</head>
+
+
+<body>
+<!-- Change out for NAV bar if ever-->
+<aside class="sidebar">
+    <div class="logo">Ka<span>Trip</span></div>
+    <nav>
+        <a href="driverDashboard.html"><span class="icon"></span> Dashboard</a>
+        <a href="myTrips.html"><span class="icon"></span> My Trips</a>
+        <a href="createTrip.html"><span class="icon"></span> Create Trip</a>
+        <a href="tripPage.html"><span class="icon"></span> Trip Page</a>
+    </nav>
+    <div class="bottom">
+        <a href="driverProfile.html"><span></span> View Account</a>
+        <a href="login.html"><span></span> Logout</a>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="topbar">
+        <h1>Driver Application</h1>
+        <div class="admin-info">
+            <span>Welcome, User</span> <!-- Top right: make sure to make it a user -->
+            <div class="avatar">Us</div>
+        </div>
+    </div>
+
+    <form class="form-body" onsubmit="handleSubmit(event)"></form> <!-- To be passed to function, add at the end-->
+
+<!-- Personal Information -->
+        <div class="form-card">
+            <h3>Personal Information</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" name="full_name" placeholder="e.g. John Doe" required />
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" name="contact" placeholder="e.g. 09181234567" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="license-no">Driver's License Number</label>
+                    <input type="text" id="license-no" name="license_number" placeholder="e.g. P01-23-456789" required />
+                </div>
+                <div class="form-group">
+                    <label for="valid-id">Valid ID Type</label>
+                    <select id="valid-id" name="valid_id" required>
+                        <option value="" disabled selected>Select ID type</option>
+                        <option>Philippine Passport</option>
+                        <option>SSS ID</option>
+                        <option>PhilHealth ID</option>
+                        <option>Voter's ID</option>
+                        <option>National ID</option>
+                        <option>UMID</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Profile Photo</label>
+                <div class="upload-box" onclick="document.getElementById('profile-photo').click()">
+                    
+                    <div class="upload-text">Click to upload a profile photo</div>
+                    <div class="upload-sub">PNG, JPG up to 5MB</div> <!-- Change this depending on the size-->
+                    <input type="file" id="profile-photo" name="profile_photo" accept="image/*" />
+                </div>
+            </div>
+        </div>
+
+
+<!-- Vehicle Details -->
+        <div class="form-card">
+            <h3>Vehicle Details</h3>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vehicle-model">Vehicle Model</label>
+                    <input type="text" id="vehicle-model" name="vehicle_model" placeholder="e.g. Honda Civic" required />
+                </div>
+                <div class="form-group">
+                    <label for="plate-number">Plate Number</label>
+                    <input type="text" id="plate-number" name="plate_number" placeholder="e.g. ABC-1234" required />
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="vehicle-color">Vehicle Color</label>
+                    <select id="vehicle-color" name="vehicle_color" required>
+                        <option value="" disabled selected>Select color</option>
+                        <option>Black</option>
+                        <option>White</option>
+                        <option>Silver</option>
+                        <option>Gray</option>
+                        <option>Red</option>
+                        <option>Blue</option>
+                        <option>Brown</option>
+                        <option>Green</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <!-- spacer -->
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Verification Documents -->
+        <div class="form-card">
+            <h3>Verification Documents</h3>
+            <p class="form-note">Upload clear copies of the following. All documents are required for verification.</p>
+
+            <div class="doc-grid">
+
+                <div class="form-group">
+
+                    <!-- Driver's License-->
+                    <label>Driver's License</label>
+                    <div class="upload-box" onclick="document.getElementById('doc-license').click()">
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-sub">PNG, JPG, PDF up to 10MB</div> <!-- Change this depending on the size-->
+                        <input type="file" id="doc-license" name="doc_license" accept="image/*,.pdf" hidden />
+                    </div>
+                </div>
+
+                <!-- Registration-->
+                <div class="form-group">
+                    <label>Vehicle Registration</label>
+                    <div class="upload-box" onclick="document.getElementById('doc-registration').click()">
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-sub">PNG, JPG, PDF up to 10MB</div> <!-- Change this depending on the size-->
+                        <input type="file" id="doc-registration" name="doc_registration" accept="image/*,.pdf" hidden />
+                    </div>
+                </div>
+
+                <!-- Insurance -->
+                <div class="form-group">
+                    <label>Insurance</label>
+                    <div class="upload-box" onclick="document.getElementById('doc-insurance').click()">
+                        <div class="upload-text">Click to upload</div>
+                        <div class="upload-sub">PNG, JPG, PDF up to 10MB</div> <!-- Change this depending on the size-->
+                        <input type="file" id="doc-insurance" name="doc_insurance" accept="image/*,.pdf" hidden />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Submission Section -->
+        <div class="form-actions">
+            <a href="driverDashboard.html" class="btn-cancel">Cancel</a> <!-- Goes back to dashboard when cancel-->
+            <button type="submit" class="btn-submit">Submit Application</button> <!-- Submission button, link somewhere in the future-->
+        </div>
+
+    </form>
+
+    <!-- Success message (hidden by default) -->
+    <div id="success-msg" class="success-msg hidden">
+        Application submitted! It is now pending review by the administrator.
+    </div>
+</main>
+
+<script>
+
+function handleSubmit(event) {
+    event.preventDefault();
+    document.querySelector('.form-body').classList.add('hidden');
+    document.getElementById('success-msg').classList.remove('hidden');
+}
+
+</script>
+</body>
+</html>
