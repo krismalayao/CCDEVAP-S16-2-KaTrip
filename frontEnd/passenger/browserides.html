@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Rides - KaTrip</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body class="browserides-body">
+    <div id="navbar-mount"></div>
+
+    <div class="browserides-layout">
+        <main class="browserides-main">
+
+            <h2 class="browserides-heading">Available Rides</h2>
+
+            <div class="browserides-card">
+
+                <div class="browserides-filters">
+                    <button class="browserides-filter-btn active">
+                        <img src="../src/images/marker-icon.png" class="filter-icon">
+                        Destination
+                    </button>
+                    <button class="browserides-filter-btn">
+                        <img src="../src/images/clock-icon.png" class="filter-icon">
+                        Departure
+                    </button>
+                    <button class="browserides-filter-btn">
+                        <img src="../src/images/car-icon.png" class="filter-icon">
+                        Destination
+                    </button>
+                </div>
+
+                <!-- static for now, change to dynamic in phase 2 -->
+                <div class="browserides-filter-panel">
+                    <select class="browserides-destination-select">
+                        <option>All destinations</option>
+                        <option>España, Manila</option>
+                        <option>Quiapo, Manila</option>
+                        <option>Divisoria, Manila</option>
+                        <option>Tondo, Manila</option>
+                        <option>Malate, Manila</option>
+                        <option>Ermita, Manila</option>
+                    </select>
+                </div>
+
+                <!-- Hard coded rde list -->
+                <div class="browserides-ride-list">
+
+                    <div class="browserides-ride-card">
+                        <div class="browserides-ride-top">
+                            <span class="browserides-ride-route">MANILA → ESPANA</span>
+                            <a href="#" class="browserides-view-btn">View</a>
+                        </div>
+
+                        <div class="browserides-ride-meta">
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">TIME:</span>
+                                <span class="browserides-meta-value">7:00 am</span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">DATE:</span>
+                                <span class="browserides-meta-value">26 MAY 2026</span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">CAPACITY:</span>
+                                <span class="browserides-capacity-badge" style="background:#22c55e">
+                                    3 / 4
+                                </span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">FARE:</span>
+                                <span class="browserides-meta-value">PHP 92.33</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2nd card -->
+                    <div class="browserides-ride-card">
+                        <div class="browserides-ride-top">
+                            <span class="browserides-ride-route">MANILA → QUIAPO</span>
+                            <a href="#" class="browserides-view-btn">View</a>
+                        </div>
+
+                        <div class="browserides-ride-meta">
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">TIME:</span>
+                                <span class="browserides-meta-value">6:30 am</span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">DATE:</span>
+                                <span class="browserides-meta-value">26 MAY 2026</span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">CAPACITY:</span>
+                                <span class="browserides-capacity-badge" style="background:#f97316">
+                                    2 / 4
+                                </span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">FARE:</span>
+                                <span class="browserides-meta-value">PHP 55.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3rd card -->
+                    <div class="browserides-ride-card">
+                        <div class="browserides-ride-top">
+                            <span class="browserides-ride-route">MANILA → DIVISORIA</span>
+                            <a href="#" class="browserides-view-btn">View</a>
+                        </div>
+
+                        <div class="browserides-ride-meta">
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">TIME:</span>
+                                <span class="browserides-meta-value">8:15 am</span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">DATE:</span>
+                                <span class="browserides-meta-value">26 MAY 2026</span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">CAPACITY:</span>
+                                <span class="browserides-capacity-badge" style="background:#ef4444">
+                                    4 / 4
+                                </span>
+                            </div>
+
+                            <div class="browserides-meta-item">
+                                <span class="browserides-meta-label">FARE:</span>
+                                <span class="browserides-meta-value">PHP 40.50</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script src="../components/navbar.js"></script>
+
+</body>
+</html>
