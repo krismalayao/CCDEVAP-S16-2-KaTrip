@@ -6,7 +6,7 @@ document.getElementById('navbar-mount').innerHTML = `
             <span class="nav-logo-text">KaTrip</span>
         </a>
         <nav class="nav-links">
-            <a class="nav-link" href="#">View Bookings</a>
+            <a class="nav-link" href="myBookings.html">View Bookings</a>
             <a class="nav-link" href="#">Browse Rides</a>
             <a class="nav-link" href="#">Create Ride</a>
         </nav>
