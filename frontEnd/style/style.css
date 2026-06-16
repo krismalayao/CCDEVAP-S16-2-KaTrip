@@ -1694,3 +1694,77 @@ body {
     }
 }
 /* END OF MY BOOKINGS */
+
+/* Ride Details Page */
+.ride-details-container {
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+.back-navigation {
+    margin-bottom: 20px;
+}
+
+.back-link {
+    color: var(--purple);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.detail-card {
+    cursor: default;
+    background: var(--purple-faint);
+}
+
+.route-section {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.destination-point {
+    margin-top: 15px;
+}
+
+.details-meta-bar {
+    border-top: 1px solid #f5f5f5;
+    border-bottom: 1px solid #f5f5f5;
+    padding: 15px 0;
+    margin: 5px 0;
+}
+
+.badge-green {
+    background-color: #22c55e;
+}
+
+.badge-orange {
+    background-color: #f97316;
+}
+
+.badge-red {
+    background-color: #ef4444;
+}
+
+.badge-disabled {
+    background-color: #b4b4b4;
+    cursor: not-allowed;
+}
+
+.footer-section {
+    margin-top: 10px;
+}
+
+.fare-label {
+    display: block;
+    margin-bottom: 2px;
+}
+
+.reserve-action-btn {
+    padding: 12px 28px;
+    font-size: 14px;
+    border-radius: 8px;
+}
+/* END OF RIDE DETAILS */
