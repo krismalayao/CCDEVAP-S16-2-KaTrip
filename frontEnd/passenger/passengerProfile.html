@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>KaTrip - Passenger Profile</title>
+        <link rel="stylesheet" href="../style/style.css">
+        <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+    </head>
+    <body class="passenger-profile-body">
+        <!-- TO DO: Change Nav Bar -->
+        <div id="navbar-mount"></div>
+
+        <div class="profile-container">
+            <section class="profile-header">
+                <div class="theme-toggle">
+                    <label class="theme-switch">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <span class="theme-slider"></span>
+                    </label>
+                </div>
+
+                <div class="profile-avatar" id="avatar-preview">
+                    <label class="avatar-edit-label" for="avatar-upload">
+                        <input type="file" id="avatar-upload" accept="image/*">
+                    </label>
+                </div>
+                
+                <div class="name-display">
+                    <h2>Juan Dela Rosa</h2>
+                </div>
+            </section>
+            <section class="profile-details">
+                <div class="profile-field-group">
+                    <label for="profile-phone">Number</label>
+                    <div class="profile-input-wrapper">
+                        <input type="text" id="profile-phone" value="0987 654 3210">
+                        <button class="profile-field-edit-btn" aria-label="Edit number"></button>
+                    </div>
+                </div>
+
+                <div class="profile-field-group">
+                    <label for="profile-email">E-mail</label>
+                    <div class="profile-input-wrapper">
+                        <input type="email" id="profile-email" value="example@gmail.com">
+                        <button class="profile-field-edit-btn" aria-label="Edit email"></button>
+                    </div>
+                </div>
+
+                <div class="profile-field-group">
+                    <label for="profile-password">Password</label>
+                    <div class="profile-input-wrapper">
+                        <input type="password" id="profile-password" value="••••••••">
+                        <button class="profile-field-edit-btn" aria-label="Edit password"></button>
+                    </div>
+                </div>
+
+                <div class="profile-field-group">
+                    <label for="profile-gender">Gender</label>
+                    <div class="profile-input-wrapper profile-dropdown-wrapper">
+                        <select id="profile-gender">
+                            <option value="M" selected>M</option>
+                            <option value="F">F</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <button class="profile-field-edit-btn" aria-label="Edit gender"></button>
+                    </div>
+                </div>
+
+                <div class="profile-metadata">
+                    <p>Created at 2026-05-30</p>
+                    <button type="submit" class="profile-save-btn">Save</button>
+                </div>
+            </section>
+        </div>
+
+        <div class="profile-account-actions">
+            <button type="button" class="profile-logout-btn">Log Out</button>
+        </div>
+        
+        <div class="profile-cta-container">
+            <a href="#" class="profile-cta-text">Become a KaTrip Driver</a>
+        </div>
+
+        <script src="../components/navbar.js"></script>
+        <script src="../components/profile.js"></script>
+    </body>
+</html>

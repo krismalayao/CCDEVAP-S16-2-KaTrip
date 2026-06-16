@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>KaTrip - My Bookings</title>
+        <link rel="stylesheet" href="../style/style.css">
+        <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+    </head>
+    <body class="passenger-bookings-body">
+        <div id="navbar-mount"></div>
+
+        <div class="bookings-container">
+            <section class="bookings-header">
+                <h2>My Bookings</h2>
+                <div class="bookings-tabs">
+                    <button class="tab-btn active" data-tab="pending">Pending</button>
+                    <button class="tab-btn" data-tab="approved">Approved</button>
+                    <button class="tab-btn" data-tab="history">History</button>
+                </div>
+            </section>
+
+            <section class="bookings-content">
+                
+                <div class="tab-panel active" id="pending">
+                    <div class="booking-card">
+                        <div class="booking-card-header">
+                            <span class="status-badge pending">Awaiting Driver</span>
+                            <span class="booking-date">Tommorow, 8:00 AM</span>
+                        </div>
+                        <div class="booking-route">
+                            <div class="route-point"><span class="dot pickup"></span><strong>From:</strong> DLSU Taft Campus</div>
+                            <div class="route-point"><span class="dot destination"></span><strong>To:</strong> SM Mall of Asia</div>
+                        </div>
+                        <div class="booking-card-footer">
+                            <span class="booking-price">₱70.00</span>
+                            <button class="cancel-booking-btn">Cancel Request</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="approved">
+                    <div class="booking-card history-booking-card" data-booking-id="B102">
+                        <div class="booking-card-header">
+                            <span class="status-badge approved">Driver Matched</span>
+                            <span class="booking-date">Today, 2:30 PM</span>
+                        </div>
+                        <div class="booking-route">
+                            <div class="route-point"><span class="dot pickup"></span><strong>From:</strong> MRT Buendia Station</div>
+                            <div class="route-point"><span class="dot destination"></span><strong>To:</strong> DLSU Taft Campus</div>
+                        </div>
+                        <div class="driver-info-snippet">
+                            <div class="driver-avatar-mini"></div>
+                            <div>
+                                <p class="driver-name">Jose Garcia</p>
+                                <small class="vehicle-plate">Honda City • ABC 1234</small>
+                            </div>
+                        </div>
+                        <div class="booking-card-footer">
+                            <span class="booking-price">₱70.00</span>
+                            <a href="tel:09171234567" class="contact-driver-btn" onclick="event.stopPropagation();">Contact Driver</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="history">
+                    <div class="booking-card completed history-booking-card" data-booking-id="B101">
+                        <div class="booking-card-header">
+                            <span class="status-badge completed">Completed</span>
+                            <span class="booking-date">2026-06-10</span>
+                        </div>
+                        <div class="booking-route">
+                            <div class="route-point"><span class="dot pickup"></span><strong>From:</strong> Malate, Manila</div>
+                            <div class="route-point"><span class="dot destination"></span><strong>To:</strong> Banaue, Quezon City</div>
+                        </div>
+                        <div class="booking-card-footer">
+                            <span class="booking-price">₱190.00</span>
+                        </div>
+                    </div>
+                    <div class="booking-card completed history-booking-card" data-booking-id="B101">
+                        <div class="booking-card-header">
+                            <span class="status-badge completed">Completed</span>
+                            <span class="booking-date">2026-06-08</span>
+                        </div>
+                        <div class="booking-route">
+                            <div class="route-point"><span class="dot pickup"></span><strong>From:</strong> Intramuros, Manila</div>
+                            <div class="route-point"><span class="dot destination"></span><strong>To:</strong> DLSU Taft Campus</div>
+                        </div>
+                        <div class="booking-card-footer">
+                            <span class="booking-price">₱90.00</span>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+        <script src="../components/navbar.js"></script>
+        <script src="../components/bookings.js"></script>
+    </body>
+</html>

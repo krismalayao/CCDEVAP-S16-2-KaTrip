@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KaTrip - Driver Dashboard</title>
+<link rel="stylesheet" href="driverDashboard.css" />
+</head>
+
+<body>
+
+
+<!-- Sidebar:
+Make sure to change the links to the correct files once they are created. 
+-->
+<aside class="sidebar">
+    <div class="logo">Ka<span>Trip</span></div>
+    <nav>
+        <a href="driverDashboard.html" class="active"><span class="icon"></span> Dashboard</a>
+        <a href="myTrips.html"><span class="icon"></span> My Trips</a>
+        <a href="createTrip.html"><span class="icon"></span> Create Trip</a>
+        <a href="tripPage.html"><span class="icon"></span> Trip Page</a>
+    </nav>
+    <div class="bottom">
+        <a href="driverProfile.html"><span></span> View Account</a>
+        <a href="login.html"><span></span> Logout</a>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="topbar">
+        <h1>Driver Dashboard</h1>
+        <div class="user-info">
+        <span>Welcome</span> <!-- Top right: make sure to make it a user -->
+            <div class="avatar">U</div>
+        </div>
+    </div>
+
+    <!-- Cards taken from Admin, change later if needed & Dynamic Integration later -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="label">Upcoming Trips</div>
+            <div class="value">3</div>
+            <div class="sub">Scheduled &amp; ongoing</div>
+        </div>
+
+        <div class="stat-card green">
+            <div class="label">Est. Contribution</div>
+            <div class="value">₱277</div>
+            <div class="sub">Per trip (based on passengers)</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="label">Completed Trips</div>
+            <div class="value">14</div>
+            <div class="sub">Total trips finished</div>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div class="section-label">Quick Actions</div> <!-- Temporarily named Quick Actions, change later kung gusto-->
+    <div class="quick-grid">
+
+        <a href="createTrip.html" class="quick-card">
+            <div class="quick-name">Post a Trip</div>
+            <div class="quick-desc">Schedule a new ride</div>
+        </a>
+
+        <a href="driverApplication.html" class="quick-card">
+            <div class="quick-name">Driver Application</div>
+            <div class="quick-desc">Apply &amp; upload documents</div>
+        </a>
+
+        <a href="tripPage.html" class="quick-card yellow">
+            <div class="quick-name">Passenger Requests</div>
+            <div class="quick-desc">Review &amp; respond</div>
+            <div class="req-badge">2 pending</div> <!-- make into diff color -->
+        </a>
+
+    </div>
+
+<!-- UPCOMING TRIPS: Make Dynamic Somehow  -->
+    <div class="section-label">Upcoming Trips</div>
+    <div class="table-card">
+        <h3>Scheduled &amp; Ongoing <a href="myTrips.html">View all </a></h3> <!-- Change link once done. -->
+        <table>
+            <thead> <!-- Categories -->
+                <tr>
+                    <th>Route</th>
+                    <th>Vehicle</th>
+                    <th>Date &amp; Time</th>
+                    <th>Seats</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Make Dynamic in the Future, Static for Frontend Presentation-->
+                <tr>
+                    <td>DLSU - Makati CBD</td>
+                    <td>Toyota Vios | ABC-1234</td>
+                    <td>Jun 17 | 7:30 AM</td>
+                    <td>3 / 4</td> <!-- Change to dynamic passenger count later. -->
+                    <td><span class="badge scheduled">Scheduled</span></td>
+                    <td><a href="tripPage.html" class="btn-view">View</a></td> <!-- Change link once done. -->
+                </tr>
+                <tr>
+                    <td>Taguig - BGC Loop</td>
+                    <td>Honda City | XYZ-5678</td>
+                    <td>Jun 18 | 8:00 AM</td>
+                    <td>2 / 4</td>
+                    <td><span class="badge recurring">Recurring</span></td>
+                    <td><a href="tripPage.html" class="btn-view">View</a></td> <!-- Change link once done. -->
+                </tr>
+                <tr>
+                    <td>Quezon City - Ortigas</td>
+                    <td>Toyota Vios | ABD-1239</td>
+                    <td>Today | 6:45 AM</td>
+                    <td>4 / 4</td>
+                    <td><span class="badge ongoing">Ongoing</span></td>
+                    <td><a href="tripPage.html" class="btn-view">View</a></td> <!-- Change link once done. -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
