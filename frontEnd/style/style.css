@@ -1433,7 +1433,7 @@ body {
     max-width: 900px;
     width: 90%;
     margin: 40px auto 50px auto;
-    background: var(--bg-card);
+    background: var(--purple-faint);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     overflow: hidden;
@@ -1441,7 +1441,7 @@ body {
 }
 
 .bookings-header {
-    background-color: var(--purple-faint);
+    background-color: var(--bg-card);
     padding: 30px 35px 0 35px;
     border-bottom: 1px solid rgba(152, 84, 203, 0.1);
 }
