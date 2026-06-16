@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- scale Design for mobile devices. -->
+<title>KaTrip - Admin Dashboard</title>
+<link rel="stylesheet" href="admin-dashboard.css" />
+</head>
+
+<body>
+<aside class="sidebar"> <!-- SIDEBAR gaming -->
+<div class="logo">Ka<span>Trip</span></div>
+<nav>
+    <a href="#" class="active"><span class="icon"></span> Dashboard</a>
+    <a href="user-management.html"><span class="icon"></span> User Management</a> <!-- user management file link here -->
+    <a href="driver-verification.html"><span class="icon"></span> Driver Verification</a> <!-- Driver verification file link here -->
+    <a href="reports.html"><span class="icon"></span> Reports</a> <!-- Add reports feature? (remove later if not necessary) -->
+</nav>
+<div class="bottom">
+    <a href="admin-profile.html"><span></span> View Account</a>
+    <a href="login.html"><span></span> Logout</a>
+</div>
+</aside>
+
+
+<main class="main"> <!--Main content area -->
+<div class="topbar"> 
+    <h1>Admin Dashboard</h1>
+    <div class="admin-info"> 
+        <span>Welcome, Admin</span> <!-- Top right -->
+        <div class="avatar">A</div>
+    </div>
+</div>
+
+
+<!-- STAT CARDS: Remember to change static to dynamic. Furthermore, 
+stat-card <color>, pa change nalang if ever -->
+
+<div class="stats-grid"> <!--Top cards bar - just looks good. -->
+    <div class="stat-card">
+        <div class="label">Total Passengers</div>
+        <div class="value">128</div> <!-- Change to dynamic value later. -->
+        <div class="sub">Registered users</div>
+    </div>
+
+    <!--Total Drivers, change to dynamic value later. (must only be verified accounts) -->
+    <div class="stat-card green">
+        <div class="label">Total Drivers</div>
+        <div class="value">34</div> <!-- Change to dynamic value later. (VERIFIED DRIVERS ONLY) -->
+        <div class="sub">Verified accounts</div>
+    </div>
+
+    <!--Pending verification, change to dynamic value later. -->
+    <div class="stat-card yellow">
+        <div class="label">Pending Verifications</div>
+        <div class="value">7</div> <!-- Change to dynamic value later. -->
+        <div class="sub">Awaiting review</div>
+    </div>
+
+    <!--Total Trips For the day, change to dynamic value later. -->
+    <div class="stat-card red">
+        <div class="label">Total Trips Today</div>
+        <div class="value">21</div> <!-- Change to dynamic value later. -->
+        <div class="sub">Scheduled &amp; ongoing</div>
+    </div>
+</div>
+
+<!--CHARTS - Fixed bc Frontend. Change Dynamic values later. const data, const maxValue, and const maxHeight in js in the futrue. -->
+<!--Calculate the height of the bars based on the data values and the maximum value. -->
+
+<div class="charts-row">
+<div class="chart-card">
+
+    <h3>Trips This Week</h3>
+
+    <div class="bar-chart">
+        <div class="bar-wrap">
+        <div class="bar" style="height:55px" title="Mon: 11"></div>
+    <div class="bar-label">Mon</div>
+    </div>
+
+        <div class="bar-wrap">
+        <div class="bar" style="height:80px" title="Tue: 16"></div>
+        <div class="bar-label">Tue</div>
+        </div>
+
+        <div class="bar-wrap">
+        <div class="bar" style="height:65px" title="Wed: 13"></div>
+        <div class="bar-label">Wed</div>
+        </div>
+
+        <div class="bar-wrap">
+        <div class="bar" style="height:100px" title="Thu: 20"></div>
+        <div class="bar-label">Thu</div>
+        </div>
+
+        <div class="bar-wrap">
+        <div class="bar" style="height:90px" title="Fri: 18"></div>
+        <div class="bar-label">Fri</div>
+        </div>
+
+        <div class="bar-wrap">
+        <div class="bar" style="height:40px" title="Sat: 8"></div>
+        <div class="bar-label">Sat</div>
+        </div>
+
+        <div class="bar-wrap">
+        <div class="bar" style="height:25px" title="Sun: 5"></div>
+        <div class="bar-label">Sun</div>
+        </div>
+    </div>
+</div>
+
+<!--Donut chart, change in the future or make dynamic.-->
+<!--User Breakdown chart, change to dynamic values later. const passengerPercentage, const driverPercentage, and const pendingPercentage in js in the future.-->
+
+    <div class="chart-card">
+    <h3>User Breakdown</h3>
+    <div class="donut-placeholder">
+        <div class="donut-ring"></div>
+        <div class="donut-legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background:#6a0dad"></div><!--fixed value, chose purple for KaTrip theme, change for more accuracy if ever.-->
+            Passengers (52%) 
+        </div>
+
+        <div class="legend-item">
+            <div class="legend-dot" style="background:#a855f7"></div>
+            Drivers (26%)
+        </div>
+
+        <div class="legend-item">
+            <div class="legend-dot" style="background:#d8b4fe"></div>
+            Pending (22%)
+        </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!--Bottom Row - Add more charts or tables here if necessary. -->
+<div class="bottom-row">
+
+<!-- Bar Chart: Trips Completed Over Time -->
+    <div class="chart-card chart-card-wide">
+    <h3>Trips Completed Over Time</h3>
+    <div class="bar-chart">
+    <div class="bar-wrap">
+        <div class="bar" style="height:30px" title="Jan: 30"></div>
+        <div class="bar-label">Jan</div>
+    </div>
+
+    <div class="bar-wrap">
+        <div class="bar" style="height:52px" title="Feb: 52"></div>
+        <div class="bar-label">Feb</div>
+    </div>
+
+    <div class="bar-wrap">
+        <div class="bar" style="height:41px" title="Mar: 41"></div>
+        <div class="bar-label">Mar</div>
+    </div>
+
+    <div class="bar-wrap">
+        <div class="bar" style="height:78px" title="Apr: 78"></div>
+        <div class="bar-label">Apr</div>
+    </div>
+
+    <div class="bar-wrap">
+        <div class="bar" style="height:65px" title="May: 65"></div>
+        <div class="bar-label">May</div>
+    </div>
+
+    <div class="bar-wrap">
+        <div class="bar" style="height:100px" title="Jun: 120"></div>
+        <div class="bar-label">Jun</div>
+    </div>
+    </div>
+    </div>
+
+    
+    <div class="chart-card">
+    <h3>Trip Status Breakdown</h3>
+    <div class="donut-placeholder">
+        <div class="status-donut-ring"></div>
+        <div class="donut-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#6a0dad"></div> Scheduled (40)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div> Ongoing (15)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div> Completed (120)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div> Cancelled (18)</div>
+        </div>
+    </div>
+    </div>
+
+
+</div>
+
+
+</main>
+</body>
+</html>

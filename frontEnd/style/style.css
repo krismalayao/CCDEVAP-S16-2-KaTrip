@@ -562,5 +562,114 @@ body {
 
     .nav-menu-btn {
         display: flex;
+/* LANDING */
+.landing-body {
+    background-color: #fcfbfa; 
+    color: #1a1a1a;
+    font-family: 'Helvetica Now';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-container {
+    display: flex;
+    align-items: center;
+    padding: 40px 5%;
+    gap: 60px;
+    max-width: 1300px;
+    width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.landing-left {
+    flex: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.landing-headline {
+    font-size: clamp(36px, 4.5vw, 64px);
+    font-weight: 400;
+    line-height: 0.90;
+    letter-spacing: -1.5px;
+    margin: 0 0 25px 0;
+    color: #5b2981;
+}
+
+.landing-subtext {
+    font-size: clamp(15px, 1.2vw, 18px);
+    color: #555555;
+    max-width: 520px;
+}
+
+.landing-cta-btn {
+    display: inline-block;
+    background-color: #9854cb; 
+    color: #ffffff;
+    text-decoration: none;
+    padding: 14px 32px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.landing-cta-btn:hover {
+    background-color: #b078db; 
+}
+
+.landing-cta-btn:active {
+    transform: scale(0.98);
+}
+
+.landing-footer-tag {
+    margin-top: 60px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: #8c8c8c;
+    font-weight: bold;
+}
+
+.landing-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.landing-img {
+    width: 100%;
+    max-width: 580px;
+    height: auto;
+}
+
+@media (max-width: 991px) {
+    .landing-container {
+        flex-direction: column-reverse;
+        padding: 40px 24px;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .landing-left {
+        align-items: center;
+    }
+
+    .landing-subtext {
+        margin: 0 auto 30px auto;
+    }
+
+    .landing-footer-tag {
+        margin-top: 40px;
+    }
+
+    .landing-img {
+        max-width: 85%;
     }
 }
