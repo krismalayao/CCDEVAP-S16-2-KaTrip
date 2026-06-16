@@ -13,6 +13,7 @@
   --bg:               #f4f4f4;
   --bg-card:          #ffffff;
   --icon-muted:       #b4b4b4;
+    --grey-text:        #2d2d2d;
 
   /* Status */
   --success:          #0fbf00;
@@ -1125,3 +1126,305 @@ body {
 }
 
 /* END OF BROWSE RIDES */
+
+/* Passenger Profile Page */
+.profile-container {
+    max-width: 900px;
+    width: 90%;
+    margin: 40px auto 20px auto;
+    background: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.profile-header {
+    position: relative;
+    background-color: var(--purple-faint);
+    padding: 40px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(152, 84, 203, 0.1);
+}
+
+.theme-toggle {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.theme-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--purple-light);
+    transition: 0.3s ease;
+    border-radius: 24px;
+}
+
+.theme-slider:before {
+    position: absolute;
+    content: "";
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s ease;
+    border-radius: 50%;
+    background-image: url('../src/images/sun-icon.png');
+    background-size: 75%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.theme-switch input:checked + .theme-slider {
+    background-color: var(--purple-dark);
+}
+
+.theme-switch input:checked + .theme-slider:before {
+    transform: translateX(22px);
+    background-image: url('../src/images/moon-icon.png');
+    background-size: 75%;
+}
+
+.profile-avatar {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 15px auto;
+    background-color: var(--purple);
+    border-radius: 50%;
+    border: 4px solid var(--bg-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-image: url('../src/images/avatar-icon-placeholder.png');
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background-image: url('../src/images/camera-icon.png');
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--bg-card);
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+.avatar-edit-btn::before {
+    font-size: 14px;
+}
+
+.avatar-edit-btn:hover {
+    transform: scale(1.1);
+}
+
+.name-display h2 {
+    font-size: 26px;
+    margin: 10px 0 0 0;
+    letter-spacing: 0.5px;
+    color: rgb(37, 37, 37);
+}
+
+.profile-details {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px 15px;
+    padding: 35px;
+    box-sizing: border-box;
+}
+
+.profile-field-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-field-group label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: black;
+}
+
+.profile-input-wrapper {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.profile-input-wrapper input,
+.profile-input-wrapper select {
+    width: 100%;
+    background-color: var(--purple-faint);
+    border: none;
+    border-radius: 12px;
+    padding: 10px 40px 10px 12px;
+    font-family: 'Helvetica Now';
+    font-size: 13px;
+    font-weight: bold;
+    box-sizing: border-box;
+    color: black;
+}
+
+.profile-input-wrapper select {
+    appearance: none;
+    cursor: pointer;
+}
+
+.profile-field-edit-btn {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: url('../src/images/pen-icon.png') no-repeat center;
+    background-size: 20px 20px;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s ease;
+}
+
+.profile-field-edit-btn:hover {
+    transform: translateY(-50%) scale(1.15);
+}
+
+.profile-metadata {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 15px auto;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-metadata p {
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+    color: #777;
+    margin: 0;
+}
+
+.profile-save-btn {
+    width: 125px;
+    height: 40px;
+    background-color: var(--purple);
+    color: var(--bg-card);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-save-btn:hover {
+    background-color: var(--purple-dark);
+}
+
+.profile-account-actions {
+    max-width: 900px;
+    width: 90%;
+    margin: 0 auto 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.profile-logout-btn {
+    width: 150px;
+    height: 40px;
+    background-color: var(--purple-dark);
+    color: var(--bg-card);
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-logout-btn:hover {
+    background-color: var(--purple);
+}
+
+.profile-cta-container {
+    max-width: 900px;
+    width: 90%;
+    margin: 0 auto 50px auto;
+    text-align: right;
+}
+
+.profile-cta-text {
+    color: var(--purple);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+
+.profile-cta-text:hover {
+    color: var(--purple-dark);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .profile-details {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 20px;
+    }
+
+    .profile-account-actions {
+        flex-direction: column-reverse;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .profile-logout-btn {
+        width: 100%;
+    }
+}
+
+/* END OF PASSENGER PROFILE */
