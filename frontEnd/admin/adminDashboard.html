@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
+<head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- scale Design for mobile devices. -->
 <title>KaTrip - Admin Dashboard</title>
 <link rel="stylesheet" href="admin-dashboard.css" />
+</head>
 
 <body>
 <aside class="sidebar"> <!-- SIDEBAR gaming -->
@@ -68,7 +69,9 @@ stat-card <color>, pa change nalang if ever -->
 <!--CHARTS - Fixed bc Frontend. Change Dynamic values later. const data, const maxValue, and const maxHeight in js in the futrue. -->
 <!--Calculate the height of the bars based on the data values and the maximum value. -->
 
+<div class="charts-row">
 <div class="chart-card">
+
     <h3>Trips This Week</h3>
 
     <div class="bar-chart">
@@ -107,7 +110,7 @@ stat-card <color>, pa change nalang if ever -->
         <div class="bar-label">Sun</div>
         </div>
     </div>
-    </div>
+</div>
 
 <!--Donut chart, change in the future or make dynamic.-->
 <!--User Breakdown chart, change to dynamic values later. const passengerPercentage, const driverPercentage, and const pendingPercentage in js in the future.-->
@@ -134,7 +137,7 @@ stat-card <color>, pa change nalang if ever -->
         </div>
         </div>
     </div>
-
+</div>
 
 <!--Bottom Row - Add more charts or tables here if necessary. -->
 <div class="bottom-row">
