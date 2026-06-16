@@ -10,7 +10,7 @@
   --destination:      #e2aaf1;
 
   /* UI */
-  --bg:               #f4f4f4;
+  --bg:               #f3f0f9;
   --bg-card:          #ffffff;
   --icon-muted:       #b4b4b4;
 
@@ -438,7 +438,7 @@ body {
 .nav-logo-text {
     font-family: 'Bloc', system-ui, sans-serif;
     font-size: 28px;
-    color: var(--purple);
+    color: black;
 }
 
 .nav-links {

@@ -9,5 +9,124 @@
 <body>
     <div id="navbar-mount"></div>
     <script src="../components/navbar.js"></script>
+
+    <div class="page">
+        <div class="sidebar">
+
+        <!-- Where to -->
+        <div class="card">
+        <div class="card-title">Where to!</div>
+
+        <div style="display:flex; gap:10px; align-items:stretch;">
+            <div style="display:flex; flex-direction:column; align-items:center; width:20px; padding:10px 0; justify-content:space-between;">
+            <div class="dot-origin"></div>
+            <div class="dots-line">
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <i class="ti ti-map-pin pin-dest" aria-hidden="true"></i>
+            </div>
+
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+            <input class="route-input" type="text" placeholder="Starting point" />
+            <input class="route-input has-value" type="text" value="SM Mall of Asia" />
+            </div>
+
+            <button class="swap-btn" aria-label="Swap locations">
+            <i class="ti ti-arrows-sort" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="travel-time-bar">
+            <span>Est. Travel Time</span>
+            <span>1 hr 30 min</span>
+        </div>
+        </div>
+
+        <!-- Pickup locations -->
+        <div class="card">
+        <div style="margin-bottom:12px;">
+            <span style="font-size:13px; font-weight:500; color:var(--color-text-secondary);">Pickup Locations</span>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:stretch;">
+            <div style="display:flex; flex-direction:column; align-items:center; width:20px; padding:10px 0;">
+            <i class="ti ti-map-pin pin-pickup" aria-hidden="true"></i>
+            <div style="flex:1; display:flex; flex-direction:column; gap:3px; padding:4px 0; align-items:center;">
+                <span style="width:3px;height:3px;border-radius:50%;background:var(--destination);display:block;"></span>
+                <span style="width:3px;height:3px;border-radius:50%;background:var(--destination);display:block;"></span>
+                <span style="width:3px;height:3px;border-radius:50%;background:var(--destination);display:block;"></span>
+            </div>
+            <i class="ti ti-map-pin pin-pickup" aria-hidden="true"></i>
+            </div>
+
+            <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+            <div style="position:relative;">
+                <input class="pickup-input" type="text" placeholder="Pickup Location 1" />
+                <button class="pickup-clear" aria-label="Clear"><i class="ti ti-x" aria-hidden="true"></i></button>
+            </div>
+            <div style="position:relative;">
+                <input class="pickup-input" type="text" placeholder="Pickup Location 2" />
+                <button class="pickup-clear" aria-label="Clear"><i class="ti ti-x" aria-hidden="true"></i></button>
+            </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px; padding-top:2px;">
+            <button class="drag-handle" aria-label="Reorder"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+            <button class="drag-handle" aria-label="Reorder"><i class="ti ti-menu-2" aria-hidden="true"></i></button>
+            </div>
+        </div>
+
+        <button class="add-pickup-btn">
+            <i class="ti ti-circle-plus" style="font-size:18px;" aria-hidden="true"></i>
+            Add Pickup Location
+        </button>
+        </div>
+
+        <!-- Trip details -->
+        <div class="card">
+        <div class="details-grid">
+            <div class="field-group">
+            <span class="field-label">Date</span>
+            <input class="field-input" type="text" value="Tuesday, May 26" readonly />
+            </div>
+            <div class="field-group">
+            <span class="field-label">Departure Time</span>
+            <input class="field-input" type="text" value="7:00 am" readonly />
+            </div>
+            <div class="field-group">
+            <span class="field-label">Recurrence</span>
+            <div class="select-wrap">
+                <select class="field-select">
+                <option>Does not repeat</option>
+                <option>Daily</option>
+                <option>Weekly</option>
+                </select>
+                <i class="ti ti-chevron-down" aria-hidden="true"></i>
+            </div>
+            </div>
+            <div class="field-group">
+            <span class="field-label">No. of Passengers</span>
+            <input class="field-input" type="number" value="4" min="1" />
+            </div>
+        </div>
+        </div>
+
+        <!-- Fare + CTA -->
+        <div class="fare-card">
+        <div class="fare-row">
+            <span class="fare-label">Total Fare Amount</span>
+            <span class="fare-amount">PHP 277.00</span>
+        </div>
+        <button class="create-btn">Create Ride</button>
+        </div>
+
+    </div>
+
+    <!-- Map placeholder -->
+    <div class="map-placeholder">
+        <i class="ti ti-map-2" aria-hidden="true"></i>
+        <span>Map plugin goes here</span>
+    </div>
+    </div>
 </body>
 </html> 
