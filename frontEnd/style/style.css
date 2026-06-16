@@ -892,6 +892,7 @@ body {
 .browserides-main {
     width: 100%;
     max-width: 660px;
+    border-radius: 12px;
     background: var(--bg-card);
     padding: 0px 40px 0px 40px;
 }
@@ -1448,10 +1449,11 @@ body {
 
 .bookings-header h2 {
     font-size: 26px;
+    font-weight: 400;
     margin: 0 0 20px 0;
     letter-spacing: 0.5px;
     color: var(--purple-dark);
-    font-family: 'Bloc', system-ui, sans-serif;
+    font-family: 'Bloc';
 }
 
 .bookings-tabs {

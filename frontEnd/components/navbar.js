@@ -7,7 +7,7 @@ document.getElementById('navbar-mount').innerHTML = `
         </a>
         <nav class="nav-links">
             <a class="nav-link" href="myBookings.html">View Bookings</a>
-            <a class="nav-link" href="#">Browse Rides</a>
+            <a class="nav-link" href="browseRides.html">Browse Rides</a>
             <a class="nav-link" href="#">Create Ride</a>
         </nav>
         <div class="nav-actions">
