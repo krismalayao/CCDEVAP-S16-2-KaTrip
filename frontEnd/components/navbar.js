@@ -6,9 +6,9 @@ document.getElementById('navbar-mount').innerHTML = `
             <span class="nav-logo-text">KaTrip</span>
         </a>
         <nav class="nav-links">
-            <a class="nav-link" href="myBookings.html">View Bookings</a>
-            <a class="nav-link" href="browseRides.html">Browse Rides</a>
-            <a class="nav-link" href="#">Create Ride</a>
+            <a class="nav-link" href="../passenger/myBookings.html">View Bookings</a>
+            <a class="nav-link" href="../passenger/browseRides.html">Browse Rides</a>
+            <a class="nav-link" href="../driver/driverDashboard.html">Create Ride</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
@@ -16,16 +16,16 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
                 <span class="nav-menu-bar"></span>
             </button>
-            <a class="nav-profile-btn" href="passengerProfile.html" aria-label="Profile">
+            <a class="nav-profile-btn" href="../passenger/passengerProfile.html" aria-label="Profile">
                 <span class="nav-profile-initials">JD</span>
             </a>
         </div>
     </div>
 
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
-        <a class="nav-dropdown-link" href="#">View Bookings</a>
-        <a class="nav-dropdown-link" href="#">Browse Rides</a>
-        <a class="nav-dropdown-link" href="#">Create Ride</a>
+        <a class="nav-dropdown-link" href="../passenger/myBookings.html">View Bookings</a>
+        <a class="nav-dropdown-link" href="../passenger/browseRides.html">Browse Rides</a>
+        <a class="nav-dropdown-link" href="../driver/driverDashboard.html">Create Ride</a>
     </div>
 </header>
 `;

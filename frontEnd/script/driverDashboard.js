@@ -103,7 +103,7 @@ function renderTrips() {
   container.innerHTML = list.map(t => {
     const actions = [];
     if (t.status === 'ongoing') {
-      actions.push(`<a href="trip-ongoing.html" class="btn-sm btn-primary">▶ View Live Trip</a>`);
+      actions.push(`<a href="../driver/driverOngoing.html" class="btn-sm btn-primary">▶ View Live Trip</a>`);
     }
     if (t.status === 'upcoming') {
       actions.push(`<button class="btn-sm btn-primary" onclick="startTrip(${t.id})">▶ Start Trip</button>`);
@@ -164,8 +164,7 @@ function startTrip(id) {
   trips = trips.map(t => t.id === id ? { ...t, status: 'ongoing' } : t);
   updateStats();
   renderTrips();
-  // In a real app, navigate to trip-ongoing.html
-  window.location.href = 'trip-ongoing.html';
+  window.location.href = '../driver/driverStartTrip.html';
 }
 
 function showCancelModal(id) {
