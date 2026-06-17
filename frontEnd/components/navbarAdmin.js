@@ -14,12 +14,14 @@ function initNavbar() {
             <nav class="nav-links">
                 <a class="nav-link" href="adminDashboard.html">Dashboard</a>
                 <a class="nav-link" href="userManagement.html">User Management</a>
+                <a class="nav-link" href="tripManagement.html">Trip Management</a>
                 <a class="nav-link" href="driverVerification.html">Driver Verification</a>
                 <button class="nav-link nav-logout-btn" id="nav-logout-desktop">Logout</button>
             </nav>
 
             <div class="nav-actions">
                 <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
+                    <span class="nav-menu-bar"></span>
                     <span class="nav-menu-bar"></span>
                     <span class="nav-menu-bar"></span>
                     <span class="nav-menu-bar"></span>
@@ -30,6 +32,7 @@ function initNavbar() {
         <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
             <a class="nav-dropdown-link" href="adminDashboard.html">Dashboard</a>
             <a class="nav-dropdown-link" href="userManagement.html">User Management</a>
+            <a class="nav-dropdown-link" href="tripManagement.html">Trip Management</a>
             <a class="nav-dropdown-link" href="driverVerification.html">Driver Verification</a>
             <hr class="nav-dropdown-divider" />
             <button class="nav-dropdown-link nav-logout-btn" id="nav-logout-mobile">Logout</button>
