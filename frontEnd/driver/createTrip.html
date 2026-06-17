@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaTrip - Create Trip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="../style/driver.css"/>
+    <link rel="stylesheet" href="../style/navbar.css"/>
+</head>
+<body>
+<div id="navbar-mount"></div>
+<script src="../components/navbar.js"></script>
+
+    <div class="app">
+    <div class="panel">
+    
+        <div class="expand-hint" onclick="toggleSheet()">▲ Show details</div>
+        <!-- WHERE TO -->
+        <div class="card">
+        <div class="card-title">Where to!</div>
+    
+        <div style="display:flex; align-items:stretch; gap:10px;">
+            <div style="display:flex;flex-direction:column;align-items:center;padding-top:12px;">
+            <div class="loc-dot"></div>
+            <div style="flex:1;width:2px;background:repeating-linear-gradient(to bottom,#c084fc 0 4px,transparent 4px 8px);margin:3px 0;"></div>
+            <div class="loc-dot red"></div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+            <div class="loc-input-wrap" id="wrap-from">
+                <input class="loc-input" id="input-from" placeholder="Location 1 (Origin)" autocomplete="off" oninput="onLocInput('from')" onfocus="onLocFocus('from')" onblur="onLocBlur('from')"/>
+                <div class="autocomplete-list" id="ac-from" style="display:none;"></div>
+            </div>
+            <div class="loc-input-wrap" id="wrap-to">
+                <input class="loc-input active-field" id="input-to" placeholder="Location 2 (Destination)" autocomplete="off" oninput="onLocInput('to')" onfocus="onLocFocus('to')" onblur="onLocBlur('to')"/>
+                <span class="loc-search-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                </span>
+                <div class="autocomplete-list" id="ac-to" style="display:none;"></div>
+            </div>
+            </div>
+            <button class="swap-btn" onclick="swapLocations()" title="Swap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+            </button>
+        </div>
+    
+        <div class="travel-time-bar">
+            <span>Est. Travel Time</span>
+            <span id="travel-time">—</span>
+        </div>
+        </div>
+    
+        <!-- PICKUP LOCATIONS -->
+        <div class="card">
+        <div id="pickup-list"></div>
+        <button class="add-pickup-btn" onclick="addPickup()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            Add Pickup Location
+        </button>
+        </div>
+    
+        <!-- SCHEDULE -->
+        <div class="card">
+        <div class="form-grid">
+            <div class="form-field">
+            <label>Date</label>
+            <input type="date" id="ride-date"/>
+            </div>
+            <div class="form-field">
+            <label>Departure Time</label>
+            <input type="time" id="ride-time" value="07:00"/>
+            </div>
+            <div class="form-field">
+            <label>Recurrence</label>
+            <div class="select-wrap">
+                <select id="recurrence">
+                <option>Does not repeat</option>
+                <option>Daily</option>
+                <option>Weekdays</option>
+                <option>Weekly</option>
+                </select>
+            </div>
+            </div>
+            <div class="form-field">
+            <label>No. of Passengers</label>
+            <input type="number" id="passengers" value="4" min="1" max="20"/>
+            </div>
+        </div>
+        </div>
+    
+        <!-- FARE + CTA -->
+        <div class="card">
+        <div class="fare-row">
+            <span class="fare-label">Total Fare Amount</span>
+            <span class="fare-amount" id="fare-display">PHP —</span>
+        </div>
+        <button class="create-btn" id="create-btn" onclick="createRide()">Create Ride</button>
+        </div>
+    
+    </div>
+    
+    <div id="map"></div>
+    </div>
+    
+    <div id="toast"></div>
+
+<script src="../script/driver.js"></script>
+</body>
+</html>
