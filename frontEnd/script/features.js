@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initPasswordToggle();
     initPhoneFormatter();
     initStaticLogin();
-    initRideDetails();
+    initRideDetail();
+    initApplicationUploadPreview()
 });
 
 // Toggling See Password Button/Icon
@@ -102,7 +103,7 @@ function initStaticLogin() {
 }
 
 // Script for displaying the ride details for each trip
-function initRideDetails() {
+function initRideDetail() {
     const ridesDatabase = {
         '1': {
             route: 'MANILA → ESPANA',
@@ -167,4 +168,27 @@ function initRideDetails() {
             reserveBtn.className = "contact-driver-btn reserve-action-btn badge-disabled";
         }
     }
+}
+
+// Script for displaying the driver application document uploads
+function initApplicationUploadPreview() {
+    document.querySelectorAll(".upload-dropzone input").forEach(input => {
+        input.addEventListener("change", function() {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            const zone = this.closest(".upload-dropzone");
+
+            reader.onload = (e) => {
+                let img = zone.querySelector(".preview-image") || document.createElement("img");
+                img.className = "preview-image";
+                img.src = e.target.result;
+                
+                if (!zone.querySelector(".preview-image")) zone.appendChild(img);
+                zone.classList.add("upload-preview");
+            };
+            reader.readAsDataURL(file);
+        });
+    });
 }

@@ -1526,10 +1526,6 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
-.booking-card.history-booking-card {
-    cursor: pointer;
-}
-
 .booking-card.history-booking-card:hover {
     border-color: var(--purple-light);
     transform: translateY(-3px);
