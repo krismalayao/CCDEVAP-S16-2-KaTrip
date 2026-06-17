@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaTrip - Start Trip</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <link rel="stylesheet" href="../style/driverStartTrip.css"/>
+    <link rel="stylesheet" href="../style/navbar.css"/>
+</head>
+<body>
+    <div id="navbar-mount"></div>
+    <script src="../components/navbar.js"></script>
+ 
+  <div class="app">
+ 
+    <!-- ── PANEL ── -->
+    <div class="panel" id="panel">
+      <div class="expand-hint" onclick="toggleSheet()">Show details</div>
+ 
+      <!-- Ride Details -->
+      <div class="card">
+        <div class="card-title">Ride Details</div>
+        <div class="driver-row">
+          <div class="avatar">A</div>
+          <div>
+            <div class="driver-name">Alan</div>
+            <div class="driver-sub">Toyota Vios • ABC-1234 • Silver</div>
+          </div>
+        </div>
+        <div class="route-list">
+          <div class="route-item">
+            <div class="route-icon-col"><div class="r-dot"></div><div class="r-dash"></div></div>
+            <div class="route-label bold">Olongapo City Hall</div>
+          </div>
+          <div class="route-item">
+            <div class="route-icon-col"><div class="r-dot pickup"></div><div class="r-dash"></div></div>
+            <div class="route-label">SM City Olongapo</div>
+          </div>
+          <div class="route-item">
+            <div class="route-icon-col"><div class="r-dot pickup"></div><div class="r-dash"></div></div>
+            <div class="route-label">Subic Bay Freeport Zone Gate</div>
+          </div>
+          <div class="route-item">
+            <div class="route-icon-col"><div class="r-dot red"></div></div>
+            <div class="route-label bold">Subic Bay Boardwalk</div>
+          </div>
+        </div>
+        <div class="fare-block">
+          <div class="fare-row"><span>Est. Travel Time</span><span>1 hr 30 min</span></div>
+          <div class="fare-row"><span>Fee Per Passenger</span><span>PHP 92.33</span></div>
+          <div class="fare-row total"><span>Total Fare Amount</span><span>PHP 277.00</span></div>
+        </div>
+      </div>
+ 
+      <!-- Passengers -->
+      <div class="card">
+        <div class="pax-header">
+          <div class="card-title" style="margin-bottom:0;">Passengers</div>
+          <div class="pax-badge">3 / 4</div>
+        </div>
+        <div class="pax-list">
+          <div class="pax-row">
+            <div class="pax-avatar">R</div>
+            <div class="pax-info"><div class="pax-name">Robin</div><div class="pax-fee"><s>PHP 92.33</s> PHP 69.25</div></div>
+            <div class="pax-actions"><button class="btn-ico remove" onclick="removePax(this)" aria-label="Remove">
+                <i class='bx bx-x-circle'></i>
+              </button></div>
+          </div>
+          <div class="pax-row">
+            <div class="pax-avatar">R</div>
+            <div class="pax-info"><div class="pax-name">Ronald</div><div class="pax-fee"><s>PHP 92.33</s> PHP 69.25</div></div>
+            <div class="pax-actions"><button class="btn-ico remove" onclick="removePax(this)" aria-label="Remove Ronald">
+                <i class='bx bx-x-circle'></i>
+              </button></div>
+          </div>
+          <div class="pax-row">
+            <div class="pax-avatar">P</div>
+            <div class="pax-info"><div class="pax-name">Pia</div><div class="pax-fee"><s>PHP 92.33</s> PHP 69.25</div></div>
+            <div class="pax-actions"><button class="btn-ico remove" onclick="removePax(this)" aria-label="Remove Pia">
+                <i class='bx bx-x-circle'></i>
+              </button></div>
+          </div>
+          <div class="pax-row pending">
+            <div class="pax-avatar">A</div>
+            <div class="pax-info"><div class="pax-name">Antonio</div><div class="pax-fee">PHP 69.25</div></div>
+            <div class="pax-actions">
+              <button class="btn-ico accept" onclick="acceptPax(this)" aria-label="Accept">
+                <i class='bx bx-check-circle'></i>
+              </button>
+              <button class="btn-ico remove" onclick="removePax(this)" aria-label="Remove">
+                <i class='bx bx-x-circle'></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- CTA -->
+      <div class="bottom-btns">
+        <button class="btn-start" id="btn-start">Start</button>
+        <button class="btn-cancel">Cancel</button>
+      </div>
+    </div>
+ 
+    <!-- ── MAP + MODAL ── -->
+    <div class="map-wrapper">
+      <div id="map"></div>
+      <div class="modal-backdrop" id="modal">
+        <div class="modal">
+          <div class="modal-title">Start Ride?</div>
+          <p class="modal-body">Some seats are still <strong>available</strong>,<br>but you may proceed with the trip as scheduled.</p>
+          <button class="btn-proceed" id="btn-proceed">Proceed</button>
+          <button class="btn-wait"    id="btn-wait">Wait for more</button>
+        </div>
+      </div>
+    </div>
+ 
+  </div>
+
+<script src="../script/driverStartTrip.js"></script>
+</body>
+</html>

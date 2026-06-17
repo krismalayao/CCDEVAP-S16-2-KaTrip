@@ -1,3 +1,6 @@
+// -----------------------------------------------------------------------------
+// CREATE TRIP PAGE
+// -----------------------------------------------------------------------------
 // ─── State ───────────────────────────────────────────────────────────────────
 const state = {
   from: null,   // { display, lat, lon }
@@ -28,7 +31,7 @@ function makeIcon(color) {
   });
 }
  
-// ─── Geocoding via Claude API (avoids iframe CORS block on Nominatim) ────────
+// ─── Geocoding via Claude API ────────
 const acTimers = {};
  
 async function searchPlaces(q) {
@@ -279,5 +282,19 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
  
+
 // ─── Init ─────────────────────────────────────────────────────────────────────
 renderPickups();
+
+// ── Mobile bottom-sheet toggle ────────────────────────────────────────────────
+function toggleSheet() {
+  const panel = document.querySelector('.panel');
+  const hint  = document.querySelector('.expand-hint');
+  panel.classList.toggle('collapsed');
+  hint.textContent = panel.classList.contains('collapsed') ? 'Show details' : 'Hide details';
+}
+
+if (window.innerWidth <= 640) {
+  document.querySelector('.panel').classList.add('collapsed');
+  document.querySelector('.expand-hint').textContent = 'Show details';
+}
