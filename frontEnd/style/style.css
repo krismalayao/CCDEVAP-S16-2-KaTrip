@@ -512,6 +512,7 @@ body {
     width: 36px;
     height: 36px;
     border-radius: 50%;
+    text-decoration: none;
     border: 2px solid var(--purple);
     background: var(--purple-faint);
     cursor: pointer;
@@ -1140,7 +1141,7 @@ body {
     box-sizing: border-box;
 }
 
-.profile-header {
+.profile-heading {
     position: relative;
     background-color: var(--purple-faint);
     padding: 40px 20px;
@@ -1441,13 +1442,13 @@ body {
     box-sizing: border-box;
 }
 
-.bookings-header {
+.bookings-heading {
     background-color: var(--bg-card);
     padding: 30px 35px 0 35px;
     border-bottom: 1px solid rgba(152, 84, 203, 0.1);
 }
 
-.bookings-header h2 {
+.bookings-heading h2 {
     font-size: 26px;
     font-weight: 400;
     margin: 0 0 20px 0;
@@ -1531,7 +1532,7 @@ body {
     transform: translateY(-3px);
 }
 
-.booking-card-header {
+.booking-card-heading {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1678,7 +1679,7 @@ body {
 }
 
 @media (max-width: 768px) {
-    .bookings-header {
+    .bookings-heading {
         padding: 20px 20px 0 20px;
     }
     .bookings-content {

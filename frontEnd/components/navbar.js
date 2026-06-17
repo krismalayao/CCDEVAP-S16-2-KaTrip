@@ -1,7 +1,7 @@
 document.getElementById('navbar-mount').innerHTML = `
 <header class="nav">
     <div class="nav-inner">
-        <a class="nav-brand" href="#">
+        <a class="nav-brand" href="passengerDashboard.html">
             <img class="nav-logo-img" src="../src/images/katrip_logo.svg" alt="KaTrip logo" />
             <span class="nav-logo-text">KaTrip</span>
         </a>
@@ -16,9 +16,9 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
                 <span class="nav-menu-bar"></span>
             </button>
-            <button class="nav-profile-btn" aria-label="Profile">
+            <a class="nav-profile-btn" href="passengerProfile.html" aria-label="Profile">
                 <span class="nav-profile-initials">JD</span>
-            </button>
+            </a>
         </div>
     </div>
 
