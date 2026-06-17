@@ -6,6 +6,7 @@ document.getElementById('navbar-mount').innerHTML = `
             <span class="nav-logo-text">KaTrip</span>
         </a>
         <nav class="nav-links">
+            <a class="nav-link" href="passengerDashboard.html">Home</a>
             <a class="nav-link" href="myBookings.html">View Bookings</a>
             <a class="nav-link" href="browseRides.html">Browse Rides</a>
         </nav>
@@ -22,6 +23,7 @@ document.getElementById('navbar-mount').innerHTML = `
     </div>
 
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
+        <a class="nav-dropdown-link" href="passengerDashboard.html">Home</a>
         <a class="nav-dropdown-link" href="myBookings.html">View Bookings</a>
         <a class="nav-dropdown-link" href="browseRides.html">Browse Rides</a>
     </div>
