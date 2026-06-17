@@ -7,19 +7,19 @@ const state = {
   routeDuration: null, // seconds
 };
 let pickupIdCounter = 3;
-
+ 
 const BASE_FARE = 50;
 const FARE_PER_KM = 15;
-
+ 
 // ─── Map setup ───────────────────────────────────────────────────────────────
 const map = L.map('map', { zoomControl: true }).setView([14.5995, 120.9842], 12);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors'
 }).addTo(map);
-
+ 
 let fromMarker = null, toMarker = null, routeLayer = null;
 const pickupMarkers = {};
-
+ 
 function makeIcon(color) {
   return L.divIcon({
     className: '',
@@ -27,19 +27,34 @@ function makeIcon(color) {
     iconSize: [28, 36], iconAnchor: [14, 36], popupAnchor: [0, -36]
   });
 }
-
-// ─── Nominatim autocomplete ───────────────────────────────────────────────────
+ 
+// ─── Geocoding via Claude API (avoids iframe CORS block on Nominatim) ────────
 const acTimers = {};
-
+ 
 async function searchPlaces(q) {
   if (!q || q.length < 3) return [];
-  const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&addressdetails=1&countrycodes=ph`;
   try {
-    const r = await fetch(url, { headers: { 'Accept-Language': 'en' } });
-    return await r.json();
-  } catch { return []; }
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        tools: [{ type: "web_search_20250305", name: "web_search" }],
+        system: `You are a geocoding assistant. When given a place search query, search Nominatim for matching places in the Philippines and return ONLY a JSON array (no markdown, no explanation) with up to 5 results. Each result must have: name (short place name), display_name (full address), lat (number), lon (number). If no results, return [].`,
+        messages: [{ role: "user", content: `Search Nominatim OpenStreetMap for: "${q}" in the Philippines. Return only the JSON array.` }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content.filter(b => b.type === "text").map(b => b.text).join("");
+    const clean = text.replace(/```json|```/g, "").trim();
+    const start = clean.indexOf("[");
+    const end = clean.lastIndexOf("]");
+    if (start === -1 || end === -1) return [];
+    return JSON.parse(clean.slice(start, end + 1));
+  } catch(e) { console.error(e); return []; }
 }
-
+ 
 function onLocInput(side) {
   clearTimeout(acTimers[side]);
   const val = document.getElementById(`input-${side}`).value;
@@ -49,7 +64,7 @@ function onLocInput(side) {
     showAc(side, results);
   }, 350);
 }
-
+ 
 function showAc(side, results) {
   const el = document.getElementById(`ac-${side}`);
   if (!results.length) { el.style.display = 'none'; return; }
@@ -64,7 +79,7 @@ function showAc(side, results) {
   el._results = results;
   el.style.display = 'block';
 }
-
+ 
 function selectLoc(side, idx) {
   const el = document.getElementById(`ac-${side}`);
   const r = el._results[idx];
@@ -75,11 +90,11 @@ function selectLoc(side, idx) {
   updateMapMarker(side, loc);
   tryRoute();
 }
-
+ 
 function hideAc(side) { document.getElementById(`ac-${side}`).style.display = 'none'; }
 function onLocFocus(side) { const v = document.getElementById(`input-${side}`).value; if (v.length >= 3) onLocInput(side); }
 function onLocBlur(side) { setTimeout(() => hideAc(side), 200); }
-
+ 
 // ─── Swap ─────────────────────────────────────────────────────────────────────
 function swapLocations() {
   [state.from, state.to] = [state.to, state.from];
@@ -89,7 +104,7 @@ function swapLocations() {
   if (state.to) updateMapMarker('to', state.to);
   tryRoute();
 }
-
+ 
 // ─── Map markers ─────────────────────────────────────────────────────────────
 function updateMapMarker(side, loc) {
   if (side === 'from') {
@@ -101,7 +116,7 @@ function updateMapMarker(side, loc) {
   }
   fitMapBounds();
 }
-
+ 
 function fitMapBounds() {
   const pts = [];
   if (state.from) pts.push([state.from.lat, state.from.lon]);
@@ -110,56 +125,71 @@ function fitMapBounds() {
   if (pts.length > 1) map.fitBounds(pts, { padding: [40, 40] });
   else if (pts.length === 1) map.setView(pts[0], 14);
 }
-
-// ─── OpenRouteService route ───────────────────────────────────────────────────
-// Using OSRM (free, no key needed) as a fallback
+ 
+// ─── Route estimation via Claude API ─────────────────────────────────────────
 async function tryRoute() {
   if (!state.from || !state.to) return;
   document.getElementById('travel-time').innerHTML = 'Calculating<span class="spinner"></span>';
-
-  const coords = `${state.from.lon},${state.from.lat};${state.to.lon},${state.to.lat}`;
-  const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`;
-
+ 
+  // Draw a straight-line polyline as visual placeholder
+  if (routeLayer) map.removeLayer(routeLayer);
+  routeLayer = L.polyline([
+    [state.from.lat, state.from.lon],
+    [state.to.lat, state.to.lon]
+  ], { color: '#a855f7', weight: 4, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+  fitMapBounds();
+ 
+  // Estimate distance & duration via Claude
   try {
-    const r = await fetch(url);
-    const data = await r.json();
-    if (data.code !== 'Ok' || !data.routes.length) throw new Error('No route');
-
-    const route = data.routes[0];
-    state.routeDistance = route.distance / 1000; // km
-    state.routeDuration = route.duration; // seconds
-
-    // Draw route
-    if (routeLayer) map.removeLayer(routeLayer);
-    routeLayer = L.geoJSON(route.geometry, {
-      style: { color: '#a855f7', weight: 4, opacity: 0.75 }
-    }).addTo(map);
-
-    fitMapBounds();
+    const resp = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 200,
+        system: `You are a routing assistant. Given two locations with coordinates, estimate the driving distance in km and duration in minutes via typical Philippine roads. Return ONLY JSON: {"distance_km": number, "duration_min": number}. No markdown.`,
+        messages: [{
+          role: "user",
+          content: `From: ${state.from.display} (${state.from.lat}, ${state.from.lon})\nTo: ${state.to.display} (${state.to.lat}, ${state.to.lon})`
+        }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content.filter(b => b.type === "text").map(b => b.text).join("").replace(/```json|```/g,"").trim();
+    const j = JSON.parse(text);
+    state.routeDistance = j.distance_km;
+    state.routeDuration = j.duration_min * 60;
     updateTravelTime();
     updateFare();
-  } catch (e) {
-    document.getElementById('travel-time').textContent = 'Route unavailable';
-    state.routeDistance = null;
+  } catch(e) {
+    // Fallback: haversine straight-line estimate
+    const R = 6371;
+    const dLat = (state.to.lat - state.from.lat) * Math.PI / 180;
+    const dLon = (state.to.lon - state.from.lon) * Math.PI / 180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(state.from.lat*Math.PI/180)*Math.cos(state.to.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+    state.routeDistance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)) * 1.3;
+    state.routeDuration = (state.routeDistance / 40) * 3600;
+    updateTravelTime();
+    updateFare();
   }
 }
-
+ 
 function updateTravelTime() {
   if (!state.routeDuration) return;
   const mins = Math.round(state.routeDuration / 60);
   const h = Math.floor(mins / 60), m = mins % 60;
   document.getElementById('travel-time').textContent = h > 0 ? `${h} hr ${m} min` : `${m} min`;
 }
-
+ 
 function updateFare() {
   if (!state.routeDistance) { document.getElementById('fare-display').textContent = 'PHP —'; return; }
   const pax = parseInt(document.getElementById('passengers').value) || 1;
   const fare = Math.round((BASE_FARE + state.routeDistance * FARE_PER_KM) * (1 + (pax - 1) * 0.15));
   document.getElementById('fare-display').textContent = `PHP ${fare.toFixed(2)}`;
 }
-
+ 
 document.getElementById('passengers').addEventListener('input', updateFare);
-
+ 
 // ─── Pickup locations ─────────────────────────────────────────────────────────
 function renderPickups() {
   const list = document.getElementById('pickup-list');
@@ -176,7 +206,7 @@ function renderPickups() {
     </div>
   `).join('');
 }
-
+ 
 function onPickupInput(id) {
   const val = document.getElementById(`pickup-input-${id}`).value;
   const p = state.pickups.find(x => x.id === id);
@@ -188,7 +218,7 @@ function onPickupInput(id) {
     showPickupAc(id, results);
   }, 350);
 }
-
+ 
 function showPickupAc(id, results) {
   const el = document.getElementById(`ac-pickup-${id}`);
   if (!results.length) { el.style.display = 'none'; return; }
@@ -202,7 +232,7 @@ function showPickupAc(id, results) {
   el._results = results;
   el.style.display = 'block';
 }
-
+ 
 function selectPickupLoc(id, idx) {
   const el = document.getElementById(`ac-pickup-${id}`);
   const r = el._results[idx];
@@ -215,32 +245,32 @@ function selectPickupLoc(id, idx) {
   pickupMarkers[id] = L.marker([loc.lat, loc.lon], { icon: makeIcon('#d946ef') }).addTo(map).bindPopup(`Pickup: ${loc.name}`);
   fitMapBounds();
 }
-
+ 
 function clearPickup(id) {
   const p = state.pickups.find(x => x.id === id);
   if (p) { p.value = ''; p.loc = null; }
   if (pickupMarkers[id]) { map.removeLayer(pickupMarkers[id]); delete pickupMarkers[id]; }
   renderPickups();
 }
-
+ 
 function onPickupFocus(id) { const v = document.getElementById(`pickup-input-${id}`).value; if (v.length >= 3) onPickupInput(id); }
 function onPickupBlur(id) { setTimeout(() => { const el = document.getElementById(`ac-pickup-${id}`); if (el) el.style.display = 'none'; }, 200); }
-
+ 
 function addPickup() {
   state.pickups.push({ id: pickupIdCounter++, value: '', loc: null });
   renderPickups();
 }
-
+ 
 // ─── Date default ─────────────────────────────────────────────────────────────
 const today = new Date();
 document.getElementById('ride-date').value = today.toISOString().split('T')[0];
-
+ 
 // ─── Create Ride ──────────────────────────────────────────────────────────────
 function createRide() {
   if (!state.from || !state.to) { showToast('Please set origin and destination.'); return; }
   showToast('Ride created! 🎉');
 }
-
+ 
 // ─── Toast ────────────────────────────────────────────────────────────────────
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -248,6 +278,6 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
 }
-
+ 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 renderPickups();
