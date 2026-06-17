@@ -11,34 +11,34 @@
     <div id="navbar-mount"></div>
 
     <div class="browserides-layout">
-        <main class="browserides-main" style="padding-top: 30px; padding-bottom: 40px;">
+        <main class="browserides-main ride-details-container">
             
-            <div style="margin-bottom: 20px;">
-                <a href="browseRides.html" style="color: var(--purple); text-decoration: none; font-size: 14px; font-weight: bold; display: inline-flex; align-items: center; gap: 5px;">
-                    ← Back to Browse Rides
+            <div class="back-navigation">
+                <a href="browseRides.html" class="back-link">
+                    &larr; Back to Browse Rides
                 </a>
             </div>
 
             <h2 class="browserides-heading">Trip Details</h2>
 
-            <div class="booking-card" style="cursor: default; background: #ffffff;">
-                <div class="booking-card-header">
-                    <span class="browserides-ride-route" id="detail-route">MANILA → ESPANA</span>
+            <div class="booking-card detail-card">
+                <div class="booking-card-heading">
+                    <span class="browserides-ride-route" id="detail-route">MANILA &rarr; ESPANA</span>
                     <span class="status-badge approved" id="detail-status">Active</span>
                 </div>
 
-                <div class="booking-route" style="margin-top: 10px; margin-bottom: 10px;">
+                <div class="booking-route route-section">
                     <div class="route-point">
                         <span class="dot pickup"></span>
                         <strong>From:</strong> <span id="detail-pickup">Manila Terminal</span>
                     </div>
-                    <div class="route-point" style="margin-top: 15px;">
+                    <div class="route-point destination-point">
                         <span class="dot destination"></span>
                         <strong>To:</strong> <span id="detail-destination">Espana, Manila</span>
                     </div>
                 </div>
 
-                <div class="browserides-ride-meta" style="border-top: 1px solid #f5f5f5; border-bottom: 1px solid #f5f5f5; padding: 15px 0; margin: 5px 0;">
+                <div class="browserides-ride-meta details-meta-bar">
                     <div class="browserides-meta-item">
                         <span class="browserides-meta-label">Departure Time</span>
                         <span class="browserides-meta-value" id="detail-time">7:00 am</span>
@@ -51,7 +51,7 @@
 
                     <div class="browserides-meta-item">
                         <span class="browserides-meta-label">Available Seats</span>
-                        <span class="browserides-capacity-badge" id="detail-capacity" style="background:#22c55e">3 / 4 Seats</span>
+                        <span class="browserides-capacity-badge badge-green" id="detail-capacity">3 / 4 Seats</span>
                     </div>
                 </div>
 
@@ -59,16 +59,16 @@
                     <div class="driver-avatar-mini"></div>
                     <div>
                         <p class="driver-name" id="detail-driver">Jose Garcia</p>
-                        <small class="vehicle-plate" id="detail-vehicle">Honda City • ABC 1234</small>
+                        <small class="vehicle-plate" id="detail-vehicle">Honda City &bull; ABC 1234</small>
                     </div>
                 </div>
 
-                <div class="booking-card-footer" style="margin-top: 10px;">
+                <div class="booking-card-footer footer-section">
                     <div>
-                        <span class="browserides-meta-label" style="display:block; margin-bottom: 2px;">ESTIMATED FARE</span>
+                        <span class="browserides-meta-label fare-label">ESTIMATED FARE</span>
                         <span class="booking-price" id="detail-fare">₱92.33</span>
                     </div>
-                    <button id="reserve-btn" class="contact-driver-btn" style="padding: 12px 28px; font-size: 14px; border-radius: 8px;">
+                    <button id="reserve-btn" class="contact-driver-btn reserve-action-btn">
                         Reserve a Seat
                     </button>
                 </div>
@@ -78,47 +78,6 @@
     </div>
 
     <script src="../components/navbar.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const params = new URLSearchParams(window.location.search);
-            const rideId = params.get('id') || '1';
-
-            const routeEl = document.getElementById('detail-route');
-            const destinationEl = document.getElementById('detail-destination');
-            const timeEl = document.getElementById('detail-time');
-            const dateEl = document.getElementById('detail-date');
-            const capacityEl = document.getElementById('detail-capacity');
-            const fareEl = document.getElementById('detail-fare');
-            const reserveBtn = document.getElementById('reserve-btn');
-
-            if (rideId === '2') {
-                routeEl.textContent = 'MANILA → QUIAPO';
-                destinationEl.textContent = 'Quiapo, Manila';
-                timeEl.textContent = '6:30 am';
-                dateEl.textContent = '26 MAY 2026';
-                capacityEl.textContent = '2 / 4 Seats';
-                capacityEl.style.backgroundColor = '#f97316';
-                fareEl.textContent = '₱55.00';
-            } else if (rideId === '3') {
-                routeEl.textContent = 'MANILA → DIVISORIA';
-                destinationEl.textContent = 'Divisoria, Manila';
-                timeEl.textContent = '8:15 am';
-                dateEl.textContent = '26 MAY 2026';
-                capacityEl.textContent = '4 / 4 Full';
-                capacityEl.style.backgroundColor = '#ef4444';
-                fareEl.textContent = '₱40.50';
-                
-                reserveBtn.textContent = 'Ride Full';
-                reserveBtn.style.backgroundColor = '#b4b4b4';
-                reserveBtn.style.cursor = 'not-allowed';
-                reserveBtn.disabled = true;
-            }
-
-            reserveBtn.addEventListener('click', () => {
-                alert('Your reservation request has been sent to the driver! Tracking available under pending bookings.');
-                window.location.href = 'myBookings.html';
-            });
-        });
-    </script>
+    <script src="../script/features.js"></script>
 </body>
 </html>
