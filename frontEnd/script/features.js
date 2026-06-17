@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initPasswordToggle();
     initPhoneFormatter();
     initStaticLogin();
+    initStaticRegistration();
     initRideDetail();
     initApplicationUploadPreview()
 });
@@ -98,6 +99,23 @@ function initStaticLogin() {
                 default:
                     window.location.href = "landing.html";
             }
+        }
+    });
+}
+
+// Script for testing User Registrations
+function initStaticRegistration() {
+    const regForm = document.getElementById("registration-form");
+    const driverCheckbox = document.getElementById("katrip_driver");
+
+    if (!regForm || !driverCheckbox) return;
+
+    regForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (driverCheckbox.checked) {
+            window.location.href = '../driver/driverApplication.html';
+        } else {
+            window.location.href = "loginPage.html";
         }
     });
 }
