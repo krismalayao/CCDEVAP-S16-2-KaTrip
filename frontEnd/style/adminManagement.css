@@ -23,6 +23,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    height: fit-content;
 }
 
 .management-actions,
@@ -111,6 +115,7 @@
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
 }
 
 .management-data h2 {
@@ -237,6 +242,17 @@
     border: none;
 }
 
+.responsive-table {
+    flex: 1;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.responsive-table table {
+    min-width: 900px;
+    width: 100%;
+}
+
 /* MODALS */
 .modal {
     display: none;
@@ -353,26 +369,27 @@
     color: var(--purple-dark);
 }
 
+/* MOBILE RESPONSIVE */
 @media (max-width: 768px) {
 
-    .admin-page {
+    .management-container {
         flex-direction: column;
     }
 
-    .admin-features {
+    .management-features {
+        width: 100%;
+        position: static;
+    }
+
+    .management-data {
         width: 100%;
     }
 
-    .admin-data {
+    .table-wrapper {
         overflow-x: auto;
-    }
-
-    .admin-data table {
-        min-width: 700px;
     }
 
     .modal-content {
         width: 95%;
     }
-
 }

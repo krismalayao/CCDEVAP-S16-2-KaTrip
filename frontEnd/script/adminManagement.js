@@ -133,7 +133,7 @@ let filters = {
     to: ""
 };
 
-const rowsPerPage = 5;
+const rowsPerPage = 7;
 let currentPage = 1;
 
 function searchUsers() {

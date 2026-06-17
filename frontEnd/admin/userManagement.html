@@ -42,102 +42,104 @@
 
         <div class="management-data">
             <h2>User Management</h2>
-            <table id="userTable">
-                <thead>
-                    <tr>
-                        <th>SELECT</th>
-                        <th>USER ID</th>
-                        <th>FULL NAME</th>
-                        <th>EMAIL</th>
-                        <th>ROLE</th>
-                        <th>STATUS</th>
-                        <th>DATE REGISTERED</th>
-                        <th>ACTIONS</th>
-                    </tr>
-                </thead>
+            <div class="responsive-table">
+                <table id="userTable">
+                    <thead>
+                        <tr>
+                            <th>SELECT</th>
+                            <th>USER ID</th>
+                            <th>FULL NAME</th>
+                            <th>EMAIL</th>
+                            <th>ROLE</th>
+                            <th>STATUS</th>
+                            <th>DATE REGISTERED</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                    </thead>
 
-                <tbody>
-                    <tr data-date="2026-06-01">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U001</td><td>Juan Dela Cruz</td><td>juan@email.com</td>
-                        <td>Passenger</td><td class="status-active">Active</td>
-                        <td>06/01/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
+                    <tbody>
+                        <tr data-date="2026-06-01">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U001</td><td>Juan Dela Cruz</td><td>juan@email.com</td>
+                            <td>Passenger</td><td class="status-active">Active</td>
+                            <td>06/01/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-02">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U002</td><td>Maria Santos</td><td>maria@email.com</td>
-                        <td>Driver</td><td class="status-active">Active</td>
-                        <td>06/02/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-02">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U002</td><td>Maria Santos</td><td>maria@email.com</td>
+                            <td>Driver</td><td class="status-active">Active</td>
+                            <td>06/02/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-03">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U003</td><td>Pedro Reyes</td><td>pedro@email.com</td>
-                        <td>Admin</td><td class="status-inactive">Inactive</td>
-                        <td>06/03/2026</td>
-                        <td class="action-button"><button class="enable-button" onclick="toggleStatus(this)">Enable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-03">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U003</td><td>Pedro Reyes</td><td>pedro@email.com</td>
+                            <td>Admin</td><td class="status-inactive">Inactive</td>
+                            <td>06/03/2026</td>
+                            <td class="action-button"><button class="enable-button" onclick="toggleStatus(this)">Enable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-04">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U004</td><td>Anna Lopez</td><td>anna@email.com</td>
-                        <td>Passenger</td><td class="status-active">Active</td>
-                        <td>06/04/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-04">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U004</td><td>Anna Lopez</td><td>anna@email.com</td>
+                            <td>Passenger</td><td class="status-active">Active</td>
+                            <td>06/04/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-05">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U005</td><td>Mark Cruz</td><td>mark@email.com</td>
-                        <td>Driver</td><td class="status-active">Active</td>
-                        <td>06/05/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-05">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U005</td><td>Mark Cruz</td><td>mark@email.com</td>
+                            <td>Driver</td><td class="status-active">Active</td>
+                            <td>06/05/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-06">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U006</td><td>Sarah Lim</td><td>sarah@email.com</td>
-                        <td>Passenger</td><td class="status-inactive">Inactive</td>
-                        <td>06/06/2026</td>
-                        <td class="action-button"><button class="enable-button" onclick="toggleStatus(this)">Enable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-06">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U006</td><td>Sarah Lim</td><td>sarah@email.com</td>
+                            <td>Passenger</td><td class="status-inactive">Inactive</td>
+                            <td>06/06/2026</td>
+                            <td class="action-button"><button class="enable-button" onclick="toggleStatus(this)">Enable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-07">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U007</td><td>John Dizon</td><td>john@email.com</td>
-                        <td>Driver</td><td class="status-active">Active</td>
-                        <td>06/07/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-07">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U007</td><td>John Dizon</td><td>john@email.com</td>
+                            <td>Driver</td><td class="status-active">Active</td>
+                            <td>06/07/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-08">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U008</td><td>Grace Bautista</td><td>grace@email.com</td>
-                        <td>Passenger</td><td class="status-active">Active</td>
-                        <td>06/08/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-08">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U008</td><td>Grace Bautista</td><td>grace@email.com</td>
+                            <td>Passenger</td><td class="status-active">Active</td>
+                            <td>06/08/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-09">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U009</td><td>Kevin Yu</td><td>kevin@email.com</td>
-                        <td>Driver</td><td class="status-inactive">Inactive</td>
-                        <td>06/09/2026</td>
-                        <td class="action-button"><button class="enable-button" onclick="toggleStatus(this)">Enable</button></td>
-                    </tr>
+                        <tr data-date="2026-06-09">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U009</td><td>Kevin Yu</td><td>kevin@email.com</td>
+                            <td>Driver</td><td class="status-inactive">Inactive</td>
+                            <td>06/09/2026</td>
+                            <td class="action-button"><button class="enable-button" onclick="toggleStatus(this)">Enable</button></td>
+                        </tr>
 
-                    <tr data-date="2026-06-10">
-                        <td><input type="radio" name="selectedUser"></td>
-                        <td>U010</td><td>Ella Ramos</td><td>ella@email.com</td>
-                        <td>Passenger</td><td class="status-active">Active</td>
-                        <td>06/10/2026</td>
-                        <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
-                    </tr>
-                </tbody>
-            </table>
+                        <tr data-date="2026-06-10">
+                            <td><input type="radio" name="selectedUser"></td>
+                            <td>U010</td><td>Ella Ramos</td><td>ella@email.com</td>
+                            <td>Passenger</td><td class="status-active">Active</td>
+                            <td>06/10/2026</td>
+                            <td class="action-button"><button class="disable-button" onclick="toggleStatus(this)">Disable</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div id="pagination"></div>
         </div>
     </div>
@@ -171,8 +173,6 @@
         </div>
     </div>
 
-
-    <!-- CONFIRM MODAL (SEPARATE) -->
     <div class="modal" id="confirmModal">
         <div class="modal-content">
             <h3 id="confirmTitle">Confirm Action</h3>
