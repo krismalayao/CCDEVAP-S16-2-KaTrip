@@ -13,7 +13,7 @@
   --bg:               #f4f4f4;
   --bg-card:          #ffffff;
   --icon-muted:       #b4b4b4;
-    --grey-text:        #2d2d2d;
+  --grey-text:        #2d2d2d;
 
   /* Status */
   --success:          #0fbf00;
@@ -29,6 +29,13 @@ body {
 @font-face {
   font-family: 'Bloc';
   src: url('../src/fonts/BlocC\ Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Bold';
+  src: url('../src/fonts/HelveticaNowText-Bold.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
