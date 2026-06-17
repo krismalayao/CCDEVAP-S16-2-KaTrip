@@ -130,7 +130,7 @@
   function confirmEnd() {
     closeEndModal();
     showToast('Trip ended! Redirecting…');
-    setTimeout(() => { window.location.href = 'my-trips.html'; }, 1800);
+    setTimeout(() => { window.location.href = '../driver/driverDashboard.html'; }, 1800);
   }
 
   // ── Toast ──────────────────────────────────────────────────────────────────

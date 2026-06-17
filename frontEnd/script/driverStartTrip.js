@@ -47,7 +47,7 @@
     });
     document.getElementById('btn-proceed').addEventListener('click', () => {
       document.getElementById('modal').classList.remove('visible');
-      // TODO: navigate to active trip / in-progress screen
+      window.location.href = '../driver/driverOngoing.html';
     });
  
     // ── Passenger actions ────────────────────────────────────────────────────
