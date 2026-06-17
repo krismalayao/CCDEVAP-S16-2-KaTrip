@@ -7,14 +7,13 @@
         <meta name="author" content="Team 2">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin - User Management</title>
-        <link rel="stylesheet" href="../style/adminManagement.css">
+        <link rel="stylesheet" href="../style/userManagement.css">
         <link rel="stylesheet" href="../style/navbarAdmin.css">
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
     </head>
 
     <body class="management-body">
         <div id="navbar-mount"></div>
-        <script src="../components/navbarAdmin.js"></script>
 
         <div class="management-container">
             <div class="management-features">
@@ -30,9 +29,9 @@
                     <input type="text" id="searchInput" placeholder="Search User" onkeyup="searchUsers()">
 
                     <select id="roleFilter" onchange="filterByRole()">
-                        <option value="all">All Roles</option>
-                        <option value="passenger">Passenger</option>
-                        <option value="driver">Driver</option>
+                        <option>All Roles</option>
+                        <option>Passenger</option>
+                        <option>Driver</option>
                     </select>
 
                     <label for="fromDate" class="date">Date From:</label>
@@ -188,6 +187,8 @@
                 </div>
             </div>
         </div>
-        <script src="../script/adminManagement.js"></script>
+
+        <script src="../components/navbarAdmin.js"></script>
+        <script src="../script/userManagement.js"></script>
     </body>
 </html>

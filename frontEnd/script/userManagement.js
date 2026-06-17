@@ -3,6 +3,7 @@ let confirmCallback = null;
 /* MODAL CONTROL */
 function openAddModal() {
     const modal = document.getElementById("userModal");
+    if (!modal) return;
 
     document.getElementById("modalTitle").textContent = "Add User";
     modal.classList.add("show");
@@ -16,23 +17,30 @@ function openEditModal() {
     if (!row) return alert("Please select a user first.");
 
     const modal = document.getElementById("userModal");
+    if (!modal) return;
 
     document.getElementById("modalTitle").textContent = "Edit User";
     modal.classList.add("show");
     modal.dataset.mode = "edit";
 
     const cells = row.cells;
+    if (cells.length < 6) return;
 
-    document.querySelector("#userModal input[type='text']").value = cells[2].textContent;
-    document.querySelector("#userModal input[type='email']").value = cells[3].textContent;
+    const nameInput = document.querySelector("#userModal input[type='text']");
+    const emailInput = document.querySelector("#userModal input[type='email']");
+    if (nameInput) nameInput.value = cells[2].textContent;
+    if (emailInput) emailInput.value = cells[3].textContent;
 
     const selects = document.querySelectorAll("#userModal select");
-    selects[0].value = cells[4].textContent.trim();
-    selects[1].value = cells[5].textContent.trim();
+    if (selects.length >= 2) {
+        selects[0].value = cells[4].textContent.trim();
+        selects[1].value = cells[5].textContent.trim();
+    }
 }
 
 function closeModal() {
-    document.getElementById("userModal").classList.remove("show");
+    const modal = document.getElementById("userModal");
+    if (modal) modal.classList.remove("show");
 }
 
 /* RESET MODAL */
@@ -43,29 +51,28 @@ function resetUserModal() {
 
 /* CONFIRM MODAL */
 function openConfirmModal(title, message, onConfirm) {
-    document.getElementById("confirmTitle").textContent = title;
-    document.getElementById("confirmMessage").textContent = message;
+    const titleEl = document.getElementById("confirmTitle");
+    const msgEl = document.getElementById("confirmMessage");
+    const modal = document.getElementById("confirmModal");
 
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+    
     confirmCallback = onConfirm;
 
-    document.getElementById("confirmModal").classList.add("show");
+    if (modal) modal.classList.add("show");
 }
 
 function closeConfirmModal() {
-    document.getElementById("confirmModal").classList.remove("show");
+    const modal = document.getElementById("confirmModal");
+    if (modal) modal.classList.remove("show");
     confirmCallback = null;
 }
-
-/* SINGLE HANDLER ONLY */
-document.getElementById("confirmYesBtn").onclick = function () {
-    if (typeof confirmCallback === "function") confirmCallback();
-    closeConfirmModal();
-};
 
 /* DELETE USER */
 function deleteUser() {
     const row = getSelectedRow();
-    if (!row) return;
+    if (!row) return alert("Please select a user first.");
 
     openConfirmModal(
         "Delete User",
@@ -77,21 +84,21 @@ function deleteUser() {
     );
 }
 
-/* SAVE (ADD / EDIT) */
-document.querySelector(".save-button").onclick = function () {
-
+/* SAVE DATA HANDLER */
+function handleSaveAction() {
     const modal = document.getElementById("userModal");
+    if (!modal) return;
+    
     const mode = modal.dataset.mode;
-
     const fullName = document.querySelector("#userModal input[type='text']").value;
     const email = document.querySelector("#userModal input[type='email']").value;
 
     const selects = document.querySelectorAll("#userModal select");
+    if (selects.length < 2) return;
     const role = selects[0].value;
     const status = selects[1].value;
 
     if (mode === "edit") {
-
         openConfirmModal(
             "Confirm Update",
             "Are you sure with the updates?",
@@ -105,19 +112,16 @@ document.querySelector(".save-button").onclick = function () {
                 row.cells[5].textContent = status;
 
                 const statusCell = row.cells[5];
-                statusCell.className = status === "Active"
-                    ? "status-active"
-                    : "status-inactive";
+                statusCell.className = status === "Active" ? "status-active" : "status-inactive";
 
                 closeModal();
                 applyFilters();
             }
         );
-
     } else {
         closeModal();
     }
-};
+}
 
 /* HELPERS */
 function getSelectedRow() {
@@ -137,50 +141,72 @@ const rowsPerPage = 7;
 let currentPage = 1;
 
 function searchUsers() {
-    filters.search = document.getElementById("searchInput").value.toLowerCase();
+    const searchInput = document.getElementById("searchInput");
+    filters.search = searchInput ? searchInput.value.toLowerCase().trim() : "";
     currentPage = 1;
     applyFilters();
 }
 
 function filterByRole() {
-    filters.role = document.getElementById("roleFilter").value.toLowerCase();
+    const roleSelect = document.getElementById("roleFilter");
+    if (roleSelect) {
+        const roleValue = roleSelect.value.toLowerCase().trim();
+        if (roleValue === "all" || roleValue === "all roles") {
+            filters.role = "all";
+        } else {
+            filters.role = roleValue;
+        }
+    }
     currentPage = 1;
     applyFilters();
 }
 
 function filterDates() {
-    filters.from = document.getElementById("fromDate").value;
-    filters.to = document.getElementById("toDate").value;
+    const fromInput = document.getElementById("fromDate");
+    const toInput = document.getElementById("toDate");
+    filters.from = fromInput ? fromInput.value : "";
+    filters.to = toInput ? toInput.value : "";
     currentPage = 1;
     applyFilters();
 }
 
 function applyFilters() {
     const table = document.getElementById("userTable");
-    const allRows = Array.from(table.querySelectorAll("tbody tr"));
+    if (!table) return;
+
+    const tbody = table.querySelector("tbody");
+    if (!tbody) return;
+
+    const allRows = Array.from(tbody.querySelectorAll("tr"));
 
     const filteredRows = allRows.filter(row => {
-        const text = row.textContent.toLowerCase();
-        const role = row.cells[4].textContent.trim().toLowerCase();
-        const rowDate = row.dataset.date;
+        if (!row.cells || row.cells.length < 6) return false;
 
-        return (
-            text.includes(filters.search) &&
-            (filters.role === "all" || role === filters.role) &&
-            (!filters.from || rowDate >= filters.from) &&
-            (!filters.to || rowDate <= filters.to)
-        );
+        const nameText = row.cells[2].textContent.toLowerCase();
+        const emailText = row.cells[3].textContent.toLowerCase();
+        const matchesSearch = nameText.includes(filters.search) || emailText.includes(filters.search);
+
+        const role = row.cells[4].textContent.trim().toLowerCase();
+        const matchesRole = (filters.role === "all" || role === filters.role);
+
+        const rowDate = row.dataset.date || "";
+        let matchesDateFrom = true;
+        let matchesDateTo = true;
+
+        if (filters.from) matchesDateFrom = (rowDate >= filters.from);
+        if (filters.to)   matchesDateTo = (rowDate <= filters.to);
+
+        return matchesSearch && matchesRole && matchesDateFrom && matchesDateTo;
     });
 
-    const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
     if (currentPage > totalPages) currentPage = 1;
 
     allRows.forEach(r => (r.style.display = "none"));
 
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-
-    filteredRows.slice(start, end).forEach(r => r.style.display = "");
+    filteredRows.slice(start, end).forEach(r => (r.style.display = ""));
 
     renderPagination(totalPages);
 }
@@ -188,6 +214,7 @@ function applyFilters() {
 /* PAGINATION */
 function renderPagination(totalPages) {
     const container = document.getElementById("pagination");
+    if (!container) return;
     container.innerHTML = "";
 
     if (totalPages <= 1) return;
@@ -220,7 +247,10 @@ function renderPagination(totalPages) {
 /* STATUS TOGGLE */
 function toggleStatus(button) {
     const row = button.closest("tr");
+    if (!row) return;
+
     const statusCell = row.querySelector(".status-active, .status-inactive");
+    if (!statusCell) return;
 
     const isActive = statusCell.classList.contains("status-active");
 
@@ -233,4 +263,21 @@ function toggleStatus(button) {
     button.classList.toggle("enable-button", isActive);
 }
 
-window.onload = applyFilters;
+document.addEventListener("DOMContentLoaded", () => {
+    const confirmYesBtn = document.getElementById("confirmYesBtn");
+    if (confirmYesBtn) {
+        confirmYesBtn.onclick = function () {
+            if (typeof confirmCallback === "function") confirmCallback();
+            closeConfirmModal();
+        };
+    }
+
+    const saveButton = document.querySelector(".save-button");
+    if (saveButton) {
+        saveButton.onclick = function () {
+            handleSaveAction();
+        };
+    }
+
+    applyFilters();
+});
