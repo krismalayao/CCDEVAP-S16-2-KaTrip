@@ -10,10 +10,4 @@ document.addEventListener("DOMContentLoaded", () => {
             panels.forEach(p => p.classList.toggle("active", p.id === target));
         });
     });
-
-    // document.querySelectorAll(".history-booking-card").forEach(card => {
-    //     card.addEventListener("click", () => {
-    //         window.location.href = `booking-details.html?id=${card.dataset.bookingId}`;
-    //     });
-    // });
 });

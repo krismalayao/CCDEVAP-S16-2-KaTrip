@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaTrip - Become a Driver</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/driverApplication.css">
+    <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+</head>
+<body class="driver-application-body">
+    <div id="navbar-mount"></div>
+
+    <div class="application-layout">
+        <h1 class="application-heading">Become a KaTrip Driver</h1>
+
+        <form class="application-form">
+            <!-- Driver's License Number Input -->
+            <div class="form-group">
+                <label for="license_number">Driver's License Number <span class="required">*</span></label>
+                <input type="text" id="license_number" placeholder="A01-23-456789" required>
+            </div>
+
+            <!-- Driver's License Image Upload -->
+            <div class="form-group">
+                <label>Upload Driver's License <span class="required">*</span></label>
+                <p class="upload-hint">Make sure the <span class="highlight">License Number</span> is clear and readable</p>
+                <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
+                    <input type="file" id="license_file" accept=".png, .jpg, .jpeg" hidden>
+                    <div class="upload-icon-placeholder"></div>
+                </div>
+            </div>
+
+            <div class="form-row-three">
+                <!-- Vehicle Model Input -->
+                <div class="form-group relative-input">
+                    <label for="vehicle_model">Vehicle Model <span class="required">*</span></label>
+                    <div class="search-input-wrapper">
+                        <input type="text" id="vehicle_model" required>
+                        <div class="search-icon-placeholder"></div>
+                    </div>
+                </div>
+                
+                <!-- Vehicle Plate Number Input -->
+                <div class="form-group">
+                    <label for="plate_number">Plate Number <span class="required">*</span></label>
+                    <input type="text" id="plate_number" placeholder="ABC 1234" required>
+                </div>
+                
+                <!-- Vehicle Color Input -->
+                <div class="form-group">
+                    <label for="vehicle_color">Color</label>
+                    <div class="select-wrapper">
+                        <select id="vehicle_color">
+                            <option value="" selected></option>
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="red">Red</option>
+                            <option value="blue">Blue</option>
+                            <option value="gray">Gray</option>
+                            <option value="brown">Brown</option>
+                            <option value="green">Green</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vehicle Image Upload -->
+            <div class="form-group">
+                <label>Upload Vehicle Picture <span class="required">*</span></label>
+                <p class="upload-hint">Make sure the <span class="highlight">front of the vehicle</span> and <span class="highlight">license plate</span> is clear and readable</p>
+                <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
+                    <input type="file" id="vehicle_file" accept=".png, .jpg, .jpeg" hidden>
+                    <div class="upload-icon-placeholder"></div>
+                </div>
+            </div>
+
+            <!-- Vehicle Registration Image Upload -->
+            <div class="form-group">
+                <label>Upload Vehicle Registration <span class="required">*</span></label>
+                <p class="upload-hint">To be submitted for verification and community accountability purposes</p>
+                <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
+                    <input type="file" id="registration_file" accept=".png, .jpg, .jpeg" hidden>
+                    <div class="upload-icon-placeholder"></div>
+                </div>
+            </div>
+
+            <!--Vehicle Insurance Image Upload -->
+            <div class="form-group">
+                <label>Upload Vehicle Insurance <span class="required">*</span></label>
+                <p class="upload-hint">To be submitted for verification and community accountability purposes</p>
+                <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
+                    <input type="file" id="insurance_file" accept=".png, .jpg, .jpeg" hidden>
+                    <div class="upload-icon-placeholder"></div>
+                </div>
+            </div>
+
+            <!-- Agreement Checkbox -->
+            <div class="form-checkbox-group">
+                <input type="checkbox" id="agreement_check" required>
+                <label for="agreement_check">
+                    I acknowledge that the submitted documents will be used for verification and safety purposes within the platform. <span class="required">*</span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="application-submit-btn">Submit</button>
+            </div>
+
+        </form>
+    </div>
+    
+    <script src="../components/navbar.js"></script>
+    <script src="../script/features.js"></script>
+</body>
+</html>
