@@ -894,7 +894,7 @@ body {
     max-width: 660px;
     border-radius: 12px;
     background: var(--bg-card);
-    padding: 0px 40px 0px 40px;
+    padding: 20px 40px 0px 40px;
 }
 
 .browserides-heading {
