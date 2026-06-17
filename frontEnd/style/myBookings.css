@@ -59,7 +59,7 @@
     font-family: 'Helvetica Now', sans-serif;
     font-weight: 600;
     font-size: 13px;
-    color: #5c2d91;
+    color: var(--purple-dark);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,7 +76,7 @@
 }
 
 .tab-btn.active {
-    background-color: #5c2d91;
+    background-color: var(--purple-dark);
     color: #ffffff;
 }
 
@@ -134,11 +134,11 @@
     align-items: center;
     gap: 10px;
     font-size: 0.95rem;
-    color: #333333;
+    color: var(--text-grey);
 }
 
 .route-point strong {
-    color: #5c2d91;
+    color: var(--purple-dark);
     min-width: 45px;
 }
 

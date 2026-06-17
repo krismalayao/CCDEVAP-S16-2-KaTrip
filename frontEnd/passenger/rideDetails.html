@@ -16,6 +16,7 @@
     <div class="browserides-layout">
         <main class="browserides-main ride-details-container">
             
+            <!-- Back Nav Button -->
             <div class="back-navigation">
                 <a href="browseRides.html" class="back-link">
                     &larr; Back to Browse Rides
@@ -24,12 +25,15 @@
 
             <h2 class="browserides-heading">Trip Details</h2>
 
+            <!-- Ride Details -->
             <div class="bookings-card detail-card">
+                <!-- Ride Details Heading -->
                 <div class="bookings-card-heading">
                     <span class="browserides-ride-route" id="detail-route">MANILA &rarr; ESPANA</span>
                     <span class="status-badge approved" id="detail-status">Active</span>
                 </div>
 
+                <!-- Ride Routes -->
                 <div class="booking-route route-section">
                     <div class="route-point">
                         <span class="dot pickup"></span>
@@ -41,6 +45,7 @@
                     </div>
                 </div>
 
+                <!-- Ride Availability and Departure Date & Time -->
                 <div class="browserides-ride-meta">
                     <div class="browserides-meta-item">
                         <span class="browserides-meta-label">Departure Time</span>
@@ -58,6 +63,7 @@
                     </div>
                 </div>
 
+                <!-- Driver Information -->
                 <div class="driver-info-snippet">
                     <div class="driver-avatar-mini"></div>
                     <div>
@@ -67,10 +73,12 @@
                 </div>
 
                 <div class="booking-card-footer">
+                    <!-- Ride Fare -->
                     <div>
                         <span class="browserides-meta-label fare-label">ESTIMATED FARE</span>
                         <span class="booking-price" id="detail-fare">₱92.33</span>
                     </div>
+                    <!-- Reserve Button-->
                     <button id="reserve-btn" class="contact-driver-btn reserve-action-btn">
                         Reserve a Seat
                     </button>
