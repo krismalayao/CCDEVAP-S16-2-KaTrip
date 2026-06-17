@@ -1798,3 +1798,340 @@ body {
     color: white;
 }
 /* END OF RESERVATION BADGE */
+
+/* CREATE RIDE FORM */
+.create-ride-wrap * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.create-ride-wrap {
+    font-family: 'Helvetica Now', system-ui, sans-serif;
+    background: var(--bg);
+    padding: 20px 16px 24px;
+    max-width: 380px;
+    border-radius: 20px;
+}
+
+.create-ride-title {
+    font-family: 'Bloc', system-ui, sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: var(--purple-dark);
+    margin-bottom: 16px;
+}
+
+.create-ride-card {
+    background: var(--bg-card);
+    border-radius: 14px;
+    padding: 14px 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.create-ride-route {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.create-ride-route-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 13px;
+    gap: 3px;
+}
+
+.create-ride-icon-circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--purple);
+    flex-shrink: 0;
+}
+
+.create-ride-icon-circle-red {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--pickup);
+    flex-shrink: 0;
+}
+
+.create-ride-icon-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--purple-light);
+    flex-shrink: 0;
+}
+
+.create-ride-icon-pin {
+    font-size: 14px;
+    line-height: 1;
+    color: var(--pickup);
+}
+
+.create-ride-route-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.create-ride-swap-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--purple);
+    font-size: 18px;
+    align-self: center;
+    padding: 4px;
+    transition: transform 0.2s;
+}
+
+.create-ride-swap-btn:hover {
+    transform: rotate(180deg);
+}
+
+.create-ride-est {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--purple-faint);
+    border-radius: 8px;
+    padding: 7px 10px;
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--purple);
+}
+
+.create-ride-select,
+.create-ride-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--purple-light);
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Helvetica Now', system-ui, sans-serif;
+    color: var(--purple-dark);
+    background: var(--bg-card);
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.create-ride-select:focus,
+.create-ride-input:focus {
+    border-color: var(--purple);
+}
+
+.create-ride-select-wrap {
+    position: relative;
+}
+
+.create-ride-select-wrap::after {
+    content: "▾";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--purple);
+    pointer-events: none;
+    font-size: 13px;
+}
+
+.create-ride-pickup-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.create-ride-pickup-row .create-ride-select-wrap {
+    flex: 1;
+}
+
+.create-ride-pickup-dot {
+    color: var(--purple);
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.create-ride-pickup-remove {
+    background: none;
+    border: none;
+    color: var(--icon-muted);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.create-ride-pickup-remove:hover {
+    color: var(--danger);
+}
+
+.create-ride-pickup-handle {
+    color: var(--icon-muted);
+    font-size: 15px;
+    cursor: grab;
+    user-select: none;
+}
+
+.create-ride-add-pickup-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--purple);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Helvetica Now', system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0 0;
+    transition: color 0.15s;
+}
+
+.create-ride-add-pickup-btn:hover {
+    color: var(--purple-dark);
+}
+
+.create-ride-add-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.create-ride-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.create-ride-field-label {
+    font-size: 11px;
+    color: var(--purple);
+    font-weight: 700;
+    font-family: 'Helvetica Now', system-ui, sans-serif;
+    margin-bottom: 5px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.create-ride-counter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 2px;
+}
+
+.create-ride-counter-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--purple-light);
+    background: var(--bg-card);
+    color: var(--purple);
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.create-ride-counter-btn:hover {
+    background: var(--purple-faint);
+    border-color: var(--purple);
+}
+
+.create-ride-counter-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    min-width: 20px;
+    text-align: center;
+}
+
+.create-ride-fare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0 14px;
+}
+
+.create-ride-fare-label {
+    font-size: 13px;
+    color: var(--purple-dark);
+    font-weight: 500;
+    font-family: 'Helvetica Now', system-ui, sans-serif;
+}
+
+.create-ride-fare-amount {
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Bloc', system-ui, sans-serif;
+    color: var(--purple-dark);
+    letter-spacing: 0.5px;
+}
+
+.create-ride-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Helvetica Now', system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 14px rgba(100, 60, 200, 0.3);
+}
+
+.create-ride-submit-btn:hover {
+    background: var(--purple-dark);
+}
+
+.create-ride-submit-btn:active {
+    transform: scale(0.98);
+}
+
+#create-ride-toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--purple);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-family: 'Helvetica Now', sans-serif;
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+#create-ride-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+/* END OF CREATE RIDE FORM */
