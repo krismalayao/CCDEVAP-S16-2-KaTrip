@@ -192,3 +192,113 @@ function initApplicationUploadPreview() {
         });
     });
 }
+
+// Browse Rides Filtering 
+const rides = [
+  { id: 1, route: 'MANILA → ESPANA',    destination: 'españa',    time: '7:00 am', time24: '07:00', date: '26 MAY 2026', capacity: '3 / 4', capacityColor: '#22c55e', fare: 'PHP 92.33' },
+  { id: 2, route: 'MANILA → QUIAPO',    destination: 'quiapo',    time: '6:30 am', time24: '06:30', date: '26 MAY 2026', capacity: '2 / 4', capacityColor: '#f97316', fare: 'PHP 55.00' },
+  { id: 3, route: 'MANILA → DIVISORIA', destination: 'divisoria', time: '8:15 am', time24: '08:15', date: '26 MAY 2026', capacity: '4 / 4', capacityColor: '#ef4444', fare: 'PHP 40.50' },
+];
+
+// Card rendering
+function renderRides(list) {
+  const rideList = document.getElementById('ride-list');
+  if (!rideList) return;
+
+  if (list.length === 0) {
+    rideList.innerHTML = '<p class="browserides-empty">No rides match your filter.</p>';
+    return;
+  }
+
+  let html = '';
+
+  for (let i = 0; i < list.length; i++) {
+    let r = list[i];
+    html += `
+      <div class="browserides-ride-card">
+        <div class="browserides-ride-top">
+          <span class="browserides-ride-route">${r.route}</span>
+          <a href="rideDetails.html?id=${r.id}" class="browserides-view-btn">View</a>
+        </div>
+        <div class="browserides-ride-meta">
+          <div class="browserides-meta-item">
+            <span class="browserides-meta-label">TIME:</span>
+            <span class="browserides-meta-value">${r.time}</span>
+          </div>
+          <div class="browserides-meta-item">
+            <span class="browserides-meta-label">DATE:</span>
+            <span class="browserides-meta-value">${r.date}</span>
+          </div>
+          <div class="browserides-meta-item">
+            <span class="browserides-meta-label">CAPACITY:</span>
+            <span class="browserides-capacity-badge" style="background:${r.capacityColor}">${r.capacity}</span>
+          </div>
+          <div class="browserides-meta-item">
+            <span class="browserides-meta-label">FARE:</span>
+            <span class="browserides-meta-value">${r.fare}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  rideList.innerHTML = html;
+}
+
+function getFilteredRides() {
+  const dest = document.getElementById('destination-select').value;
+  let result = [];
+
+  for (let i = 0; i < rides.length; i++) {
+    if (dest === '' || rides[i].destination === dest) {
+      result.push(rides[i]);
+    }
+  }
+
+  return result;
+}
+
+function sortByTime() {
+  let sorted = [...rides];
+  sorted.sort(function(a, b) {
+    if (a.time24 < b.time24) return -1;
+    if (a.time24 > b.time24) return 1;
+    return 0;
+  });
+  return sorted;
+}
+
+if (document.getElementById('ride-list')) {
+
+  renderRides(rides);
+
+  let filterBtns = document.querySelectorAll('.browserides-filter-btn');
+
+  for (let i = 0; i < filterBtns.length; i++) {
+    filterBtns[i].addEventListener('click', function() {
+
+      for (let j = 0; j < filterBtns.length; j++) {
+        filterBtns[j].classList.remove('active');
+      }
+      this.classList.add('active');
+
+      let panels = document.querySelectorAll('.browserides-filter-panel');
+      for (let k = 0; k < panels.length; k++) {
+        panels[k].classList.add('hidden');
+      }
+      document.getElementById('panel-' + this.dataset.filter).classList.remove('hidden');
+
+      if (this.dataset.filter === 'departure') {
+        renderRides(sortByTime());
+      } else {
+        renderRides(getFilteredRides());
+      }
+
+    });
+  }
+
+  document.getElementById('destination-select').addEventListener('change', function() {
+    renderRides(getFilteredRides());
+  });
+
+}
