@@ -1,4 +1,4 @@
-/* Passenger Profile Page */
+/* User Profile CSS */
 .profile-container {
     max-width: 900px;
     width: 90%;
@@ -140,7 +140,8 @@
     flex-direction: column;
 }
 
-.profile-field-group label {
+.profile-field-group label,
+.driver-profile-group label {
     font-size: 13px;
     font-weight: bold;
     margin-bottom: 6px;
@@ -280,11 +281,46 @@
     text-decoration: underline;
 }
 
+.profile-status-static {
+    background-color: var(--purple-faint);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-family: 'Helvetica Now', sans-serif;
+    font-size: 13px;
+    font-weight: bold;
+    color: black;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 38px;
+}
+
+.profile-status-static .status-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.profile-driver-details-row {
+    grid-column: 1 / -1; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 @media (max-width: 768px) {
     .profile-details {
         grid-template-columns: 1fr;
         gap: 15px;
         padding: 20px;
+    }
+
+    .profile-driver-details-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .profile-account-actions {

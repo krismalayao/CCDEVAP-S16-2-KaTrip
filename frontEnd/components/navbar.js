@@ -1,12 +1,12 @@
 document.getElementById('navbar-mount').innerHTML = `
 <header class="nav">
     <div class="nav-inner">
-        <a class="nav-brand" href="passengerDashboard.html">
+        <a class="nav-brand" href="driverDashboard.html">
             <img class="nav-logo-img" src="../src/images/katrip_logo.svg" alt="KaTrip logo" />
             <span class="nav-logo-text">KaTrip</span>
         </a>
         <nav class="nav-links">
-            <a class="nav-link" href="../passenger/myBookings.html">View Bookings</a>
+            <a class="nav-link" href="#">View Bookings</a>
             <a class="nav-link" href="../passenger/browseRides.html">Browse Rides</a>
             <a class="nav-link" href="../driver/driverDashboard.html">Create Ride</a>
         </nav>
@@ -16,7 +16,7 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
                 <span class="nav-menu-bar"></span>
             </button>
-            <a class="nav-profile-btn" href="../passenger/passengerProfile.html" aria-label="Profile">
+            <a class="nav-profile-btn" href="../driver/driverProfile.html" aria-label="Profile">
                 <span class="nav-profile-initials">JD</span>
             </a>
         </div>

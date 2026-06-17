@@ -3,14 +3,13 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>KaTrip - Passenger Profile</title>
+        <title>KaTrip - Driver Profile</title>
         <link rel="stylesheet" href="../style/style.css">
         <link rel="stylesheet" href="../style/navbar.css">
         <link rel="stylesheet" href="../style/userProfile.css">
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
     </head>
-    <body class="passenger-profile-body">
-        <!-- TO DO: Change Nav Bar -->
+    <body class="driver-profile-body">
         <div id="navbar-mount"></div>
 
         <div class="profile-container">
@@ -77,6 +76,36 @@
                     </div>
                 </div>
 
+                <!-- Bottom Row: New 3-Column Layout Block -->
+                <div class="profile-driver-details-row">
+                    <!-- Vehicle Model -->
+                    <div class="driver-profile-group">
+                        <label for="profile-vehicle-model">Vehicle Model</label>
+                        <div class="profile-input-wrapper">
+                            <input type="text" id="profile-vehicle-model" name="vehicle-model" value="Honda City">
+                            <button class="profile-field-edit-btn" aria-label="Edit vehicle model"></button>
+                        </div>
+                    </div>
+
+                    <!-- License Plate -->
+                    <div class="driver-profile-group">
+                        <label for="profile-license-plate">License Plate</label>
+                        <div class="profile-input-wrapper">
+                            <input type="text" id="profile-license-plate" name="license-plate" value="ABC 1234">
+                            <button class="profile-field-edit-btn" aria-label="Edit license plate"></button>
+                        </div>
+                    </div>
+
+                    <!-- Driver Verification Status -->
+                    <div class="driver-profile-group">
+                        <label for="profile-status">Status</label>
+                        <div class="profile-input-wrapper profile-status-static">
+                            <span class="status-text">Approved</span>
+                            <img src="../src/images/black-approved-icon.png" class="status-icon" alt="Approved Status">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Account Creation Date -->
                 <div class="profile-metadata">
                     <p>Created at 2026-05-30</p>
@@ -88,13 +117,8 @@
         <div class="profile-account-actions">
             <button type="button" class="profile-logout-btn">Log Out</button>
         </div>
-        
-        <!-- CTA -->
-        <div class="profile-cta-container">
-            <a href="driverApplication.html" class="profile-cta-text">Become a KaTrip Driver</a>
-        </div>
 
-        <script src="../components/navbarPassenger.js"></script>
+        <script src="../components/navbar.js"></script>
         <script src="../components/profile.js"></script>
     </body>
 </html>
