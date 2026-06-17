@@ -13,6 +13,7 @@
 
     <div class="browserides-layout">
         <main class="browserides-main">
+
             <div class="back-navigation">
                 <a href="passengerDashboard.html" class="back-link">
                     &larr; Back to Dashboard
@@ -23,132 +24,47 @@
             <div class="browserides-card">
 
                 <div class="browserides-filters">
-                    <button class="browserides-filter-btn active">
-                        <img src="../src/images/marker-icon.png" class="filter-icon">
-                        Destination
+                    <button class="browserides-filter-btn active" data-filter="destination">
+                        <span class="filter-icon">
+                            <img src="../src/images/marker-icon.png" class="filter-icon">
+                        </span> Destination
                     </button>
-                    <button class="browserides-filter-btn">
-                        <img src="../src/images/clock-icon.png" class="filter-icon">
-                        Departure
+                    <button class="browserides-filter-btn" data-filter="departure">
+                        <span class="filter-icon">
+                            <img src="../src/images/clock-icon.png" class="filter-icon">
+                        </span> Departure Time
                     </button>
-                    <button class="browserides-filter-btn">
-                        <img src="../src/images/car-icon.png" class="filter-icon">
-                        Driver
+                    <button class="browserides-filter-btn" data-filter="pickup">
+                        <span class="filter-icon">
+                            <img src="../src/images/car-icon.png" class="filter-icon">
+                        </span> Pickup Point
                     </button>
                 </div>
 
-                <!-- static for now, change to dynamic in phase 2 -->
-                <div class="browserides-filter-panel">
-                    <select class="browserides-destination-select">
-                        <option>All destinations</option>
-                        <option>España, Manila</option>
-                        <option>Quiapo, Manila</option>
-                        <option>Divisoria, Manila</option>
-                        <option>Tondo, Manila</option>
-                        <option>Malate, Manila</option>
-                        <option>Ermita, Manila</option>
-                    </select>
+                <div class="browserides-filter-panel" id="panel-destination">
+                    <div class="browserides-destination-select-wrap">
+                        <select class="browserides-destination-select" id="destination-select">
+                            <option value="">All destinations</option>
+                            <option value="españa">Espana, Manila</option>
+                            <option value="quiapo">Quiapo, Manila</option>
+                            <option value="divisoria">Divisoria, Manila</option>
+                            <option value="tondo">Tondo, Manila</option>
+                            <option value="malate">Malate, Manila</option>
+                            <option value="ermita">Ermita, Manila</option>
+                        </select>
+                        <span class="browserides-select-arrow">▾</span>
+                    </div>
                 </div>
 
-                <!-- Hard coded rde list -->
-                <div class="browserides-ride-list">
-
-                    <div class="browserides-ride-card">
-                        <div class="browserides-ride-top">
-                            <span class="browserides-ride-route">MANILA → ESPANA</span>
-                            <a href="rideDetails.html?id=1" class="browserides-view-btn">View</a>
-                        </div>
-
-                        <div class="browserides-ride-meta">
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">TIME:</span>
-                                <span class="browserides-meta-value">7:00 am</span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">DATE:</span>
-                                <span class="browserides-meta-value">26 MAY 2026</span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">CAPACITY:</span>
-                                <span class="browserides-capacity-badge" style="background:#22c55e">
-                                    3 / 4
-                                </span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">FARE:</span>
-                                <span class="browserides-meta-value">PHP 92.33</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2nd card -->
-                    <div class="browserides-ride-card">
-                        <div class="browserides-ride-top">
-                            <span class="browserides-ride-route">MANILA → QUIAPO</span>
-                            <a href="rideDetails.html?id=2" class="browserides-view-btn">View</a>
-                        </div>
-
-                        <div class="browserides-ride-meta">
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">TIME:</span>
-                                <span class="browserides-meta-value">6:30 am</span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">DATE:</span>
-                                <span class="browserides-meta-value">26 MAY 2026</span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">CAPACITY:</span>
-                                <span class="browserides-capacity-badge" style="background:#f97316">
-                                    2 / 4
-                                </span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">FARE:</span>
-                                <span class="browserides-meta-value">PHP 55.00</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3rd card -->
-                    <div class="browserides-ride-card">
-                        <div class="browserides-ride-top">
-                            <span class="browserides-ride-route">MANILA → DIVISORIA</span>
-                            <a href="rideDetails.html?id=3" class="browserides-view-btn">View</a>
-                        </div>
-
-                        <div class="browserides-ride-meta">
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">TIME:</span>
-                                <span class="browserides-meta-value">8:15 am</span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">DATE:</span>
-                                <span class="browserides-meta-value">26 MAY 2026</span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">CAPACITY:</span>
-                                <span class="browserides-capacity-badge" style="background:#ef4444">
-                                    4 / 4
-                                </span>
-                            </div>
-
-                            <div class="browserides-meta-item">
-                                <span class="browserides-meta-label">FARE:</span>
-                                <span class="browserides-meta-value">PHP 40.50</span>
-                            </div>
-                        </div>
-                    </div>
-
+                <div class="browserides-filter-panel hidden" id="panel-departure">
+                    <p class="browserides-filter-hint">Showing earliest departures first</p>
                 </div>
+
+                <div class="browserides-filter-panel hidden" id="panel-pickup">
+                    <p class="browserides-filter-hint">Showing rides nearest to your location first</p>
+                </div>
+
+                <div class="browserides-ride-list" id="ride-list"></div>
 
             </div>
 
