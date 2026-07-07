@@ -86,7 +86,7 @@ function initStaticRegistration() {
         }
         const dataPayload = new FormData(regForm);
 
-        fetch("/CCDEVAP-S16-2-KaTrip/backend/registrationProcess/register_process.php", {
+        fetch("/CCDEVAP-S16-2-KaTrip/backend/registrationProcess/registerProcess.php", {
             method: "POST",
             body: dataPayload
         })
@@ -129,7 +129,7 @@ function initStaticRegistration() {
         const verificationPayload = new FormData();
         verificationPayload.append('otp_code', enteredOTP); // Appends a new array value which is otp_code, to be used in verify_otp
 
-        fetch("/CCDEVAP-S16-2-KaTrip/backend/registrationProcess/verify_otp.php", {
+        fetch("/CCDEVAP-S16-2-KaTrip/backend/registrationProcess/verifyOTP.php", {
             method: "POST",
             body: verificationPayload
         })
