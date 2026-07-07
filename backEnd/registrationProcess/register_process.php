@@ -1,13 +1,14 @@
 <?php
     header("Content-Type: application/json");
 
+    require '../PHPMailer/Exception.php';
+    require '../PHPMailer/SMTP.php';
+    require '../PHPMailer/PHPMailer.php';
+
     // Import PHPMailer Files
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
-
-    require 'PHPMailer/Exception.php';
-    require 'PHPMailer/PHPMailer.php';
-    require 'PHPMailer/SMTP.php';
+    use PHPMailer\PHPMailer\SMTP;
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();

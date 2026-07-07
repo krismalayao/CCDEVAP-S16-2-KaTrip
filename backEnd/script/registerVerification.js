@@ -86,7 +86,7 @@ function initStaticRegistration() {
         }
         const dataPayload = new FormData(regForm);
 
-        fetch("../../backend/register_process.php", {
+        fetch("/CCDEVAP-S16-2-KaTrip/backend/registrationProcess/register_process.php", {
             method: "POST",
             body: dataPayload
         })
@@ -129,7 +129,7 @@ function initStaticRegistration() {
         const verificationPayload = new FormData();
         verificationPayload.append('otp_code', enteredOTP); // Appends a new array value which is otp_code, to be used in verify_otp
 
-        fetch("../../backend/verify_otp.php", {
+        fetch("/CCDEVAP-S16-2-KaTrip/backend/registrationProcess/verify_otp.php", {
             method: "POST",
             body: verificationPayload
         })
@@ -142,9 +142,9 @@ function initStaticRegistration() {
                 
                 setTimeout(() => {
                     if (driverCheckbox.checked) {
-                        window.location.href = '../driver/driverApplication.html';
+                        window.location.href = '../../frontEnd/driver/driverApplication.html';
                     } else {
-                        window.location.href = "loginPage.html";
+                        window.location.href = "../../frontEnd/public/loginPage.html";
                     }
                 }, 2000);
             } else {
