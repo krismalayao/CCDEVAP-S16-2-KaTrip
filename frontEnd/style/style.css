@@ -202,6 +202,44 @@ body {
     letter-spacing: 1px;
 }
 
+.charts {
+    max-width: 720px;
+    width: 90%;
+    margin: 0 auto 30px auto;
+    padding: 22px 20px 18px;
+    background: var(--bg-card);
+    border-radius: 18px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.charts h4 {
+    margin: 0 0 18px;
+    font-size: 22px;
+    color: var(--purple-dark);
+    font-family: 'Bloc';
+    letter-spacing: 1px;
+}
+
+#rides-chart {
+    width: 100%;
+    max-width: 660px;
+    height: 260px;
+    margin: 0 auto;
+    display: block;
+}
+
+.charts {
+    width: 320px;
+    height: 220px;
+}
+
+.rides-chart {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
 .passenger-dashboard-card-actions {
     display: flex;
     background: var(--bg-card);
