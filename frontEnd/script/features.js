@@ -5,7 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
     initStaticLogin();
     initStaticRegistration();
     initRideDetail();
-    initApplicationUploadPreview()
+    initApplicationUploadPreview();
+    initBrowseRidesAutocomplete();
 });
 
 // Toggling See Password Button/Icon
@@ -212,13 +213,25 @@ function initApplicationUploadPreview() {
 }
 
 // Script for Browse Rides Filtering
-const rides = [
-  { id: 1, route: 'MANILA → ESPANA',    destination: 'españa',    time: '7:00 am', time24: '07:00', date: '26 MAY 2026', capacity: '3 / 4', capacityColor: '#22c55e', fare: 'PHP 92.33' },
-  { id: 2, route: 'MANILA → QUIAPO',    destination: 'quiapo',    time: '6:30 am', time24: '06:30', date: '26 MAY 2026', capacity: '2 / 4', capacityColor: '#f97316', fare: 'PHP 55.00' },
-  { id: 3, route: 'MANILA → DIVISORIA', destination: 'divisoria', time: '8:15 am', time24: '08:15', date: '26 MAY 2026', capacity: '4 / 4', capacityColor: '#ef4444', fare: 'PHP 40.50' },
+const browseRideDestinations = [
+  'Espana, Manila',
+  'Quiapo, Manila',
+  'Divisoria, Manila'
 ];
 
-// Card rendering
+const rides = [
+  { id: 1, route: 'MANILA → ESPANA', destination: 'Espana, Manila', destinationSearch: 'españa', time: '7:00 am', time24: '07:00', date: '26 MAY 2026', capacity: '3 / 4', capacityColor: '#22c55e', fare: 'PHP 92.33' },
+  { id: 2, route: 'MANILA → QUIAPO', destination: 'Quiapo, Manila', destinationSearch: 'quiapo', time: '6:30 am', time24: '06:30', date: '26 MAY 2026', capacity: '2 / 4', capacityColor: '#f97316', fare: 'PHP 55.00' },
+  { id: 3, route: 'MANILA → DIVISORIA', destination: 'Divisoria, Manila', destinationSearch: 'divisoria', time: '8:15 am', time24: '08:15', date: '26 MAY 2026', capacity: '4 / 4', capacityColor: '#ef4444', fare: 'PHP 40.50' },
+];
+
+function normalizeText(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+
 function renderRides(list) {
   const rideList = document.getElementById('ride-list');
   if (!rideList) return;
@@ -264,16 +277,21 @@ function renderRides(list) {
 }
 
 function getFilteredRides() {
-  const dest = document.getElementById('destination-select').value;
-  let result = [];
+  const destinationInput = document.getElementById('destination-input');
+  const query = destinationInput ? destinationInput.value.trim() : '';
+  const normalizedQuery = normalizeText(query);
 
-  for (let i = 0; i < rides.length; i++) {
-    if (dest === '' || rides[i].destination === dest) {
-      result.push(rides[i]);
-    }
+  if (!normalizedQuery) {
+    return rides;
   }
 
-  return result;
+  return rides.filter((ride) => {
+    return (
+      normalizeText(ride.destination).includes(normalizedQuery) ||
+      normalizeText(ride.destinationSearch).includes(normalizedQuery) ||
+      normalizeText(ride.route).includes(normalizedQuery)
+    );
+  });
 }
 
 function sortByTime() {
@@ -286,18 +304,79 @@ function sortByTime() {
   return sorted;
 }
 
-if (document.getElementById('ride-list')) {
+function initBrowseRidesAutocomplete() {
+  const rideList = document.getElementById('ride-list');
+  const destinationInput = document.getElementById('destination-input');
+  const suggestionsBox = document.getElementById('destination-suggestions');
+  const destinationForm = document.getElementById('destination-form');
+
+  if (!rideList || !destinationInput || !suggestionsBox || !destinationForm) return;
+
+  function showSuggestions(query = '') {
+    const normalizedQuery = normalizeText(query);
+    const suggestions = browseRideDestinations.filter((destination) => {
+      if (!normalizedQuery) return true;
+      return normalizeText(destination).includes(normalizedQuery);
+    }).slice(0, 5);
+
+    if (!suggestions.length) {
+      suggestionsBox.classList.remove('show');
+      suggestionsBox.innerHTML = '';
+      return;
+    }
+
+    suggestionsBox.innerHTML = suggestions
+      .map((destination) => `<button type="button" class="browserides-suggestion">${destination}</button>`)
+      .join('');
+    suggestionsBox.classList.add('show');
+  }
+
+  function hideSuggestions() {
+    suggestionsBox.classList.remove('show');
+  }
+
+  function applyDestinationFilter(value = destinationInput.value) {
+    destinationInput.value = value;
+    renderRides(getFilteredRides());
+  }
 
   renderRides(rides);
+
+  destinationInput.addEventListener('focus', () => showSuggestions(destinationInput.value));
+  destinationInput.addEventListener('input', () => {
+    showSuggestions(destinationInput.value);
+    applyDestinationFilter(destinationInput.value);
+  });
+
+  destinationForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    applyDestinationFilter(destinationInput.value);
+    hideSuggestions();
+  });
+
+  suggestionsBox.addEventListener('click', (event) => {
+    const suggestion = event.target.closest('.browserides-suggestion');
+    if (!suggestion) return;
+
+    destinationInput.value = suggestion.textContent.trim();
+    applyDestinationFilter(destinationInput.value);
+    hideSuggestions();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!destinationInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+      hideSuggestions();
+    }
+  });
 
   let filterBtns = document.querySelectorAll('.browserides-filter-btn');
 
   for (let i = 0; i < filterBtns.length; i++) {
     filterBtns[i].addEventListener('click', function() {
-
       for (let j = 0; j < filterBtns.length; j++) {
         filterBtns[j].classList.remove('active');
       }
+
       this.classList.add('active');
 
       let panels = document.querySelectorAll('.browserides-filter-panel');
@@ -311,12 +390,6 @@ if (document.getElementById('ride-list')) {
       } else {
         renderRides(getFilteredRides());
       }
-
     });
   }
-
-  document.getElementById('destination-select').addEventListener('change', function() {
-    renderRides(getFilteredRides());
-  });
-
 }
