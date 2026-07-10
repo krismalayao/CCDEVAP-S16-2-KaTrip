@@ -503,6 +503,18 @@ body {
     transition: border-color 0.2s ease;
 }
 
+.browserides-panel-destination {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height:100vh;
+}
+
+.destination-input {
+    justify-content: center;
+    font-family: 'Helvetica Now';
+}
+
 .browserides-destination-select:focus {
     border-color: var(--purple);
 }
@@ -617,6 +629,76 @@ body {
     font-family: 'Bloc', sans-serif;
     padding: 20px 0 6px 0;
     opacity: 0.7;
+}
+
+/* NEW ADDED */
+.browserides-form {
+    display: flex;
+    justify-content: center;
+}
+
+.browserides-input-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+}
+
+.browserides-input {
+    width: 100%;
+    box-sizing: border-box;
+
+    background: var(--bg-card);
+    border: 1.5px solid var(--purple-light);
+    border-radius: 10px;
+
+    padding: 10px 14px;
+
+    font-family: 'Helvetica Now', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--purple-dark);
+
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.browserides-input:focus {
+    border-color: var(--purple);
+}
+
+.browserides-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    display: none;
+    background: var(--bg-card);
+    border: 1px solid var(--purple-light);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(100, 55, 160, 0.12);
+    overflow: hidden;
+    z-index: 20;
+}
+
+.browserides-suggestions.show {
+    display: block;
+}
+
+.browserides-suggestion {
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    font-family: 'Helvetica Now', sans-serif;
+    font-size: 14px;
+    color: var(--purple-dark);
+    cursor: pointer;
+}
+
+.browserides-suggestion:hover,
+.browserides-suggestion.active {
+    background: var(--purple-faint);
 }
 
 @media (max-width: 600px) {
