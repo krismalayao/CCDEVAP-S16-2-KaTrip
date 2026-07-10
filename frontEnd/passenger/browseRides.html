@@ -36,18 +36,12 @@
                 </div>
 
                 <div class="browserides-filter-panel" id="panel-destination">
-                    <div class="browserides-destination-select-wrap">
-                        <select class="browserides-destination-select" id="destination-select">
-                            <option value="">All destinations</option>
-                            <option value="españa">Espana, Manila</option>
-                            <option value="quiapo">Quiapo, Manila</option>
-                            <option value="divisoria">Divisoria, Manila</option>
-                            <option value="tondo">Tondo, Manila</option>
-                            <option value="malate">Malate, Manila</option>
-                            <option value="ermita">Ermita, Manila</option>
-                        </select>
-                        <span class="browserides-select-arrow">▾</span>
-                    </div>
+                    <form class="browserides-form" id="destination-form">
+                        <div class="browserides-input-wrapper">
+                            <input class="browserides-input" id="destination-input" type="text" placeholder="Enter destination" autocomplete="off">
+                            <div class="browserides-suggestions" id="destination-suggestions" aria-label="Destination suggestions"></div>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="browserides-filter-panel hidden" id="panel-departure">
