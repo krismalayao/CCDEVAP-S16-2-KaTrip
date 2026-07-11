@@ -6,16 +6,16 @@ function initNavbar() {
     mountPoint.innerHTML = `
     <header class="nav">
         <div class="nav-inner">
-            <a class="nav-brand" href="adminDashboard.html">
+            <a class="nav-brand" href="adminDashboard.php">
                 <img class="nav-logo-img" src="../src/images/katrip_logo.svg" alt="KaTrip logo" />
                 <span class="nav-logo-text">KaTrip</span>
             </a>
             
             <nav class="nav-links">
-                <a class="nav-link" href="adminDashboard.html">Dashboard</a>
-                <a class="nav-link" href="userManagement.html">User Management</a>
-                <a class="nav-link" href="tripManagement.html">Trip Management</a>
-                <a class="nav-link" href="driverVerification.html">Driver Verification</a>
+                <a class="nav-link" href="adminDashboard.php">Dashboard</a>
+                <a class="nav-link" href="userManagement.php">User Management</a>
+                <a class="nav-link" href="tripManagement.php">Trip Management</a>
+                <a class="nav-link" href="driverVerification.php">Driver Verification</a>
                 <button class="nav-link nav-logout-btn" id="nav-logout-desktop">Logout</button>
             </nav>
 
@@ -30,10 +30,10 @@ function initNavbar() {
         </div>
 
         <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
-            <a class="nav-dropdown-link" href="adminDashboard.html">Dashboard</a>
-            <a class="nav-dropdown-link" href="userManagement.html">User Management</a>
-            <a class="nav-dropdown-link" href="tripManagement.html">Trip Management</a>
-            <a class="nav-dropdown-link" href="driverVerification.html">Driver Verification</a>
+            <a class="nav-dropdown-link" href="adminDashboard.php">Dashboard</a>
+            <a class="nav-dropdown-link" href="userManagement.php">User Management</a>
+            <a class="nav-dropdown-link" href="tripManagement.php">Trip Management</a>
+            <a class="nav-dropdown-link" href="driverVerification.php">Driver Verification</a>
             <hr class="nav-dropdown-divider" />
             <button class="nav-dropdown-link nav-logout-btn" id="nav-logout-mobile">Logout</button>
         </div>
