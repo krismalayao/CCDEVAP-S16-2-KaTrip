@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             console.log("User logged out successfully. Redirecting...");
 
-            window.location.href = "../public/loginPage.html"; 
+            window.location.href = "../public/loginPage.php"; 
         });
     }
 });
