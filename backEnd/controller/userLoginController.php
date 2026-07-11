@@ -30,7 +30,7 @@
             header("Location: ../../frontEnd/driver/driverDashboard.html");
             exit();
         } else {
-            header("Location: ../../frontEnd/passenger/passengerDashboard.html");
+            header("Location: ../../frontEnd/passenger/passengerDashboard.php");
             exit();
         }
     } else {
