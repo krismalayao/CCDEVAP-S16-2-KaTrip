@@ -67,7 +67,7 @@ function initNavbar() {
     });
 
     const handleLogout = () => {
-        window.location.href = '../public/loginPage.html'; 
+        window.location.href = '../../backEnd/controller/logoutController.php'; 
     };
 
     const logoutDesktop = document.getElementById('nav-logout-desktop');
