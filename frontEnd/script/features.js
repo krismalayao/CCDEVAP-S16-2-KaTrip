@@ -2,7 +2,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     initPasswordToggle();
     initPhoneFormatter();
-    initStaticLogin();
     initStaticRegistration();
     initRideDetail();
     initApplicationUploadPreview();
@@ -44,63 +43,6 @@ function initPhoneFormatter() {
         }
         
         e.target.value = value;
-    });
-}
-
-// Script for testing User Logins
-function initStaticLogin() {
-    const loginForm = document.querySelector("form");
-
-    if (!loginForm) return;
-
-    const users = [
-        {
-            email: "passenger@email.com",
-            password: "passenger123",
-            role: "passenger"
-        },
-        {
-            email: "driver@email.com",
-            password: "driver123",
-            role: "driver"
-        },
-        {
-            email: "admin@email.com",
-            password: "admin123",
-            role: "admin"
-        }
-    ];
-
-    loginForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-
-        const typedEmail = document.getElementById("email").value.trim().toLowerCase();
-        const typedPassword = document.getElementById("password").value.trim();
-        const validUser = users.find(
-            (user) =>
-                user.email.toLowerCase() === typedEmail &&
-                user.password === typedPassword
-        );
-
-        if (validUser) {
-            switch (validUser.role) {
-                case "driver":
-                    window.location.href = "../driver/driverDashboard.html";
-                    break;
-
-                case "passenger":
-                    window.location.href =
-                        "../passenger/passengerDashboard.html";
-                    break;
-
-                case "admin":
-                    window.location.href = "../admin/adminDashboard.html";
-                    break;
-
-                default:
-                    window.location.href = "landing.html";
-            }
-        }
     });
 }
 
