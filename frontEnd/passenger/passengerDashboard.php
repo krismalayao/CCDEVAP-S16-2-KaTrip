@@ -35,23 +35,6 @@
         <h3>Upcoming Rides</h3>
 
         <div class="passenger-ride-list">
-            <div class="passenger-ride-card">
-            <div class="ride-title">Manila -> Espana</div>
-            <div class="ride-info">June 30, 8:00 AM<br>Status: Pending<br>Seats: 2/4</div>
-            <a href="rideDetails.html" class="passenger-dashboard-details-btn">View Details</a>
-            </div>
-            
-            <div class="passenger-ride-card">
-            <div class="ride-title">Las Pinas -> Paranaque</div>
-            <div class="ride-info">June 30, 8:00 AM<br>Status: Pending<br>Seats: 2/4</div>
-            <a href="rideDetails.html" class="passenger-dashboard-details-btn">View Details</a>
-             </div>   
-
-             <div class="passenger-ride-card">
-            <div class="ride-title">Taft Ave -> Quezon City</div>
-            <div class="ride-info">June 30, 8:00 AM<br>Status: Pending<br>Seats: 2/4</div>
-            <a href="rideDetails.html" class="passenger-dashboard-details-btn">View Details</a>
-             </div>   
         </div>
 
     </div>
