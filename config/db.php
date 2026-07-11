@@ -1,6 +1,6 @@
 <?php
     $host = 'localhost:3306';
-    $dbname = 'katrip_db.sql';
+    $dbname = 'katrip_db';
     $username = 'root';
     $password = 'Dlsu1234!'; // This can change, depende sa MySQL Workbench password niyo
 

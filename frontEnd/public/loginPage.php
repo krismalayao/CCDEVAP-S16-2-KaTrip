@@ -1,3 +1,20 @@
+<?php
+    session_start();
+
+    if (isset($_SESSION["email"]) && isset($_SESSION["role"])) {
+        if ($_SESSION["role"] == "admin") {
+            header("Location: ../../frontEnd/admin/adminDashboard.php");
+            exit();
+        } else if ($_SESSION["role"] === "driver") {
+            header("Location: ../../frontEnd/driver/driverDashboard.html");
+            exit();
+        } else {
+            header("Location: ../../frontEnd/passenger/passengerDashboard.html");
+            exit();
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -18,7 +35,7 @@
                 <h2>KaTrip</h2>
             </div>
 
-            <form action="" method="POST">
+            <form action="../../backEnd/controller/userLoginController.php" method="POST">
                 <label for="email">Email <span class="asterisk">*</span></label><br />
                 <input type="email" id="email" name="email" placeholder="username@email.com" required><br />
 
@@ -30,7 +47,7 @@
                     </button>
                 </div>
 
-                <button type="submit" class="login-button">Login</button>
+                <button type="submit" class="login-button" name="submit">Login</button>
             </form>
 
             <p>Don't have an account yet? <a href="registerPage.html">Sign up</a></p>
