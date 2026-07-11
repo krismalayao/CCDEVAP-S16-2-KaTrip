@@ -82,6 +82,20 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+//Cancel trip button disappears if it's at least 30 minutes before departure
+function canCancel(t) {
+  const [time, meridian] = t.time.split(' ');
+  let [h, m] = time.split(':').map(Number);
+  if (meridian === 'PM' && h !== 12) h += 12;
+  if (meridian === 'AM' && h === 12) h = 0;
+
+  const departure = new Date(t.date);
+  departure.setHours(h, m, 0, 0);
+
+  return (departure - new Date()) / 60000 >= 30;
+}
+
+
 function renderTrips() {
   const q = document.getElementById('search-input').value.toLowerCase();
   let list = trips.filter(t => {
@@ -108,7 +122,7 @@ function renderTrips() {
     if (t.status === 'upcoming') {
       actions.push(`<button class="btn-sm btn-primary" onclick="startTrip(${t.id})">▶ Start Trip</button>`);
       actions.push(`<button class="btn-sm btn-outline">Edit</button>`);
-      actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">✕ Cancel</button>`);
+      if (canCancel(t)) actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">✕ Cancel</button>`);
     }
     if (t.status === 'completed') {
       actions.push(`<button class="btn-sm btn-ghost">View Summary</button>`);
