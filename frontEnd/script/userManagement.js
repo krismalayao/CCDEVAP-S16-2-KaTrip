@@ -3,37 +3,43 @@ let confirmCallback = null;
 /* MODAL CONTROL */
 function openAddModal() {
     const modal = document.getElementById("userModal");
-    if (!modal) return;
-
     document.getElementById("modalTitle").textContent = "Add User";
+    document.getElementById("formAction").value = "addUser";
+    document.getElementById("userForm").reset();
     modal.classList.add("show");
-    
 }
 
 function openEditModal() {
+
     const row = getSelectedRow();
-    if (!row) return alert("Please select a user first.");
+
+    if (!row) {
+        alert("Please select a user first.");
+        return;
+    }
+
+    console.log(row.dataset);
 
     const modal = document.getElementById("userModal");
-    if (!modal) return;
-
     document.getElementById("modalTitle").textContent = "Edit User";
-    modal.classList.add("show");
-    modal.dataset.mode = "edit";
+    document.getElementById("formAction").value = "editUser";
 
     const cells = row.cells;
-    if (cells.length < 6) return;
+    document.getElementById("user_id").value = cells[1].textContent.trim();
 
-    const nameInput = document.querySelector("#userModal input[type='text']");
-    const emailInput = document.querySelector("#userModal input[type='email']");
-    if (nameInput) nameInput.value = cells[2].textContent;
-    if (emailInput) emailInput.value = cells[3].textContent;
+    let fullName = cells[2].textContent.trim().split(" ");
+    document.querySelector("input[name='first_name']").value = fullName[0];
+    document.querySelector("input[name='last_name']").value = fullName.slice(1).join(" ");
 
-    const selects = document.querySelectorAll("#userModal select");
-    if (selects.length >= 2) {
-        selects[0].value = cells[4].textContent.trim();
-        selects[1].value = cells[5].textContent.trim();
-    }
+    document.querySelector("input[name='email']").value = cells[3].textContent.trim();
+    document.querySelector("#role").value = cells[4].textContent.trim().toLowerCase();
+    document.querySelector("select[name='status']").value = cells[5].textContent.trim().toLowerCase();
+
+    document.querySelector("#gender").value = row.dataset.gender;
+    document.querySelector("#birthdate").value = row.dataset.birthdate;
+    document.querySelector("#phone_number").value = row.dataset.phone;
+
+    modal.classList.add("show");
 }
 
 function closeModal() {

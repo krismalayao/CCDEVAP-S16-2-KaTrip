@@ -83,7 +83,7 @@
                                 </tr>
                             <?php else: ?>
                                 <?php foreach($listOfUsers as $user): ?>
-                                    <tr>
+                                    <tr data-gender="<?= $user["gender"] ?>" data-birthdate="<?= $user["birthdate"] ?>" data-phone="<?= $user["phone_number"] ?>">
                                         <td><input type="checkbox" class="selectedUser" name="selectedUser" value="<?= $user["user_id"] ?>" onchange="updateActionButtons()"></td>
                                         <td><?= $user["user_id"] ?></td>
                                         <td><?= $user["first_name"] . " " . $user["last_name"] ?></td>
@@ -140,8 +140,10 @@
         </div>
 
         <div class="modal" id="userModal">
-            <form action="../../backEnd/controller/userManagementController.php" method="POST" class="modal-content">
-                <input type="hidden" name="action" value="addUser">
+            <form action="../../backEnd/controller/userManagementController.php" method="POST" class="modal-content" id="userForm">
+                <input type="hidden" name="action" value="addUser" id="formAction">
+                <input type="hidden" name="user_id" id="user_id">
+
                 <h3 id="modalTitle">Add User</h3>
 
                 <label for="first_name">First Name</label>

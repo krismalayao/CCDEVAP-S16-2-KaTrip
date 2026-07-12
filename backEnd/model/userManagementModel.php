@@ -45,4 +45,12 @@
         $stmt->bind_param("sssssssss", $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status, $pass);
         return $stmt->execute();
     }
+
+    function editUser($conn, $user_id, $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status) {
+        $stmt = $conn->prepare("UPDATE users SET first_name = ?, last_name = ?, gender = ?, birthdate = ?,
+                                    phone_number = ?, email = ?, role = ?, status = ?
+                                WHERE user_id = ?");
+        $stmt->bind_param("ssssssssi", $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status, $user_id);
+        return $stmt->execute();
+    }
 ?>
