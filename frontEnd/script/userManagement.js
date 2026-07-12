@@ -43,12 +43,6 @@ function closeModal() {
     if (modal) modal.classList.remove("show");
 }
 
-/* RESET MODAL */
-function resetUserModal() {
-    document.querySelectorAll("#userModal input").forEach(i => i.value = "");
-    document.querySelectorAll("#userModal select").forEach(s => s.selectedIndex = 0);
-}
-
 /* CONFIRM MODAL */
 function openConfirmModal(title, message, onConfirm) {
     const titleEl = document.getElementById("confirmTitle");
@@ -69,64 +63,24 @@ function closeConfirmModal() {
     confirmCallback = null;
 }
 
-/* DELETE USER */
-function deleteUser() {
-    const row = getSelectedRow();
-    if (!row) return alert("Please select a user first.");
-
-    openConfirmModal(
-        "Delete User",
-        "Are you sure you want to delete this user?",
-        () => {
-            row.remove();
-            applyFilters();
-        }
-    );
-}
-
-/* SAVE DATA HANDLER */
-function handleSaveAction() {
-    const modal = document.getElementById("userModal");
-    if (!modal) return;
-    
-    const mode = modal.dataset.mode;
-    const fullName = document.querySelector("#userModal input[type='text']").value;
-    const email = document.querySelector("#userModal input[type='email']").value;
-
-    const selects = document.querySelectorAll("#userModal select");
-    if (selects.length < 2) return;
-    const role = selects[0].value;
-    const status = selects[1].value;
-
-    if (mode === "edit") {
-        openConfirmModal(
-            "Confirm Update",
-            "Are you sure with the updates?",
-            () => {
-                const row = getSelectedRow();
-                if (!row) return;
-
-                row.cells[2].textContent = fullName;
-                row.cells[3].textContent = email;
-                row.cells[4].textContent = role;
-                row.cells[5].textContent = status;
-
-                const statusCell = row.cells[5];
-                statusCell.className = status === "Active" ? "status-active" : "status-inactive";
-
-                closeModal();
-                applyFilters();
-            }
-        );
-    } else {
-        closeModal();
-    }
-}
-
 /* HELPERS */
 function getSelectedRow() {
-    const selected = document.querySelector("input[name='selectedUser']:checked");
+    const selected = document.querySelector(".selectedUser:checked");
     return selected ? selected.closest("tr") : null;
+}
+
+function updateActionButtons() {
+
+    const selectedUsers = document.querySelectorAll(".selectedUser:checked");
+
+    const editButton = document.getElementById("editButton");
+    const deleteButton = document.getElementById("deleteButton");
+
+    const count = selectedUsers.length;
+
+    editButton.disabled = count !== 1;
+    deleteButton.disabled = count === 0;
+
 }
 
 /* CORE FILTER SYSTEM FOR STATIC */
@@ -137,7 +91,7 @@ let filters = {
     to: ""
 };
 
-const rowsPerPage = 7;
+const rowsPerPage = 5;
 let currentPage = 1;
 
 function searchUsers() {
@@ -189,7 +143,7 @@ function applyFilters() {
         const role = row.cells[4].textContent.trim().toLowerCase();
         const matchesRole = (filters.role === "all" || role === filters.role);
 
-        const rowDate = row.dataset.date || "";
+        const rowDate = row.cells[6].dataset.date || "";
         let matchesDateFrom = true;
         let matchesDateTo = true;
 
@@ -242,25 +196,6 @@ function renderPagination(totalPages) {
 
     wrapper.append(prev, label, next);
     container.appendChild(wrapper);
-}
-
-/* STATUS TOGGLE */
-function toggleStatus(button) {
-    const row = button.closest("tr");
-    if (!row) return;
-
-    const statusCell = row.querySelector(".status-active, .status-inactive");
-    if (!statusCell) return;
-
-    const isActive = statusCell.classList.contains("status-active");
-
-    statusCell.textContent = isActive ? "Inactive" : "Active";
-    statusCell.classList.toggle("status-active", !isActive);
-    statusCell.classList.toggle("status-inactive", isActive);
-
-    button.textContent = isActive ? "Enable" : "Disable";
-    button.classList.toggle("disable-button", !isActive);
-    button.classList.toggle("enable-button", isActive);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

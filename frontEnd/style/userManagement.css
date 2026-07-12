@@ -182,7 +182,7 @@
     color: white;
 }
 
-.disable-button:button {
+.disable-button:hover {
     background: #bb2d3b;
 }
 
@@ -392,4 +392,81 @@
     .modal-content {
         width: 95%;
     }
+}
+
+.management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.management-header h2 {
+    margin: 0;
+}
+
+.add-user-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: 11%;
+    height: 35px;
+
+    padding: 10px 18px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: var(--purple);
+    color: white;
+
+    font-family: 'Helvetica Now';
+    font-size: 12px;
+
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.add-user-button:hover {
+    background: var(--purple-dark);
+}
+
+.add-user-button span {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.pending-button {
+    border: none;
+    border-radius: 6px;
+
+    padding: 6px 12px;
+
+    background: #ffc107;
+    color: white;
+
+    font-size: 12px;
+    font-family: 'Helvetica Now';
+
+    cursor: not-allowed;
+}
+
+.approve-button {
+    border: none;
+    border-radius: 6px;
+
+    padding: 6px 12px;
+
+    background: #198754;
+    color: white;
+
+    font-size: 12px;
+    font-family: 'Helvetica Now';
+
+    cursor: pointer;
+}
+
+.approve-button:hover {
+    background: #157347;
 }

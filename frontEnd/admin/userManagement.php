@@ -29,9 +29,8 @@
             <div class="management-features">
                 <div class="management-actions">
                     <h3>ACTIONS</h3>
-                    <button onclick="openAddModal()">Add User</button>
-                    <button onclick="openEditModal()">Edit User</button>
-                    <button onclick="deleteUser()">Delete User</button>
+                    <button id="editButton" onclick="openEditModal()">Edit User</button>
+                    <button id="deleteButton" onclick="deleteUser()">Delete User</button>
                 </div>
 
                 <div class="management-filters">
@@ -42,6 +41,7 @@
                         <option>All Roles</option>
                         <option>Passenger</option>
                         <option>Driver</option>
+                        <option>Admin</option>
                     </select>
 
                     <label for="fromDate" class="date">Date From:</label>
@@ -54,7 +54,13 @@
             </div>
 
             <div class="management-data">
-                <h2>User Management</h2>
+                <div class="management-header">
+                    <h2>User Management</h2>
+                    
+                    <button class="add-user-button" onclick="openAddModal()">
+                        <span>+</span> Add User</button>
+                </div>
+                
                 <div class="responsive-table">
                     <table id="userTable">
                         <thead>
@@ -78,17 +84,50 @@
                             <?php else: ?>
                                 <?php foreach($listOfUsers as $user): ?>
                                     <tr>
-                                        <td><input type="checkbox" name="selectedUser" value="<?= $user["user_id"] ?>"></td>
+                                        <td><input type="checkbox" name="selectedUser" value="<?= $user["user_id"] ?>" onchange="updateActionButtons()"></td>
                                         <td><?= $user["user_id"] ?></td>
                                         <td><?= $user["first_name"] . " " . $user["last_name"] ?></td>
                                         <td><?= $user["email"] ?></td>
-                                        <td><?= $user["role"] ?></td>
-                                        <td><?= $user["status"] ?></td>
-                                        <td><?= $user["created_at"] ?></td>
+                                        <td><?= ucfirst($user["role"]) ?></td>
+                                        <td><?= ucfirst($user["status"]) ?></td>
+                                        <td data-date="<?= date("Y-m-d", strtotime($user["created_at"])) ?>">
+                                            <?= date("F j, Y", strtotime($user["created_at"])) ?>
+                                        </td>
                                         <td class="action-button">
-                                            <button class="<?= $user["status"] == "Active" ? "disable-button" : "enable-button" ?>" onclick="toggleStatus(this)">
-                                                <?= $user["status"] == "Active" ? "Disable" : "Enable" ?>
-                                            </button>
+                                            <?php if ($user["status"] == "active"): ?>
+                                                <form action="../../backEnd/controller/userManagementController.php" method="POST">
+                                                    <input type="hidden" name="action" value="toggleStatus">
+                                                    <input type="hidden" name="user_id" value="<?= $user["user_id"] ?>">
+
+                                                    <button type="submit" class="<?= strtolower($user["status"]) == "active" ? "disable-button" : "enable-button" ?>">
+                                                        Suspend
+                                                    </button>
+                                                </form>
+                                            
+                                            <?php elseif ($user["status"] == "suspended"): ?>
+                                                <form action="../../backEnd/controller/userManagementController.php" method="POST">
+                                                    <input type="hidden" name="action" value="toggleStatus">
+                                                    <input type="hidden" name="user_id" value="<?= $user["user_id"] ?>">
+
+                                                    <button type="submit" class="<?= strtolower($user["status"]) == "active" ? "disable-button" : "enable-button" ?>">
+                                                        Activate
+                                                    </button>
+                                                </form>
+
+                                            <?php elseif ($user["status"] == "pending"): ?>
+                                                <form action="../../backEnd/controller/userManagementController.php" method="POST">
+                                                    <input type="hidden" name="action" value="approveUser">
+                                                    <input type="hidden" name="user_id" value="<?= $user["user_id"] ?>">
+                                                    <button type="submit" class="approve-button">
+                                                        Approve
+                                                    </button>
+                                                </form>
+
+                                            <?php else: ?>
+                                                <button class="denied-button" disabled>
+                                                    Denied
+                                                </button>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

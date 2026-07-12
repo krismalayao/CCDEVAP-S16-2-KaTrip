@@ -18,4 +18,23 @@
             return $query->fetch_all(MYSQLI_ASSOC);
         }
     }
+
+    function toggleUserStatus($conn, $user_id) {
+        $stmt = $conn->prepare("UPDATE users SET status = 
+                                CASE 
+                                    WHEN status = 'active' THEN 'suspended'
+                                    WHEN status = 'suspended' THEN 'active'
+                                    ELSE status
+                                END
+                                WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        return $stmt->execute();
+    }
+
+    function approveUser($conn, $user_id) {
+        $stmt = $conn->prepare("UPDATE users SET status = 'active'
+                                WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        return $stmt->execute();
+    }
 ?>
