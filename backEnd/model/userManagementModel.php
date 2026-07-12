@@ -39,6 +39,15 @@
     }
 
     function addUser($conn, $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status) {
+        $check = $conn->prepare("SELECT user_id FROM users WHERE email = ? OR phone_number = ?");
+        $check->bind_param("ss", $email, $phone_number);
+        $check->execute();
+        $result = $check->get_result();
+
+        if ($result->num_rows > 0) {
+            return false; // Duplicate found
+        }
+    
         $pass = password_hash("katrip123", PASSWORD_DEFAULT);
         $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, gender, birthdate, phone_number, email, role, status, password)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");

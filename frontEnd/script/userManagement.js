@@ -273,3 +273,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     applyFilters();
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get("message");
+
+    if (message === "duplicate") {
+        alert("Cannot add user, the email or phone number already exists.");
+    }
+
+    if (message === "successful") {
+        alert("User successfully added.");
+    }
+
+    if (message) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+});

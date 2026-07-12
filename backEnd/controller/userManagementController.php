@@ -21,7 +21,15 @@
             $userRole = $_POST["role"];
             $userStatus = $_POST["status"];
 
-            addUser($conn, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
+            $result = addUser($conn, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
+
+            if ($result) {
+                header("Location: ../../frontEnd/admin/userManagement.php?message=successful");
+                exit();
+            } else {
+                header("Location: ../../frontEnd/admin/userManagement.php?message=duplicate");
+                exit();
+            }
         } elseif ($action == "editUser") { // Edit User
             $userId = $_POST["user_id"];
             $firstName = $_POST["first_name"];

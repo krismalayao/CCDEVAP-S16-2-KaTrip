@@ -142,9 +142,9 @@ function initStaticRegistration() {
                 
                 setTimeout(() => {
                     if (driverCheckbox.checked) {
-                        window.location.href = '../../frontEnd/driver/driverApplication.html';
+                        window.location.href = '../../frontEnd/driver/driverApplication.php';
                     } else {
-                        window.location.href = "../../frontEnd/public/loginPage.html";
+                        window.location.href = "../../frontEnd/public/loginPage.php";
                     }
                 }, 2000);
             } else {
