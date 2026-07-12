@@ -155,17 +155,8 @@ function initApplicationUploadPreview() {
 }
 
 // Script for Browse Rides Filtering
-const browseRideDestinations = [
-  'Espana, Manila',
-  'Quiapo, Manila',
-  'Divisoria, Manila'
-];
-
-const rides = [
-  { id: 1, route: 'MANILA → ESPANA', destination: 'Espana, Manila', destinationSearch: 'españa', time: '7:00 am', time24: '07:00', date: '26 MAY 2026', capacity: '3 / 4', capacityColor: '#22c55e', fare: 'PHP 92.33' },
-  { id: 2, route: 'MANILA → QUIAPO', destination: 'Quiapo, Manila', destinationSearch: 'quiapo', time: '6:30 am', time24: '06:30', date: '26 MAY 2026', capacity: '2 / 4', capacityColor: '#f97316', fare: 'PHP 55.00' },
-  { id: 3, route: 'MANILA → DIVISORIA', destination: 'Divisoria, Manila', destinationSearch: 'divisoria', time: '8:15 am', time24: '08:15', date: '26 MAY 2026', capacity: '4 / 4', capacityColor: '#ef4444', fare: 'PHP 40.50' },
-];
+let browseRidesData = [];
+let browseRideDestinations = [];
 
 function normalizeText(value) {
   return String(value || '')
@@ -174,48 +165,90 @@ function normalizeText(value) {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+function formatRideTime(value) {
+  if (!value) return 'TBA';
+
+  const timeValue = String(value);
+  const [hour, minute] = timeValue.split(':');
+  const parsedHour = Number(hour);
+  const parsedMinute = Number(minute || 0);
+
+  const date = new Date(2000, 0, 1, parsedHour, parsedMinute);
+  return date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+}
+
+function formatRideDate(value) {
+  if (!value) return 'TBA';
+
+  const date = new Date(`${value}T00:00:00`);
+  return date.toLocaleDateString('en-US', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).toUpperCase();
+}
+
+function getCapacityDetails(ride) {
+  const available = Number(ride.available_seats || 0);
+  const total = Number(ride.total_seats || 0);
+
+  if (available <= 0) {
+    return { label: `${available} / ${total}`, color: '#ef4444' };
+  }
+
+  if (available <= total / 2) {
+    return { label: `${available} / ${total}`, color: '#f97316' };
+  }
+
+  return { label: `${available} / ${total}`, color: '#22c55e' };
+}
+
 function renderRides(list) {
   const rideList = document.getElementById('ride-list');
   if (!rideList) return;
 
-  if (list.length === 0) {
+  if (!list || list.length === 0) {
     rideList.innerHTML = '<p class="browserides-empty">No rides match your filter.</p>';
     return;
   }
 
-  let html = '';
+  rideList.innerHTML = list.map((ride) => {
+    const capacity = getCapacityDetails(ride);
+    const routeLabel = `${ride.origin || 'Unknown'} → ${ride.destination || 'Unknown'}`.toUpperCase();
+    const timeLabel = formatRideTime(ride.departure_time || ride.departure);
+    const dateLabel = formatRideDate(ride.start_date);
 
-  for (let i = 0; i < list.length; i++) {
-    let r = list[i];
-    html += `
+    return `
       <div class="browserides-ride-card">
         <div class="browserides-ride-top">
-          <span class="browserides-ride-route">${r.route}</span>
-          <a href="rideDetails.html?id=${r.id}" class="browserides-view-btn">View</a>
+          <span class="browserides-ride-route">${routeLabel}</span>
+          <button type="button" class="browserides-view-btn" data-ride-id="${ride.ride_id}">View</button>
         </div>
         <div class="browserides-ride-meta">
           <div class="browserides-meta-item">
             <span class="browserides-meta-label">TIME:</span>
-            <span class="browserides-meta-value">${r.time}</span>
+            <span class="browserides-meta-value">${timeLabel}</span>
           </div>
           <div class="browserides-meta-item">
             <span class="browserides-meta-label">DATE:</span>
-            <span class="browserides-meta-value">${r.date}</span>
+            <span class="browserides-meta-value">${dateLabel}</span>
           </div>
           <div class="browserides-meta-item">
             <span class="browserides-meta-label">CAPACITY:</span>
-            <span class="browserides-capacity-badge" style="background:${r.capacityColor}">${r.capacity}</span>
+            <span class="browserides-capacity-badge" style="background:${capacity.color}">${capacity.label}</span>
           </div>
           <div class="browserides-meta-item">
             <span class="browserides-meta-label">FARE:</span>
-            <span class="browserides-meta-value">${r.fare}</span>
+            <span class="browserides-meta-value">₱${Number(ride.cost || 0).toFixed(2)}</span>
           </div>
         </div>
       </div>
     `;
-  }
-
-  rideList.innerHTML = html;
+  }).join('');
 }
 
 function getFilteredRides() {
@@ -224,26 +257,111 @@ function getFilteredRides() {
   const normalizedQuery = normalizeText(query);
 
   if (!normalizedQuery) {
-    return rides;
+    return browseRidesData;
   }
 
-  return rides.filter((ride) => {
-    return (
-      normalizeText(ride.destination).includes(normalizedQuery) ||
-      normalizeText(ride.destinationSearch).includes(normalizedQuery) ||
-      normalizeText(ride.route).includes(normalizedQuery)
-    );
+  return browseRidesData.filter((ride) => {
+    const haystacks = [
+      ride.origin,
+      ride.destination,
+      `${ride.origin || ''} ${ride.destination || ''}`,
+      ride.departure,
+      ride.departure_time
+    ];
+
+    return haystacks.some((value) => normalizeText(value).includes(normalizedQuery));
   });
 }
 
 function sortByTime() {
-  let sorted = [...rides];
+  const sorted = [...browseRidesData];
   sorted.sort(function(a, b) {
-    if (a.time24 < b.time24) return -1;
-    if (a.time24 > b.time24) return 1;
+    const aTime = String(a.departure_time || a.departure || '00:00');
+    const bTime = String(b.departure_time || b.departure || '00:00');
+
+    if (aTime < bTime) return -1;
+    if (aTime > bTime) return 1;
     return 0;
   });
   return sorted;
+}
+
+function openRideDetailsModal(rideId) {
+  fetch(`../../backEnd/controller/viewDetailsController.php?ride_id=${rideId}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (!data.success) {
+        alert('Failed to load ride details.');
+        return;
+      }
+
+      const ride = data.ride;
+      const modal = document.createElement('div');
+      modal.classList.add('view-details-modal-overlay');
+
+      modal.innerHTML = `
+        <div class="view-details-modal-card">
+          <button class="view-details-modal-close">&times;</button>
+          <div class="view-details-modal-header">
+            <span class="view-details-modal-route">
+              ${(ride.origin || '').toUpperCase()} &rarr; ${(ride.destination || '').toUpperCase()}
+            </span>
+            <span class="view-details-modal-status">${ride.ride_status || 'Scheduled'}</span>
+          </div>
+          <div class="view-details-modal-route-section">
+            <div class="view-details-modal-route-point">
+              <span class="view-details-modal-dot pickup"></span>
+              <strong>From:</strong>
+              <span>${ride.origin || 'Unknown'}</span>
+            </div>
+            <div class="view-details-modal-route-point">
+              <span class="view-details-modal-dot destination"></span>
+              <strong>To:</strong>
+              <span>${ride.destination || 'Unknown'}</span>
+            </div>
+          </div>
+          <div class="view-details-modal-meta">
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Departure Time</span>
+              <span class="view-details-modal-value">${ride.departure_time || ride.departure || 'TBA'}</span>
+            </div>
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Date</span>
+              <span class="view-details-modal-value">${ride.start_date || 'TBA'}</span>
+            </div>
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Seats</span>
+              <span class="view-details-modal-seat">${ride.available_seats || 0} / ${ride.total_seats || 0}</span>
+            </div>
+          </div>
+          <div class="view-details-modal-driver">
+            <div class="view-details-modal-avatar"></div>
+            <div>
+              <p class="view-details-modal-driver-name">${ride.first_name || ''} ${ride.last_name || ''}</p>
+              <small class="view-details-modal-vehicle">${ride.vehicle_model || 'Vehicle'} • ${ride.plate_number || 'N/A'}</small>
+            </div>
+          </div>
+          <div class="view-details-modal-footer">
+            <div>
+              <span class="view-details-modal-label">ESTIMATED FARE</span>
+              <span class="view-details-modal-price">₱${Number(ride.cost || 0).toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(modal);
+
+      modal.querySelector('.view-details-modal-close').addEventListener('click', () => modal.remove());
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          modal.remove();
+        }
+      });
+    })
+    .catch((error) => {
+      console.error('Error fetching ride details:', error);
+    });
 }
 
 function initBrowseRidesAutocomplete() {
@@ -282,56 +400,70 @@ function initBrowseRidesAutocomplete() {
     renderRides(getFilteredRides());
   }
 
-  renderRides(rides);
+  rideList.addEventListener('click', (event) => {
+    const viewButton = event.target.closest('.browserides-view-btn');
+    if (!viewButton) return;
 
-  destinationInput.addEventListener('focus', () => showSuggestions(destinationInput.value));
-  destinationInput.addEventListener('input', () => {
-    showSuggestions(destinationInput.value);
-    applyDestinationFilter(destinationInput.value);
-  });
-
-  destinationForm.addEventListener('submit', (event) => {
     event.preventDefault();
-    applyDestinationFilter(destinationInput.value);
-    hideSuggestions();
+    openRideDetailsModal(viewButton.dataset.rideId);
   });
 
-  suggestionsBox.addEventListener('click', (event) => {
-    const suggestion = event.target.closest('.browserides-suggestion');
-    if (!suggestion) return;
+  fetch('../../backEnd/controller/browseRidesController.php')
+    .then((response) => response.json())
+    .then((data) => {
+      browseRidesData = Array.isArray(data) ? data : [];
+      browseRideDestinations = [...new Set(browseRidesData.map((ride) => ride.destination).filter(Boolean))];
 
-    destinationInput.value = suggestion.textContent.trim();
-    applyDestinationFilter(destinationInput.value);
-    hideSuggestions();
-  });
+      renderRides(getFilteredRides());
 
-  document.addEventListener('click', (event) => {
-    if (!destinationInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
-      hideSuggestions();
-    }
-  });
+      destinationInput.addEventListener('focus', () => showSuggestions(destinationInput.value));
+      destinationInput.addEventListener('input', () => {
+        showSuggestions(destinationInput.value);
+        applyDestinationFilter(destinationInput.value);
+      });
 
-  let filterBtns = document.querySelectorAll('.browserides-filter-btn');
+      destinationForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        applyDestinationFilter(destinationInput.value);
+        hideSuggestions();
+      });
 
-  for (let i = 0; i < filterBtns.length; i++) {
-    filterBtns[i].addEventListener('click', function() {
-      for (let j = 0; j < filterBtns.length; j++) {
-        filterBtns[j].classList.remove('active');
-      }
+      suggestionsBox.addEventListener('click', (event) => {
+        const suggestion = event.target.closest('.browserides-suggestion');
+        if (!suggestion) return;
 
-      this.classList.add('active');
+        destinationInput.value = suggestion.textContent.trim();
+        applyDestinationFilter(destinationInput.value);
+        hideSuggestions();
+      });
 
-      let panels = document.querySelectorAll('.browserides-filter-panel');
-      for (let k = 0; k < panels.length; k++) {
-        panels[k].classList.add('hidden');
-      }
-      document.getElementById('panel-' + this.dataset.filter).classList.remove('hidden');
+      document.addEventListener('click', (event) => {
+        if (!destinationInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
+          hideSuggestions();
+        }
+      });
 
-      if (this.dataset.filter === 'departure') {
-        renderRides(sortByTime());
-      } else {
-        renderRides(getFilteredRides());
-      }
+      const filterBtns = document.querySelectorAll('.browserides-filter-btn');
+
+      filterBtns.forEach((button) => {
+        button.addEventListener('click', function () {
+          filterBtns.forEach((btn) => btn.classList.remove('active'));
+          this.classList.add('active');
+
+          const panels = document.querySelectorAll('.browserides-filter-panel');
+          panels.forEach((panel) => panel.classList.add('hidden'));
+          document.getElementById(`panel-${this.dataset.filter}`).classList.remove('hidden');
+
+          if (this.dataset.filter === 'departure') {
+            renderRides(sortByTime());
+          } else {
+            renderRides(getFilteredRides());
+          }
+        });
+      });
+    })
+    .catch((error) => {
+      console.error('Error loading rides:', error);
+      renderRides([]);
     });
-  }
 }
