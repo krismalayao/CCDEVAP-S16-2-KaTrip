@@ -154,6 +154,11 @@
     cursor: pointer;
 }
 
+.management-data th.center,
+.management-data td.center {
+    text-align: center;
+}
+
 .status-active {
     color: var(--success) !important;
     font-weight: bold;
@@ -492,4 +497,9 @@
 
 .approve-button:hover {
     background: #157347;
+}
+
+.center {
+    text-align: center;
+    vertical-align: middle;
 }

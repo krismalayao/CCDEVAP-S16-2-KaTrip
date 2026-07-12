@@ -67,14 +67,14 @@
                     <table id="userTable">
                         <thead>
                             <tr>
-                                <th>SELECT</th>
-                                <th>USER ID</th>
+                                <th class="center">SELECT</th>
+                                <th class="center">USER ID</th>
                                 <th>FULL NAME</th>
                                 <th>EMAIL</th>
                                 <th>ROLE</th>
                                 <th>STATUS</th>
                                 <th>DATE REGISTERED</th>
-                                <th>ACTIONS</th>
+                                <th class="center">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -86,8 +86,8 @@
                             <?php else: ?>
                                 <?php foreach($listOfUsers as $user): ?>
                                     <tr data-gender="<?= $user["gender"] ?>" data-birthdate="<?= $user["birthdate"] ?>" data-phone="<?= $user["phone_number"] ?>">
-                                        <td><input type="checkbox" class="selectedUser" name="selectedUser" value="<?= $user["user_id"] ?>" onchange="updateActionButtons()"></td>
-                                        <td><?= $user["user_id"] ?></td>
+                                        <td class="center"><input type="checkbox" class="selectedUser" name="selectedUser" value="<?= $user["user_id"] ?>" onchange="updateActionButtons()"></td>
+                                        <td class="center"><?= $user["user_id"] ?></td>
                                         <td><?= $user["first_name"] . " " . $user["last_name"] ?></td>
                                         <td><?= $user["email"] ?></td>
                                         <td><?= ucfirst($user["role"]) ?></td>

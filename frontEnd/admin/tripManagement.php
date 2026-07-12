@@ -63,13 +63,13 @@
                     <table id="tripTable">
                         <thead>
                             <tr>
-                                <th class="center-radio">SELECT</th>
-                                <th>TRIP ID</th>
+                                <th class="center">SELECT</th>
+                                <th class="center">TRIP ID</th>
                                 <th>DRIVER</th>
                                 <th>ORIGIN</th>
                                 <th>DESTINATION</th>
-                                <th>DEPARTURE TIME</th>
-                                <th>SEATS</th>
+                                <th class="center">DEPARTURE TIME</th>
+                                <th class="center">SEATS</th>
                                 <th>STATUS</th>
                             </tr>
                         </thead>
@@ -82,13 +82,13 @@
                             <?php else: ?>
                                 <?php foreach($listOfTrips as $trip): ?>
                                     <tr data-time="<?= date("H:i", strtotime($trip["departure"])) ?>">
-                                        <td class="center-radio"><input type="radio" name="selectedTrip" value="<?= $trip["ride_id"] ?>"></td>
-                                        <td><?= $trip["ride_id"] ?></td>
+                                        <td class="center"><input type="radio" name="selectedTrip" value="<?= $trip["ride_id"] ?>"></td>
+                                        <td class="center"><?= $trip["ride_id"] ?></td>
                                         <td><?= $trip["driver"] ?></td>
                                         <td><?= $trip["origin"] ?></td>
                                         <td><?= $trip["destination"] ?></td>
-                                        <td><?= date("g:i A", strtotime($trip["departure"])) ?></td>
-                                        <td><?= $trip["seats"] ?></td>
+                                        <td class="center"><?= date("g:i A", strtotime($trip["departure"])) ?></td>
+                                        <td class="center"><?= $trip["seats"] ?></td>
                                         <td><?= ucfirst($trip["ride_status"]) ?></td>
                                     </tr>
                                 <?php endforeach ?>

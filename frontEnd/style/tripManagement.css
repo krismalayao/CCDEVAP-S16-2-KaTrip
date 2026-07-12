@@ -137,8 +137,8 @@
     color: var(--purple-dark);
 }
 
-.management-data th.center-radio,
-.management-data td.center-radio {
+.management-data th.center,
+.management-data td.center {
     text-align: center;
 }
 
@@ -409,7 +409,7 @@
     text-transform: capitalize;
 }
 
-.center-radio {
+.center {
     text-align: center;
     vertical-align: middle;
 }
