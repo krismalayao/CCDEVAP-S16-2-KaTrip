@@ -21,6 +21,10 @@
         $phone = filter_var(trim($_POST['phone_number'] ?? ''), FILTER_DEFAULT);
         $firstName = filter_var(trim($_POST['first_name'] ?? ''), FILTER_DEFAULT);
         $lastName = filter_var(trim($_POST['last_name'] ?? ''), FILTER_DEFAULT);
+        $gender = filter_var(trim($_POST['gender'] ?? ''), FILTER_DEFAULT);
+        $birthdate = filter_var(trim($_POST['birthdate'] ?? ''), FILTER_DEFAULT);
+        $role = isset($_POST['katrip_driver']) ? "driver" : "passenger";
+        $status = "pending";
         $password = $_POST['password'] ?? '';
         
         // Quick validation check block
@@ -39,9 +43,13 @@
             'phone_number' => $phone,
             'first_name' => $firstName,
             'last_name' => $lastName,
+            'gender' => $gender,
+            'birthdate' => $birthdate,
+            'role' => $role,
+            'status' => $status,
             'password' => password_hash($password, PASSWORD_BCRYPT),
-            'otp' => $otpCode, // Stores the OTP in the current session
-            'otp_expires' => time() + 300 // Validity of OTP (5 minutes)
+            'otp' => $otpCode,
+            'otp_expires' => time() + 300
         ];
 
         // Mailing in Gmail

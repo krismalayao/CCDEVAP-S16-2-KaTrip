@@ -1,4 +1,5 @@
 <?php
+    require "../../config/db.php";
     header("Content-Type: application/json");
     session_start();
 
@@ -20,16 +21,24 @@
         }
 
         if ($enteredCode === $sessionData['otp']) {
-            
-            // ADD SQL STATEMENTS TO INPUT THE DATA INTO THE DATABASE
+            require "../../config/db.php";
 
-            // Clear out registration temporary data
+            $stmt = $conn->prepare("INSERT INTO users(first_name, last_name, gender, birthdate,
+                                    phone_number, email, role, status, password)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+            $stmt->bind_param("sssssssss", $sessionData['first_name'], $sessionData['last_name'],
+                                $sessionData['gender'], $sessionData['birthdate'], $sessionData['phone_number'],
+                                $sessionData['email'], $sessionData['role'], $sessionData['status'], $sessionData['password']);
+
+            if (!$stmt->execute()) {
+                echo json_encode(["status" => "error", "message" => "Failed to create account."]);
+                exit;
+            }
             unset($_SESSION['temp_user']);
 
             echo json_encode(["status" => "success", "message" => "Account successfully verified! Please login."]);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Invalid OTP."]);
-        }
         exit;
+        }
     }
 ?>
