@@ -8,7 +8,7 @@ document.getElementById('navbar-mount').innerHTML = `
         <nav class="nav-links">
             <a class="nav-link" href="passengerDashboard.php">Home</a>
             <a class="nav-link" href="myBookings.html">View Bookings</a>
-            <a class="nav-link" href="browseRides.html">Browse Rides</a>
+            <a class="nav-link" href="browseRides.php">Browse Rides</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
@@ -25,7 +25,7 @@ document.getElementById('navbar-mount').innerHTML = `
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
         <a class="nav-dropdown-link" href="passengerDashboard.php">Home</a>
         <a class="nav-dropdown-link" href="myBookings.html">View Bookings</a>
-        <a class="nav-dropdown-link" href="browseRides.html">Browse Rides</a>
+        <a class="nav-dropdown-link" href="browseRides.php">Browse Rides</a>
     </div>
 </header>
 `;
