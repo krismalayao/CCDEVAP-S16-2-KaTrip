@@ -279,12 +279,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     const message = params.get("message");
 
-    if (message === "duplicate") {
+    if (message === "duplicateAdd") {
         alert("Cannot add user, the email or phone number already exists.");
     }
 
-    if (message === "successful") {
+    if (message === "duplicateEdit") {
+        alert("Cannot edit user, the email or phone number already exists.");
+    }
+
+    if (message === "successfulAdd") {
         alert("User successfully added.");
+    }
+
+    if (message === "successfulEdit") {
+        alert("User successfully edited.");
     }
 
     if (message) {

@@ -24,10 +24,10 @@
             $result = addUser($conn, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
 
             if ($result) {
-                header("Location: ../../frontEnd/admin/userManagement.php?message=successful");
+                header("Location: ../../frontEnd/admin/userManagement.php?message=successfulAdd");
                 exit();
             } else {
-                header("Location: ../../frontEnd/admin/userManagement.php?message=duplicate");
+                header("Location: ../../frontEnd/admin/userManagement.php?message=duplicateAdd");
                 exit();
             }
         } elseif ($action == "editUser") { // Edit User
@@ -41,7 +41,15 @@
             $userRole = $_POST["role"];
             $userStatus = $_POST["status"];
 
-            editUser($conn, $userId, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
+            $result = editUser($conn, $userId, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
+
+            if ($result) {
+                header("Location: ../../frontEnd/admin/userManagement.php?message=successfulEdit");
+                exit();
+            } else {
+                header("Location: ../../frontEnd/admin/userManagement.php?message=duplicateEdit");
+                exit();
+            }
         } elseif ($action == "deleteUser") { // Delete User/s
             $userIds = json_decode($_POST["user_ids"]);
             
