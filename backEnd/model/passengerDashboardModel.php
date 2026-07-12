@@ -39,11 +39,12 @@ function getUpcomingRides($conn, $user_id)
         r.departure,
         r.ride_status,
         b.seat_reserved,
-        b.booking_status
+        b.booking_status,
+        r.ride_id
     FROM bookings b
     JOIN rides r ON b.ride_id = r.ride_id
     WHERE b.passenger_id = ?
-    AND b.booking_status != 'cancelled'
+    AND r.ride_status = 'scheduled'
     ORDER BY r.departure ASC";
 
     $stmt = $conn->prepare($sql);
