@@ -1,21 +1,8 @@
-const reservations = {
-    T001: [
-        { passenger: "Juan Dela Cruz", status: "Confirmed" },
-        { passenger: "Anna Lopez", status: "Confirmed" },
-        { passenger: "Grace Bautista", status: "Pending" }
-    ],
-
-    T002: [
-        { passenger: "Kevin Yu", status: "Confirmed" },
-        { passenger: "Sarah Lim", status: "Confirmed" }
-    ]
-};
-
 let filters = {
     search: "",
     status: "all",
-    from: "",
-    to: ""
+    fromTime: "",
+    toTime: ""
 };
 
 const rowsPerPage = 7;
@@ -49,17 +36,13 @@ function filterByStatus() {
     applyFilters();
 }
 
-/* DATE FILTER */
-function filterDates() {
+/* TIME FILTER */
+function filterTime() {
 
-    filters.from =
-        document.getElementById("fromDate").value;
-
-    filters.to =
-        document.getElementById("toDate").value;
+    filters.fromTime = document.getElementById("fromTime").value;
+    filters.toTime = document.getElementById("toTime").value;
 
     currentPage = 1;
-
     applyFilters();
 }
 
@@ -86,10 +69,10 @@ function updateTripStatus() {
         return;
     }
 
-    document
-        .getElementById("statusModal")
-        .classList
-        .add("show");
+    const rideId = row.cells[1].textContent.trim();
+
+    document.getElementById("selectedRideId").value = rideId;
+    document.getElementById("statusModal").classList.add("show");
 }
 
 function closeModal() {
@@ -98,25 +81,6 @@ function closeModal() {
         .getElementById("statusModal")
         .classList
         .remove("show");
-}
-
-function saveStatus() {
-
-    const row = getSelectedRow();
-
-    if (!row) return;
-
-    const status =
-        document.getElementById("tripStatus").value;
-
-    const cell = row.cells[7];
-
-    cell.textContent = status;
-
-    cell.className =
-        "status-" + status.toLowerCase();
-
-    closeModal();
 }
 
 /* VIEW RESERVATIONS */
@@ -183,28 +147,14 @@ function applyFilters() {
             .textContent
             .toLowerCase();
 
-        const rowDate =
-            row.dataset.date;
+        const rowTime = row.dataset.time;
 
-        const matchesSearch =
-            text.includes(filters.search);
+        const matchesSearch = text.includes(filters.search);
+        const matchesStatus = filters.status === "all" || status === filters.status;
+        const matchesFromTime = !filters.fromTime || rowTime >= filters.fromTime;
+        const matchesToTime = !filters.toTime || rowTime <= filters.toTime;
 
-        const matchesStatus =
-            filters.status === "all" ||
-            status === filters.status;
-
-        const matchesFrom =
-            !filters.from ||
-            rowDate >= filters.from;
-
-        const matchesTo =
-            !filters.to ||
-            rowDate <= filters.to;
-
-        return matchesSearch &&
-               matchesStatus &&
-               matchesFrom &&
-               matchesTo;
+        return matchesSearch && matchesStatus && matchesFromTime && matchesToTime;
     });
 
     rows.forEach(row => {

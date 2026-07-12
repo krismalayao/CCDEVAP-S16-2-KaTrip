@@ -1,3 +1,13 @@
+<?php
+    session_start();
+    require "../../backEnd/controller/tripManagementController.php";
+
+    if (!isset($_SESSION["email"]) || $_SESSION["role"] !== "admin") {
+        header("Location: ../public/loginPage.php"); 
+        exit();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -32,17 +42,17 @@
 
                     <select id="statusFilter" onchange="filterByStatus()">
                         <option>All Status</option>
-                        <option>Pending</option>
+                        <option>Scheduled</option>
                         <option>Ongoing</option>
                         <option>Completed</option>
                         <option>Cancelled</option>
                     </select>
 
-                    <label class="date">Date From:</label>
-                    <input type="date" id="fromDate" onchange="filterDates()">
+                    <label class="date">Time From:</label>
+                    <input type="time" id="fromTime" onchange="filterTime()">
 
-                    <label class="date">Date To:</label>
-                    <input type="date" id="toDate" onchange="filterDates()">
+                    <label class="date">Time To:</label>
+                    <input type="time" id="toTime" onchange="filterTime()">
                 </div>
             </div>
 
@@ -58,46 +68,31 @@
                                 <th>DRIVER</th>
                                 <th>ORIGIN</th>
                                 <th>DESTINATION</th>
-                                <th>DATE</th>
+                                <th>DEPARTURE TIME</th>
                                 <th>SEATS</th>
                                 <th>STATUS</th>
                             </tr>
                         </thead>
 
                         <tbody>
-
-                            <tr data-date="2026-06-20">
-                                <td><input type="radio" name="selectedTrip"></td>
-                                <td>T001</td>
-                                <td>Maria Santos</td>
-                                <td>UP Diliman</td>
-                                <td>Makati</td>
-                                <td>06/20/2026</td>
-                                <td>3 / 4</td>
-                                <td class="status-pending">Pending</td>
-                            </tr>
-
-                            <tr data-date="2026-06-21">
-                                <td><input type="radio" name="selectedTrip"></td>
-                                <td>T002</td>
-                                <td>John Dizon</td>
-                                <td>Quezon City</td>
-                                <td>Pasig</td>
-                                <td>06/21/2026</td>
-                                <td>4 / 4</td>
-                                <td class="status-ongoing">Ongoing</td>
-                            </tr>
-
-                            <tr data-date="2026-06-22">
-                                <td><input type="radio" name="selectedTrip"></td>
-                                <td>T003</td>
-                                <td>Mark Cruz</td>
-                                <td>Taguig</td>
-                                <td>Ortigas</td>
-                                <td>06/22/2026</td>
-                                <td>2 / 4</td>
-                                <td class="status-completed">Completed</td>
-                            </tr>
+                            <?php if (empty($listOfTrips)): ?>
+                                <tr>
+                                    <td colspan="8">No Trips Were Made.</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach($listOfTrips as $trip): ?>
+                                    <tr data-time="<?= date("H:i", strtotime($trip["departure"])) ?>">
+                                        <td><input type="radio" name="selectedTrip" value="<?= $trip["ride_id"] ?>"></td>
+                                        <td><?= $trip["ride_id"] ?></td>
+                                        <td><?= $trip["driver"] ?></td>
+                                        <td><?= $trip["origin"] ?></td>
+                                        <td><?= $trip["destination"] ?></td>
+                                        <td><?= date("g:i A", strtotime($trip["departure"])) ?></td>
+                                        <td><?= $trip["seats"] ?></td>
+                                        <td><?= ucfirst($trip["ride_status"]) ?></td>
+                                    </tr>
+                                <?php endforeach ?>
+                            <?php endif ?>
                         </tbody>
                     </table>
                 </div>
@@ -106,30 +101,35 @@
         </div>
         
         <div class="modal" id="statusModal">
-            <div class="modal-content">
+            <form action="../../backEnd/controller/tripManagementController.php" method="POST" class="modal-content">
+                <input type="hidden" name="action" value="updateStatus">
+                <input type="hidden" name="ride_id" id="selectedRideId">
 
                 <h3>Update Trip Status</h3>
 
                 <label>Status</label>
 
-                <select id="tripStatus">
-                    <option>Pending</option>
-                    <option>Ongoing</option>
-                    <option>Completed</option>
-                    <option>Cancelled</option>
+                <select name="ride_status" id="tripStatus">
+                    <option value="scheduled">Scheduled</option>
+                    <option value="ongoing">Ongoing</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
                 </select>
 
+
                 <div class="modal-buttons">
-                    <button class="cancel-button" onclick="closeModal()">
+                    <button type="button" 
+                            class="cancel-button" 
+                            onclick="closeModal()">
                         Cancel
                     </button>
 
-                    <button class="save-button" onclick="saveStatus()">
+                    <button type="submit" class="save-button">
                         Save
                     </button>
                 </div>
 
-            </div>
+            </form>
         </div>
 
         <div class="modal" id="reservationModal">
