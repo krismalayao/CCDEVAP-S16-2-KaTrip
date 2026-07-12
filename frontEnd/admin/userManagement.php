@@ -58,7 +58,9 @@
                     <h2>User Management</h2>
                     
                     <button class="add-user-button" onclick="openAddModal()">
-                        <span>+</span> Add User</button>
+                        <span class="plus">+</span>
+                        <span class="text">Add User</span>
+                    </button>
                 </div>
                 
                 <div class="responsive-table">

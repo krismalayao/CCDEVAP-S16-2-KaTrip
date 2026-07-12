@@ -266,6 +266,8 @@
     align-items: center;
 
     z-index: 999;
+    padding: 20px;
+    overflow-y: auto;
 }
 
 .modal.show {
@@ -275,10 +277,12 @@
 .modal-content {
     width: 500px;
     max-width: 90%;
+    max-height: 85vh;
     background: var(--bg-card);
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
 }
 
 .modal-content h3 {
@@ -392,6 +396,25 @@
     .modal-content {
         width: 95%;
     }
+
+    .add-user-button {
+        width: 40px;
+        height: 40px;
+
+        padding: 0;
+
+        border-radius: 50%;
+
+        justify-content: center;
+    }
+
+    .add-user-button .text {
+        display: none;
+    }
+
+    .add-user-button .plus {
+        font-size: 20px;
+    }
 }
 
 .management-header {
@@ -432,7 +455,7 @@
     background: var(--purple-dark);
 }
 
-.add-user-button span {
+.add-user-button .plus {
     font-size: 13px;
     font-weight: bold;
 }
