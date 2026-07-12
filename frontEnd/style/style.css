@@ -1095,3 +1095,196 @@ body {
   transform: translateX(-50%) translateY(0);
 }
 /* END OF CREATE RIDE FORM */
+
+/*  VIEW DETAILS MODAL  */
+.view-details-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(45,45,45,.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.view-details-modal-card {
+    width: 450px;
+    max-width: 90%;
+    background: var(--bg-card);
+    border-radius: 18px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 12px 35px rgba(100,55,160,.25);
+}
+
+.view-details-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: var(--purple-faint);
+    color: var(--purple-dark);
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.view-details-modal-close:hover {
+    background: var(--purple-light);
+    color: var(--danger);
+}
+
+.view-details-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family:'Bloc';
+    letter-spacing: 1px;
+    padding-right: 40px;
+    margin-bottom: 18px;
+}
+
+.view-details-modal-route {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--purple-dark);
+}
+
+.view-details-modal-status {
+    background: var(--success);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+.view-details-modal-route-section {
+    background: var(--purple-faint);
+    padding: 12px 15px;
+    border-radius: 12px;
+}
+
+.view-details-modal-route-point {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+    color: var(--grey-text);
+    font-size: 14px;
+}
+
+.view-details-modal-route-point strong {
+    color: var(--purple-dark);
+}
+
+.view-details-modal-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+}
+
+.view-details-modal-dot.pickup {
+    background: var(--pickup);
+}
+
+.view-details-modal-dot.destination {
+    background: var(--destination);
+}
+
+.view-details-modal-meta {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+    margin: 16px 0;
+}
+
+.view-details-modal-meta-item {
+    text-align: center;
+}
+
+.view-details-modal-label {
+    display: block;
+    font-size: 10px;
+    color: var(--icon-muted);
+    font-weight: 600;
+}
+
+.view-details-modal-value {
+    display: block;
+    margin-top: 4px;
+    color: var(--purple-dark);
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.view-details-modal-seat {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #eaffea;
+    color: var(--success);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.view-details-modal-driver {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--purple-light);
+}
+
+.view-details-modal-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--purple-light);
+}
+
+.view-details-modal-driver-name {
+    margin: 0;
+    color: var(--purple-dark);
+    font-weight: 700;
+}
+
+.view-details-modal-vehicle {
+    color: var(--grey-text);
+    font-size: 13px;
+}
+
+.view-details-modal-footer {
+    border-top: 1px solid var(--purple-light);
+    padding-top: 12px;
+    margin-top: 5px;
+}
+
+.view-details-modal-price {
+    display: block;
+    margin-top: 4px;
+    color: var(--purple-dark);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+/* END OF VIEW DETAILS MODAL */
+
+/* UPCOMING RIDES */
+.passenger-ride-card.empty {
+  text-align: center;
+  opacity: 0.7;
+
+}
+
+.passenger-ride-card.empty .ride-title {
+  font-weight: bold;
+  text-align: center;
+}
+/* END OF UPCOMING RIDES */
