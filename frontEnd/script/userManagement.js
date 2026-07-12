@@ -69,8 +69,12 @@ function closeConfirmModal() {
 
 /* HELPERS */
 function getSelectedRow() {
-    const selected = document.querySelectorAll(".selectedUser:checked");
+    const selected = document.querySelector(".selectedUser:checked");
     return selected ? selected.closest("tr") : null;
+}
+
+function getSelectedUsers() { // For Delete
+    return document.querySelectorAll(".selectedUser:checked");
 }
 
 function updateActionButtons() {
@@ -90,7 +94,7 @@ function updateActionButtons() {
 /* DELETE */
 function deleteUser() {
 
-    const selectedUsers = document.querySelectorAll(".selectedUser:checked");
+    const selectedUsers = getSelectedUsers();
 
     if (selectedUsers.length === 0) {
         alert("Please select a user first.");
@@ -131,7 +135,7 @@ function deleteUser() {
             const idsInput = document.createElement("input");
             idsInput.type = "hidden";
             idsInput.name = "user_ids";
-            idsInput.value = JSON.stringify(userIds);
+            idsInput.value = JSON.stringify(userIds); // Ito yung nagstostore ng maraming IDs if maraming user ids ang idedelete
 
             form.appendChild(actionInput);
             form.appendChild(idsInput);
