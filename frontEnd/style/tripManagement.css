@@ -137,6 +137,12 @@
     color: var(--purple-dark);
 }
 
+.management-data th.center-radio,
+.management-data td.center-radio {
+    text-align: center;
+}
+
+
 /* TABLE */
 .responsive-table {
     flex: 1;
@@ -397,4 +403,13 @@
     .modal-content {
         width: 95%;
     }
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+
+.center-radio {
+    text-align: center;
+    vertical-align: middle;
 }

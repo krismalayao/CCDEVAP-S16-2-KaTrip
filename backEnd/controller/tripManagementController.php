@@ -10,6 +10,11 @@
             $tripStat = $_POST["ride_status"];
 
             updateTripStatus($conn, $tripId, $tripStat);
+        } elseif ($action == "viewBookings") {
+            $tripId = $_POST["ride_id"];
+            $bookings = getAllBookings($conn, $tripId);
+            echo json_encode($bookings);
+            exit();
         }
 
         header("Location: ../../frontEnd/admin/tripManagement.php");

@@ -31,7 +31,7 @@
                 <div class="management-actions">
                     <h3>ACTIONS</h3>
 
-                    <button onclick="viewReservations()">View Reservations</button>
+                    <button onclick="viewBookings()">View Bookings</button>
                     <button onclick="updateTripStatus()">Change Status</button>
                 </div>
 
@@ -63,7 +63,7 @@
                     <table id="tripTable">
                         <thead>
                             <tr>
-                                <th>SELECT</th>
+                                <th class="center-radio">SELECT</th>
                                 <th>TRIP ID</th>
                                 <th>DRIVER</th>
                                 <th>ORIGIN</th>
@@ -82,7 +82,7 @@
                             <?php else: ?>
                                 <?php foreach($listOfTrips as $trip): ?>
                                     <tr data-time="<?= date("H:i", strtotime($trip["departure"])) ?>">
-                                        <td><input type="radio" name="selectedTrip" value="<?= $trip["ride_id"] ?>"></td>
+                                        <td class="center-radio"><input type="radio" name="selectedTrip" value="<?= $trip["ride_id"] ?>"></td>
                                         <td><?= $trip["ride_id"] ?></td>
                                         <td><?= $trip["driver"] ?></td>
                                         <td><?= $trip["origin"] ?></td>
@@ -135,7 +135,7 @@
         <div class="modal" id="reservationModal">
             <div class="modal-content">
 
-                <h3>Trip Reservations</h3>
+                <h3>Trip Bookings</h3>
 
                 <table>
                     <thead>

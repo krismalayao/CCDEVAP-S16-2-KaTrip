@@ -84,7 +84,7 @@ function closeModal() {
 }
 
 /* VIEW RESERVATIONS */
-function viewReservations() {
+function viewBookings() {
 
     const row = getSelectedRow();
 
@@ -93,30 +93,49 @@ function viewReservations() {
         return;
     }
 
-    const tripId = row.cells[1].textContent;
+    const rideId = row.cells[1].textContent;
 
-    const body =
-        document.getElementById("reservationBody");
+    fetch("../../backEnd/controller/tripManagementController.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body:
+            "action=viewBookings&ride_id=" + rideId
+    })
 
-    body.innerHTML = "";
+    .then(response => response.json())
 
-    const tripReservations =
-        reservations[tripId] || [];
+    .then(bookings => {
+        const body = document.getElementById("reservationBody");
+        body.innerHTML = "";
 
-    tripReservations.forEach(r => {
+        if (bookings.length === 0) {
+            body.innerHTML = `
+                <tr>
+                    <td colspan="2">
+                        No bookings found.
+                    </td>
+                </tr>
+            `;
+        } else {
+            bookings.forEach(b => {
+                body.innerHTML += `
 
-        body.innerHTML += `
-            <tr>
-                <td>${r.passenger}</td>
-                <td>${r.status}</td>
-            </tr>
-        `;
+                    <tr>
+                        <td>${b.passenger}</td>
+                        <td class="capitalize">${b.booking_status}</td>
+                    </tr>
+                `;
+            });
+
+        }
+
+        document
+            .getElementById("reservationModal")
+            .classList
+            .add("show");
     });
-
-    document
-        .getElementById("reservationModal")
-        .classList
-        .add("show");
 }
 
 function closeReservations() {
