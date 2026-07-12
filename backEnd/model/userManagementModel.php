@@ -53,4 +53,11 @@
         $stmt->bind_param("ssssssssi", $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status, $user_id);
         return $stmt->execute();
     }
+
+    function deleteUser($conn, $user_id) {
+        $stmt = $conn->prepare("DELETE FROM users
+                                WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        return $stmt->execute();
+    }
 ?>

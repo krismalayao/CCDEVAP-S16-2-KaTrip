@@ -69,7 +69,7 @@ function closeConfirmModal() {
 
 /* HELPERS */
 function getSelectedRow() {
-    const selected = document.querySelector(".selectedUser:checked");
+    const selected = document.querySelectorAll(".selectedUser:checked");
     return selected ? selected.closest("tr") : null;
 }
 
@@ -85,6 +85,62 @@ function updateActionButtons() {
     editButton.disabled = count !== 1;
     deleteButton.disabled = count === 0;
 
+}
+
+/* DELETE */
+function deleteUser() {
+
+    const selectedUsers = document.querySelectorAll(".selectedUser:checked");
+
+    if (selectedUsers.length === 0) {
+        alert("Please select a user first.");
+        return;
+    }
+
+    let message = "";
+
+    if (selectedUsers.length === 1) {
+        const row = selectedUsers[0].closest("tr");
+        const userName = row.cells[2].textContent.trim();
+
+        message = `Are you sure you want to delete ${userName}?`;
+    } else {
+        message = "Are you sure you want to delete these users?";
+    }
+
+
+    openConfirmModal("Confirm Delete", message,
+        function() {
+
+            let userIds = [];
+
+            selectedUsers.forEach(user => {
+                userIds.push(user.value);
+            });
+
+            const form = document.createElement("form");
+
+            form.method = "POST";
+            form.action = "../../backEnd/controller/userManagementController.php";
+
+            const actionInput = document.createElement("input");
+            actionInput.type = "hidden";
+            actionInput.name = "action";
+            actionInput.value = "deleteUser";
+
+            const idsInput = document.createElement("input");
+            idsInput.type = "hidden";
+            idsInput.name = "user_ids";
+            idsInput.value = JSON.stringify(userIds);
+
+            form.appendChild(actionInput);
+            form.appendChild(idsInput);
+
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    );
 }
 
 /* CORE FILTER SYSTEM FOR STATIC */

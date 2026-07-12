@@ -34,6 +34,12 @@
             $userStatus = $_POST["status"];
 
             editUser($conn, $userId, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
+        } elseif ($action == "deleteUser") { // Delete User/s
+            $userIds = json_decode($_POST["user_ids"]);
+            
+            foreach ($userIds as $user) {
+                deleteUser($conn, $user);
+            }
         }
 
         header("Location: ../../frontEnd/admin/userManagement.php");

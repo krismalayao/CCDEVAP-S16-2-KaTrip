@@ -194,8 +194,9 @@
 
         <div class="modal" id="confirmModal">
             <div class="modal-content">
-                <h3 id="confirmTitle">Confirm Action</h3>
+                <h3 id="confirmTitle">Confirm Delete</h3>
                 <p id="confirmMessage">Are you sure?</p>
+                <ul id="deleteUserList"></ul>
 
                 <div class="modal-buttons">
                     <button class="cancel-button" onclick="closeConfirmModal()">Cancel</button>
