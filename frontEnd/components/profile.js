@@ -26,7 +26,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
             console.log("User logged out successfully. Redirecting...");
 
-             window.location.href = "../../backEnd/controller/logoutController.php"; 
+            fetch("../../backEnd/controller/logoutController.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = "loginPage.php";
+                } else {
+                    console.error("Server-side logout failed.");
+                }
+            })
+            .catch(err => console.error("Network error during logout:", err));
         });
     }
 });
