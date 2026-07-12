@@ -2,34 +2,33 @@
     require __DIR__ . "/../../config/db.php";
     require __DIR__ . "/../model/userManagementModel.php";
 
-    $specificUsers = $_GET["search"] ?? "";
-    $listOfUsers = getAllUsers($conn, $specificUsers);
-
-    // Actions Button in the Far Right
-    if (isset($_POST["action"])) {
-        if ($_POST["action"] == "toggleStatus") {
-            $userId = $_POST["user_id"];
-            toggleUserStatus($conn, $userId);
-
-            header("Location: ../../frontEnd/admin/userManagement.php");
-            exit();
-        }
-    }
-
-    // Approving Users
     if (isset($_POST["action"])) {
         $action = $_POST["action"];
-        $userId = $_POST["user_id"];
-
-        if ($action == "toggleStatus") {
+        
+        if ($action == "toggleStatus") { // Suspend or Activate
+            $userId = $_POST["user_id"];
             toggleUserStatus($conn, $userId);
-        }
-
-        if ($action == "approveUser") {
+        } elseif ($action == "approveUser") { // Approve Users
+            $userId = $_POST["user_id"];
             approveUser($conn, $userId);
+        } elseif ($_POST["action"] == "addUser") { // Adding Users
+            $firstName = $_POST["first_name"];
+            $lastName = $_POST["last_name"];
+            $userGender = $_POST["gender"];
+            $userBirthdate = $_POST["birthdate"];
+            $phoneNumber = $_POST["phone_number"];
+            $userEmail = $_POST["email"];
+            $userRole = $_POST["role"];
+            $userStatus = $_POST["status"];
+
+            addUser($conn, $firstName, $lastName, $userGender, $userBirthdate, $phoneNumber, $userEmail, $userRole, $userStatus);
         }
 
         header("Location: ../../frontEnd/admin/userManagement.php");
         exit();
     }
+
+    $specificUsers = $_GET["search"] ?? "";
+    $listOfUsers = getAllUsers($conn, $specificUsers);
+    
 ?>

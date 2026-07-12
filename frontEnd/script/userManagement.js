@@ -7,9 +7,7 @@ function openAddModal() {
 
     document.getElementById("modalTitle").textContent = "Add User";
     modal.classList.add("show");
-    modal.dataset.mode = "add";
-
-    resetUserModal();
+    
 }
 
 function openEditModal() {
@@ -204,13 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
         confirmYesBtn.onclick = function () {
             if (typeof confirmCallback === "function") confirmCallback();
             closeConfirmModal();
-        };
-    }
-
-    const saveButton = document.querySelector(".save-button");
-    if (saveButton) {
-        saveButton.onclick = function () {
-            handleSaveAction();
         };
     }
 

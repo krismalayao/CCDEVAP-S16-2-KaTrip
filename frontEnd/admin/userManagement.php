@@ -84,7 +84,7 @@
                             <?php else: ?>
                                 <?php foreach($listOfUsers as $user): ?>
                                     <tr>
-                                        <td><input type="checkbox" name="selectedUser" value="<?= $user["user_id"] ?>" onchange="updateActionButtons()"></td>
+                                        <td><input type="checkbox" class="selectedUser" name="selectedUser" value="<?= $user["user_id"] ?>" onchange="updateActionButtons()"></td>
                                         <td><?= $user["user_id"] ?></td>
                                         <td><?= $user["first_name"] . " " . $user["last_name"] ?></td>
                                         <td><?= $user["email"] ?></td>
@@ -140,32 +140,54 @@
         </div>
 
         <div class="modal" id="userModal">
-            <div class="modal-content">
+            <form action="../../backEnd/controller/userManagementController.php" method="POST" class="modal-content">
+                <input type="hidden" name="action" value="addUser">
                 <h3 id="modalTitle">Add User</h3>
 
-                <label>Full Name</label>
-                <input type="text">
+                <label for="first_name">First Name</label>
+                <input type="text" name="first_name" required>
 
-                <label>Email</label>
-                <input type="email">
+                <label for="last_name">Last Name</label>
+                <input type="text" name="last_name" required>
 
-                <label>Role</label>
-                <select>
-                    <option>Passenger</option>
-                    <option>Driver</option>
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="rather-not-to-say">Rather not say</option>
                 </select>
 
-                <label>Status</label>
-                <select>
-                    <option>Active</option>
-                    <option>Inactive</option>
+                <label for="birthdate">Birthdate</label>
+                <input type="date" id="birthdate" name="birthdate" required>
+
+                <label for="phone_number">Phone Number</label>
+                <input type="tel" id="phone_number" name="phone_number" placeholder="123-456-7890" required>
+
+                <label for="email">Email</label>
+                <input type="email" name="email" required>
+
+                <label for="role">Role</label>
+                <select id="role" name="role" required>
+                    <option value="passenger">Passenger</option>
+                    <option value="driver">Driver</option>
+                    <option value="admin">Admin</option>
+                </select>
+
+                <label for="status">Status</label>
+                <select name="status">
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="suspended">Suspended</option>
+                    <option value="denied">Denied</option>
                 </select>
 
                 <div class="modal-buttons">
-                    <button class="cancel-button" onclick="closeModal()">Cancel</button>
-                    <button class="save-button">Save</button>
+                    <button type="button" class="cancel-button" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="save-button">Save</button>
                 </div>
-            </div>
+            </form>
         </div>
 
         <div class="modal" id="confirmModal">

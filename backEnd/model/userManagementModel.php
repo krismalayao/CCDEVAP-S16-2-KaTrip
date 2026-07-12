@@ -37,4 +37,12 @@
         $stmt->bind_param("i", $user_id);
         return $stmt->execute();
     }
+
+    function addUser($conn, $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status) {
+        $pass = password_hash("katrip123", PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, gender, birthdate, phone_number, email, role, status, password)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssss", $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status, $pass);
+        return $stmt->execute();
+    }
 ?>
