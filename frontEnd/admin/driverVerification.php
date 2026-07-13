@@ -1,13 +1,3 @@
-<?php
-    session_start();
-    require "../../backEnd/controller/driverVerificationController.php";
-
-    if (!isset($_SESSION["email"]) || $_SESSION["role"] !== "admin") {
-        header("Location: ../public/loginPage.php"); 
-        exit();
-    }
-?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -61,24 +51,36 @@
                         </thead>
 
                         <tbody>
-                            <?php if (empty($listOfApplicants)): ?>
-                                <tr>
-                                    <td colspan="4">No applicants have registered.</td>
-                                </tr>
-                            <?php else: ?>
-                                <?php foreach($listOfApplicants as $applicant): ?>
-                                    <tr class="applicant-card">
-                                        <td><input type="radio" name="selectedApplicant" value="<?= $applicant["user_id"]; ?>"></td>
-                                        <td><?= $applicant["full_name"]; ?></td>
-                                        <td class="<?php if ($applicant["status"] == 'active'): echo 'status-active'; 
-                                                        elseif($applicant["status"] == 'pending'): echo 'status-pending'; 
-                                                        elseif ($applicant["status"] == 'denied'): echo 'status-rejected'; endif; ?>">
-                                            <?= ucfirst($applicant["status"]) ?>
-                                        </td>
-                                        <td><?= date("F, j Y", strtotime($applicant["created_at"])); ?></td>
-                                    </tr>
-                                <?php endforeach ?>
-                            <?php endif ?>
+                            <tr class="applicant-card" onclick="selectApplicant('U002', event)">
+                                <td><input type="radio" name="selectedApplicant" value="U002" autocomplete="off"></td>
+                                <td>Maria Santos</td>
+                                <td class="status-pending">Pending</td>
+                                <td>06/02/2026</td>
+                            </tr>
+                            <tr class="applicant-card" onclick="selectApplicant('U005', event)">
+                                <td><input type="radio" name="selectedApplicant" value="U005" autocomplete="off"></td>
+                                <td>Mark Cruz</td>
+                                <td class="status-pending">Pending</td>
+                                <td>06/05/2026</td>
+                            </tr>
+                            <tr class="applicant-card" onclick="selectApplicant('U006', event)">
+                                <td><input type="radio" name="selectedApplicant" value="U006" autocomplete="off"></td>
+                                <td>Juan Dela Cruz</td>
+                                <td class="status-verified">Verified</td>
+                                <td>06/10/2026</td>
+                            </tr>
+                            <tr class="applicant-card" onclick="selectApplicant('U007', event)">
+                                <td><input type="radio" name="selectedApplicant" value="U007" autocomplete="off"></td>
+                                <td>Anna Reyes</td>
+                                <td class="status-pending">Pending</td>
+                                <td>06/12/2026</td>
+                            </tr>
+                            <tr class="applicant-card" onclick="selectApplicant('U008', event)">
+                                <td><input type="radio" name="selectedApplicant" value="U008" autocomplete="off"></td>
+                                <td>David Tan</td>
+                                <td class="status-rejected">Rejected</td>
+                                <td>06/15/2026</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

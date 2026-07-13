@@ -1,3 +1,101 @@
+const driverApplications = {
+    "U002": {
+        user_id: "U002",
+        first_name: "Maria",
+        last_name: "Santos",
+        gender: "Female",
+        phone_number: "0917-123-4567",
+        email: "maria@email.com",
+        driver_profile: {
+            license_number: "DL12345678",
+            vehicle_model: "Toyota Vios",
+            plate_number: "ABC1234",
+            verification_status: "Pending"
+        },
+        documents: {
+            license: "../uploads/U002/license.pdf",
+            registration: "../uploads/U002/registration.pdf",
+            insurance: "../uploads/U002/insurance.pdf"
+        }
+    },
+    "U005": {
+        user_id: "U005",
+        first_name: "Mark",
+        last_name: "Cruz",
+        gender: "Male",
+        phone_number: "0917-987-6543",
+        email: "mark@email.com",
+        driver_profile: {
+            license_number: "DL87654321",
+            vehicle_model: "Honda City",
+            plate_number: "XYZ5678",
+            verification_status: "Pending"
+        },
+        documents: {
+            license: "../uploads/U005/license.pdf",
+            registration: "../uploads/U005/registration.pdf",
+            insurance: "../uploads/U005/insurance.pdf"
+        }
+    },
+    "U006": {
+        user_id: "U006",
+        first_name: "Juan",
+        last_name: "Dela Cruz",
+        gender: "Male",
+        phone_number: "0918-555-0199",
+        email: "juan.delacruz@email.com",
+        driver_profile: {
+            license_number: "DL55566778",
+            vehicle_model: "Mitsubishi Mirage",
+            plate_number: "NVD9876",
+            verification_status: "Verified"
+        },
+        documents: {
+            license: "../uploads/U006/license.pdf",
+            registration: "../uploads/U006/registration.pdf",
+            insurance: "../uploads/U006/insurance.pdf"
+        }
+    },
+    "U007": {
+        user_id: "U007",
+        first_name: "Anna",
+        last_name: "Reyes",
+        gender: "Female",
+        phone_number: "0922-444-0288",
+        email: "anna.reyes@email.com",
+        driver_profile: {
+            license_number: "DL99988776",
+            vehicle_model: "Hyundai Accent",
+            plate_number: "WQR4321",
+            verification_status: "Pending"
+        },
+        documents: {
+            license: "../uploads/U007/license.pdf",
+            registration: "../uploads/U007/registration.pdf",
+            insurance: "../uploads/U007/insurance.pdf"
+        }
+    },
+    "U008": {
+        user_id: "U008",
+        first_name: "David",
+        last_name: "Tan",
+        gender: "Male",
+        phone_number: "0915-333-0377",
+        email: "david.tan@email.com",
+        driver_profile: {
+            license_number: "DL44455566",
+            vehicle_model: "Nissan Almera",
+            plate_number: "TSA8899",
+            verification_status: "Rejected"
+        },
+        documents: {
+            license: "../uploads/U008/license.pdf",
+            registration: "../uploads/U008/registration.pdf",
+            insurance: "../uploads/U008/insurance.pdf"
+        }
+    }
+};
+
 let selectedApplicant = null;
 let selectedApplicationId = null;
 let confirmCallback = null;
