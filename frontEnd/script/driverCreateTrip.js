@@ -272,7 +272,6 @@ document.getElementById('ride-date').value = today.toISOString().split('T')[0];
 function createRide() {
   if (!state.from || !state.to) { showToast('Please set origin and destination.'); return; }
   showToast('Ride created!');
-  window.location.href = "../driver/driverDashboard.html";
 }
  
 // ─── Toast ────────────────────────────────────────────────────────────────────
