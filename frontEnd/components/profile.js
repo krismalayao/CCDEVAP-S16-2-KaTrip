@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = "loginPage.php";
+                    window.location.href = "../public/loginPage.php";
                 } else {
                     console.error("Server-side logout failed.");
                 }
