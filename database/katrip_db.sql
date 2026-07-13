@@ -1,211 +1,470 @@
-CREATE DATABASE IF NOT EXISTS katrip_db;
-USE katrip_db;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Jul 14, 2026 at 01:08 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
-CREATE TABLE users (
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    gender ENUM('male', 'female', 'other', 'rather_not_say') NOT NULL,
-    birthdate DATE NOT NULL,
-    phone_number VARCHAR(15) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    role ENUM('passenger', 'driver', 'admin') NOT NULL,
-    status ENUM('active', 'pending', 'suspended', 'denied') NOT NULL DEFAULT 'pending',
-    password VARCHAR(250) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
-CREATE TABLE driver_profiles (
-    driver_id INT PRIMARY KEY,
-    license_number VARCHAR(50) NOT NULL,
-    vehicle_model VARCHAR(50) NOT NULL,
-    plate_number VARCHAR(20) NOT NULL,
-    vehicle_color ENUM('black', 'white', 'red', 'blue', 'gray', 'brown', 'green') NOT NULL,
-    verification_status ENUM('verified', 'pending', 'denied') NOT NULL DEFAULT 'pending',
-    FOREIGN KEY (driver_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
 
-CREATE TABLE driver_documents (
-    document_id INT AUTO_INCREMENT PRIMARY KEY,
-    driver_id INT NOT NULL,
-    document_type ENUM('license', 'registration', 'insurance') NOT NULL,
-    file VARCHAR(255) NOT NULL,
-    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (driver_id) REFERENCES driver_profiles(driver_id) ON DELETE CASCADE
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE ride_schedules (
-    schedule_id INT AUTO_INCREMENT PRIMARY KEY,
-    driver_id INT NOT NULL,
-    is_recurring BOOLEAN NOT NULL DEFAULT FALSE,
-    days_of_week SET('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday') NULL,
-    departure_time TIME NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (driver_id) REFERENCES driver_profiles(driver_id) ON DELETE CASCADE
-);
+--
+-- Database: `katrip_db`
+--
 
-CREATE TABLE rides (
-    ride_id INT AUTO_INCREMENT PRIMARY KEY,
-    driver_id INT NOT NULL,
-    schedule_id INT NULL,
-    destination VARCHAR(100) NOT NULL,
-    departure VARCHAR(100) NOT NULL,
-    origin VARCHAR(100) NOT NULL,
-    total_seats INT NOT NULL,
-    available_seats INT NOT NULL,
-    cost DECIMAL(10, 2) NOT NULL,
-    ride_status ENUM('scheduled', 'ongoing', 'cancelled', 'completed') NOT NULL DEFAULT 'scheduled',
-    FOREIGN KEY (driver_id) REFERENCES driver_profiles(driver_id) ON DELETE CASCADE,
-    FOREIGN KEY (schedule_id) REFERENCES ride_schedules(schedule_id) ON DELETE SET NULL
-);
+-- --------------------------------------------------------
 
-CREATE TABLE ride_landmarks (
-    landmark_id INT AUTO_INCREMENT PRIMARY KEY,
-    ride_id INT NOT NULL,
-    landmark_name VARCHAR(100) NOT NULL,
-    landmark_number INT NOT NULL,
-    FOREIGN KEY (ride_id) REFERENCES rides(ride_id) ON DELETE CASCADE
-);
+--
+-- Table structure for table `bookings`
+--
 
-CREATE TABLE bookings (
-    booking_id INT AUTO_INCREMENT PRIMARY KEY,
-    ride_id INT NOT NULL,
-    passenger_id INT NOT NULL,
-    seat_reserved INT NOT NULL DEFAULT 1,
-    booking_status ENUM('pending', 'accepted', 'rejected', 'cancelled') NOT NULL DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ride_id) REFERENCES rides(ride_id) ON DELETE CASCADE,
-    FOREIGN KEY (passenger_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
+CREATE TABLE `bookings` (
+  `booking_id` int(11) NOT NULL,
+  `ride_id` int(11) NOT NULL,
+  `passenger_id` int(11) NOT NULL,
+  `seat_reserved` int(11) NOT NULL DEFAULT 1,
+  `booking_status` enum('pending','accepted','rejected','cancelled') NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE transactions (
-    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
-    booking_id INT NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    payment_method ENUM('cash', 'gcash') NOT NULL,
-    reference_number VARCHAR(100) NULL,
-    payment_status ENUM('pending', 'completed') NOT NULL DEFAULT 'pending',
-    FOREIGN KEY (booking_id) REFERENCES bookings(booking_id) ON DELETE CASCADE
-);
+--
+-- Dumping data for table `bookings`
+--
 
--- SAMPLE DATA --
-INSERT INTO users  (first_name, last_name, gender, birthdate, phone_number, email, role, status, password) VALUES
-('John','Doe','male','1998-01-15','09170000001','john@email.com','passenger','active',SHA2('password',256)),
-('Camille','Fernandez','female','1998-07-25','09170000018','camille@email.com','driver','active',SHA2('password',256)),
-('Nicole','Flores','female','1998-10-06','09170000010','nicole@email.com','passenger','active',SHA2('password',256)),
-('Ryan','Aquino','male','1990-12-19','09170000015','ryan@email.com','driver','denied',SHA2('password',256)),
-('Mark','Santos','male','1993-06-11','09170000011','mark@email.com','driver','active',SHA2('password',256)),
-('Angela','Reyes','female','1998-05-02','09170000004','angela@email.com','passenger','active',SHA2('password',256)),
-('David','Lim','male','1992-08-23','09170000013','david@email.com','driver','pending',SHA2('password',256)),
-('Joshua','Lopez','male','1999-09-12','09170000007','joshua@email.com','passenger','active',SHA2('password',256)),
-('Ella','Villanueva','female','1996-01-21','09170000020','ella@email.com','driver','active',SHA2('password',256)),
-('Maria','Dela Cruz','female','1994-02-05','09170000012','maria@email.com','driver','active',SHA2('password',256)),
-('Patricia','Ramos','female','1997-04-28','09170000008','patricia@email.com','passenger','pending',SHA2('password',256)),
-('Brian','Castro','male','1995-03-07','09170000017','brian@email.com','driver','pending',SHA2('password',256)),
-('Michael','Garcia','male','1997-07-18','09170000003','michael@email.com','passenger','active',SHA2('password',256)),
-('Ashley','Navarro','female','1997-11-30','09170000016','ashley@email.com','driver','active',SHA2('password',256)),
-('Kevin','Torres','male','1996-11-09','09170000005','kevin@email.com','passenger','active',SHA2('password',256)),
-('Christine','Tan','female','1996-09-15','09170000014','christine@email.com','driver','active',SHA2('password',256)),
-('Samantha','Cruz','female','2000-08-17','09170000006','samantha@email.com','passenger','active',SHA2('password',256)),
-('Joshua','Rivera','male','1991-05-13','09170000019','jrivera@email.com','driver','active',SHA2('password',256)),
-('Jane','Smith','female','1999-03-22','09170000002','jane@email.com','passenger','active',SHA2('password',256)),
-('Daniel','Mendoza','male','1995-12-14','09170000009','daniel@email.com','passenger','active',SHA2('password',256)),
-('Super','Admin','rather_not_say','1985-04-01','09179999999','admin@katrip.com','admin','active',SHA2('admin123',256));
+INSERT INTO `bookings` (`booking_id`, `ride_id`, `passenger_id`, `seat_reserved`, `booking_status`, `created_at`) VALUES
+(1, 1, 1, 1, 'accepted', '2026-07-13 21:11:58'),
+(2, 1, 3, 1, 'accepted', '2026-07-13 21:11:58'),
+(3, 2, 6, 2, 'accepted', '2026-07-13 21:11:58'),
+(4, 3, 8, 1, 'pending', '2026-07-13 21:11:58'),
+(5, 4, 11, 2, 'accepted', '2026-07-13 21:11:58'),
+(6, 5, 13, 1, 'cancelled', '2026-07-13 21:11:58'),
+(7, 6, 15, 1, 'accepted', '2026-07-13 21:11:58'),
+(8, 8, 17, 2, 'pending', '2026-07-13 21:11:58'),
+(9, 9, 19, 1, 'accepted', '2026-07-13 21:11:58'),
+(10, 10, 20, 1, 'accepted', '2026-07-13 21:11:58');
 
-INSERT INTO driver_profiles (driver_id, license_number, vehicle_model, plate_number, vehicle_color, verification_status) VALUES
-(2,'N01-123456','Toyota Innova','ABC1234','black','verified'),
-(4,'N02-654321','Honda City','XYZ5678','white','denied'),
-(5,'N03-456789','Toyota Vios','JKL9012','gray','verified'),
-(7,'N04-223344','Hyundai Accent','MNO3456','red','pending'),
-(9,'N05-998877','Ford Ranger','PQR7890','blue','verified'),
-(10,'N06-112233','Suzuki Swift','STU1234','white','verified'),
-(12,'N07-445566','Mitsubishi Mirage','VWX5678','green','pending'),
-(14,'N08-778899','Toyota Wigo','YZA9012','brown','verified'),
-(16,'N09-991122','Kia Soluto','BCD3456','black','verified'),
-(18,'N10-334455','Nissan Almera','EFG7890','gray','verified');
+-- --------------------------------------------------------
 
-INSERT INTO driver_documents (driver_id, document_type, file) VALUES
-(2,'license','files/docs/driver2/license.pdf'),
-(2,'registration','files/docs/driver2/registration.pdf'),
-(2,'insurance','files/docs/driver2/insurance.pdf'),
-(4,'license','files/docs/driver4/license.pdf'),
-(5,'license','files/docs/driver5/license.pdf'),
-(5,'registration','files/docs/driver5/registration.pdf'),
-(7,'license','files/docs/driver7/license.pdf'),
-(9,'license','files/docs/driver9/license.pdf'),
-(9,'insurance','files/docs/driver9/insurance.pdf'),
-(10,'license','files/docs/driver10/license.pdf'),
-(12,'license','files/docs/driver12/license.pdf'),
-(14,'license','files/docs/driver14/license.pdf'),
-(14,'registration','files/docs/driver14/registration.pdf'),
-(16,'license','files/docs/driver16/license.pdf'),
-(18,'license','files/docs/driver18/license.pdf'),
-(18,'insurance','files/docs/driver18/insurance.pdf');
+--
+-- Table structure for table `driver_documents`
+--
 
-INSERT INTO ride_schedules (driver_id, is_recurring, days_of_week, departure_time, start_date, end_date) VALUES
-(2, TRUE, 'Monday,Wednesday,Friday', '07:00:00', '2026-07-01', '2026-12-31'),
-(4, TRUE, 'Tuesday,Thursday', '08:30:00', '2026-07-01', '2026-12-31'),
-(5, FALSE, NULL, '17:30:00', '2026-07-10', '2026-07-10'),
-(7, TRUE, 'Monday,Tuesday,Wednesday,Thursday,Friday', '06:00:00', '2026-07-01', '2026-09-30'),
-(9, TRUE, 'Saturday,Sunday', '09:00:00', '2026-07-05', '2026-08-30'),
-(10, FALSE, NULL, '13:00:00', '2026-07-12', '2026-07-12'),
-(12, TRUE, 'Monday,Wednesday', '19:00:00', '2026-07-15', '2026-10-31'),
-(14, TRUE, 'Friday', '16:00:00', '2026-07-01', '2026-12-31'),
-(16, TRUE, 'Monday,Thursday', '05:30:00', '2026-07-01', '2026-10-31'),
-(18, TRUE, 'Sunday', '20:00:00', '2026-07-01', '2026-11-30');
+CREATE TABLE `driver_documents` (
+  `document_id` int(11) NOT NULL,
+  `driver_id` int(11) NOT NULL,
+  `document_type` enum('license','registration','insurance') NOT NULL,
+  `file` varchar(255) NOT NULL,
+  `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO rides (driver_id, schedule_id, destination, departure, origin, total_seats, available_seats, cost, ride_status) VALUES
-(2,1,'Makati CBD','07:00:00','Quezon City',4,2,150.00,'scheduled'),
-(4,2,'BGC','08:30:00','Manila',3,1,180.00,'ongoing'),
-(5,3,'Ortigas','17:30:00','Makati',4,4,120.00,'scheduled'),
-(7,4,'Alabang','06:00:00','Caloocan',4,0,250.00,'completed'),
-(9,5,'Tagaytay','09:00:00','Pasay',4,4,350.00,'cancelled'),
-(10,6,'MOA','13:00:00','Quezon City',4,3,160.00,'scheduled'),
-(12,7,'Antipolo','19:00:00','BGC',3,3,200.00,'scheduled'),
-(14,8,'Clark','16:00:00','Trinoma',6,4,400.00,'scheduled'),
-(16,9,'Manila Airport','05:30:00','Fairview',4,2,300.00,'completed'),
-(18,10,'Batangas Port','20:00:00','Alabang',4,4,450.00,'scheduled');
+--
+-- Dumping data for table `driver_documents`
+--
 
-INSERT INTO ride_landmarks (ride_id, landmark_name, landmark_number) VALUES
-(1,'Cubao MRT Station',1),
-(1,'Ortigas Flyover',2),
-(2,'Quiapo Church',1),
-(2,'Taft Avenue',2),
-(3,'Ayala MRT Station',1),
-(4,'Balintawak Cloverleaf',1),
-(4,'Magallanes Interchange',2),
-(5,'Nuvali',1),
-(6,'MOA Globe',1),
-(6,'Pasay Rotonda',2),
-(7,'Antipolo Church',1),
-(8,'NLEX Marilao Exit',1),
-(8,'San Fernando Exit',2),
-(9,'Commonwealth Avenue',1),
-(9,'España Boulevard',2),
-(10,'South Luzon Expressway',1);
+INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `file`, `uploaded_at`) VALUES
+(1, 2, 'license', 'files/docs/driver2/license.pdf', '2026-07-13 21:11:58'),
+(2, 2, 'registration', 'files/docs/driver2/registration.pdf', '2026-07-13 21:11:58'),
+(3, 2, 'insurance', 'files/docs/driver2/insurance.pdf', '2026-07-13 21:11:58'),
+(4, 4, 'license', 'files/docs/driver4/license.pdf', '2026-07-13 21:11:58'),
+(5, 5, 'license', 'files/docs/driver5/license.pdf', '2026-07-13 21:11:58'),
+(6, 5, 'registration', 'files/docs/driver5/registration.pdf', '2026-07-13 21:11:58'),
+(7, 7, 'license', 'files/docs/driver7/license.pdf', '2026-07-13 21:11:58'),
+(8, 9, 'license', 'files/docs/driver9/license.pdf', '2026-07-13 21:11:58'),
+(9, 9, 'insurance', 'files/docs/driver9/insurance.pdf', '2026-07-13 21:11:58'),
+(10, 10, 'license', 'files/docs/driver10/license.pdf', '2026-07-13 21:11:58'),
+(11, 12, 'license', 'files/docs/driver12/license.pdf', '2026-07-13 21:11:58'),
+(12, 14, 'license', 'files/docs/driver14/license.pdf', '2026-07-13 21:11:58'),
+(13, 14, 'registration', 'files/docs/driver14/registration.pdf', '2026-07-13 21:11:58'),
+(14, 16, 'license', 'files/docs/driver16/license.pdf', '2026-07-13 21:11:58'),
+(15, 18, 'license', 'files/docs/driver18/license.pdf', '2026-07-13 21:11:58'),
+(16, 18, 'insurance', 'files/docs/driver18/insurance.pdf', '2026-07-13 21:11:58');
 
-INSERT INTO bookings (ride_id, passenger_id, seat_reserved, booking_status) VALUES
-(1,1,1,'accepted'),
-(1,3,1,'accepted'),
-(2,6,2,'accepted'),
-(3,8,1,'pending'),
-(4,11,2,'accepted'),
-(5,13,1,'cancelled'),
-(6,15,1,'accepted'),
-(8,17,2,'pending'),
-(9,19,1,'accepted'),
-(10,20,1,'accepted');
+-- --------------------------------------------------------
 
-INSERT INTO transactions (booking_id, amount, payment_method, reference_number, payment_status) VALUES
-(1,150.00,'gcash','REF100200300','completed'),
-(2,150.00,'cash',NULL,'pending'),
-(3,360.00,'gcash','REF400500600','completed'),
-(4,120.00,'cash',NULL,'pending'),
-(5,500.00,'gcash','REF700800900','completed'),
-(6,0.00,'cash',NULL,'pending'),
-(7,160.00,'gcash','REF111222333','completed'),
-(8,800.00,'gcash','REF444555666','pending'),
-(9,300.00,'gcash','REF777888999','completed'),
-(10,450.00,'cash',NULL,'completed');
+--
+-- Table structure for table `driver_profiles`
+--
+
+CREATE TABLE `driver_profiles` (
+  `driver_id` int(11) NOT NULL,
+  `license_number` varchar(50) NOT NULL,
+  `vehicle_model` varchar(50) NOT NULL,
+  `plate_number` varchar(20) NOT NULL,
+  `vehicle_color` enum('black','white','red','blue','gray','brown','green') NOT NULL,
+  `verification_status` enum('verified','pending','denied') NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `driver_profiles`
+--
+
+INSERT INTO `driver_profiles` (`driver_id`, `license_number`, `vehicle_model`, `plate_number`, `vehicle_color`, `verification_status`) VALUES
+(2, 'N01-123456', 'Toyota Innova', 'ABC1234', 'black', 'verified'),
+(4, 'N02-654321', 'Honda City', 'XYZ5678', 'white', 'denied'),
+(5, 'N03-456789', 'Toyota Vios', 'JKL9012', 'gray', 'verified'),
+(7, 'N04-223344', 'Hyundai Accent', 'MNO3456', 'red', 'pending'),
+(9, 'N05-998877', 'Ford Ranger', 'PQR7890', 'blue', 'verified'),
+(10, 'N06-112233', 'Suzuki Swift', 'STU1234', 'white', 'verified'),
+(12, 'N07-445566', 'Mitsubishi Mirage', 'VWX5678', 'green', 'pending'),
+(14, 'N08-778899', 'Toyota Wigo', 'YZA9012', 'brown', 'verified'),
+(16, 'N09-991122', 'Kia Soluto', 'BCD3456', 'black', 'verified'),
+(18, 'N10-334455', 'Nissan Almera', 'EFG7890', 'gray', 'verified');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rides`
+--
+
+CREATE TABLE `rides` (
+  `ride_id` int(11) NOT NULL,
+  `driver_id` int(11) NOT NULL,
+  `schedule_id` int(11) DEFAULT NULL,
+  `destination` varchar(100) NOT NULL,
+  `departure` varchar(100) NOT NULL,
+  `origin` varchar(100) NOT NULL,
+  `total_seats` int(11) NOT NULL,
+  `available_seats` int(11) NOT NULL,
+  `cost` decimal(10,2) NOT NULL,
+  `ride_status` enum('scheduled','ongoing','cancelled','completed') NOT NULL DEFAULT 'scheduled',
+  `origin_lat` decimal(10,7) DEFAULT NULL,
+  `origin_lng` decimal(10,7) DEFAULT NULL,
+  `dest_lat` decimal(10,7) DEFAULT NULL,
+  `dest_lng` decimal(10,7) DEFAULT NULL,
+  `departure_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rides`
+--
+
+INSERT INTO `rides` (`ride_id`, `driver_id`, `schedule_id`, `destination`, `departure`, `origin`, `total_seats`, `available_seats`, `cost`, `ride_status`, `origin_lat`, `origin_lng`, `dest_lat`, `dest_lng`, `departure_date`) VALUES
+(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
+(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, NULL),
+(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
+(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, NULL),
+(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, NULL),
+(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
+(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
+(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
+(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, NULL),
+(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ride_landmarks`
+--
+
+CREATE TABLE `ride_landmarks` (
+  `landmark_id` int(11) NOT NULL,
+  `ride_id` int(11) NOT NULL,
+  `landmark_name` varchar(100) NOT NULL,
+  `landmark_number` int(11) NOT NULL,
+  `lat` decimal(10,7) DEFAULT NULL,
+  `lng` decimal(10,7) DEFAULT NULL,
+  `stop_order` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ride_landmarks`
+--
+
+INSERT INTO `ride_landmarks` (`landmark_id`, `ride_id`, `landmark_name`, `landmark_number`, `lat`, `lng`, `stop_order`) VALUES
+(1, 1, 'Cubao MRT Station', 1, NULL, NULL, NULL),
+(2, 1, 'Ortigas Flyover', 2, NULL, NULL, NULL),
+(3, 2, 'Quiapo Church', 1, NULL, NULL, NULL),
+(4, 2, 'Taft Avenue', 2, NULL, NULL, NULL),
+(5, 3, 'Ayala MRT Station', 1, NULL, NULL, NULL),
+(6, 4, 'Balintawak Cloverleaf', 1, NULL, NULL, NULL),
+(7, 4, 'Magallanes Interchange', 2, NULL, NULL, NULL),
+(8, 5, 'Nuvali', 1, NULL, NULL, NULL),
+(9, 6, 'MOA Globe', 1, NULL, NULL, NULL),
+(10, 6, 'Pasay Rotonda', 2, NULL, NULL, NULL),
+(11, 7, 'Antipolo Church', 1, NULL, NULL, NULL),
+(12, 8, 'NLEX Marilao Exit', 1, NULL, NULL, NULL),
+(13, 8, 'San Fernando Exit', 2, NULL, NULL, NULL),
+(14, 9, 'Commonwealth Avenue', 1, NULL, NULL, NULL),
+(15, 9, 'España Boulevard', 2, NULL, NULL, NULL),
+(16, 10, 'South Luzon Expressway', 1, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ride_schedules`
+--
+
+CREATE TABLE `ride_schedules` (
+  `schedule_id` int(11) NOT NULL,
+  `driver_id` int(11) NOT NULL,
+  `is_recurring` tinyint(1) NOT NULL DEFAULT 0,
+  `days_of_week` set('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday') DEFAULT NULL,
+  `departure_time` time NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ride_schedules`
+--
+
+INSERT INTO `ride_schedules` (`schedule_id`, `driver_id`, `is_recurring`, `days_of_week`, `departure_time`, `start_date`, `end_date`, `created_at`) VALUES
+(1, 2, 1, 'Monday,Wednesday,Friday', '07:00:00', '2026-07-01', '2026-12-31', '2026-07-13 21:11:58'),
+(2, 4, 1, 'Tuesday,Thursday', '08:30:00', '2026-07-01', '2026-12-31', '2026-07-13 21:11:58'),
+(3, 5, 0, NULL, '17:30:00', '2026-07-10', '2026-07-10', '2026-07-13 21:11:58'),
+(4, 7, 1, 'Monday,Tuesday,Wednesday,Thursday,Friday', '06:00:00', '2026-07-01', '2026-09-30', '2026-07-13 21:11:58'),
+(5, 9, 1, 'Saturday,Sunday', '09:00:00', '2026-07-05', '2026-08-30', '2026-07-13 21:11:58'),
+(6, 10, 0, NULL, '13:00:00', '2026-07-12', '2026-07-12', '2026-07-13 21:11:58'),
+(7, 12, 1, 'Monday,Wednesday', '19:00:00', '2026-07-15', '2026-10-31', '2026-07-13 21:11:58'),
+(8, 14, 1, 'Friday', '16:00:00', '2026-07-01', '2026-12-31', '2026-07-13 21:11:58'),
+(9, 16, 1, 'Monday,Thursday', '05:30:00', '2026-07-01', '2026-10-31', '2026-07-13 21:11:58'),
+(10, 18, 1, 'Sunday', '20:00:00', '2026-07-01', '2026-11-30', '2026-07-13 21:11:58');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transactions`
+--
+
+CREATE TABLE `transactions` (
+  `transaction_id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` enum('cash','gcash') NOT NULL,
+  `reference_number` varchar(100) DEFAULT NULL,
+  `payment_status` enum('pending','completed') NOT NULL DEFAULT 'pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transactions`
+--
+
+INSERT INTO `transactions` (`transaction_id`, `booking_id`, `amount`, `payment_method`, `reference_number`, `payment_status`) VALUES
+(1, 1, 150.00, 'gcash', 'REF100200300', 'completed'),
+(2, 2, 150.00, 'cash', NULL, 'pending'),
+(3, 3, 360.00, 'gcash', 'REF400500600', 'completed'),
+(4, 4, 120.00, 'cash', NULL, 'pending'),
+(5, 5, 500.00, 'gcash', 'REF700800900', 'completed'),
+(6, 6, 0.00, 'cash', NULL, 'pending'),
+(7, 7, 160.00, 'gcash', 'REF111222333', 'completed'),
+(8, 8, 800.00, 'gcash', 'REF444555666', 'pending'),
+(9, 9, 300.00, 'gcash', 'REF777888999', 'completed'),
+(10, 10, 450.00, 'cash', NULL, 'completed');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `gender` enum('male','female','other','rather_not_say') NOT NULL,
+  `birthdate` date NOT NULL,
+  `phone_number` varchar(15) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `role` enum('passenger','driver','admin') NOT NULL,
+  `status` enum('active','pending','suspended','denied') NOT NULL DEFAULT 'pending',
+  `password` varchar(250) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `gender`, `birthdate`, `phone_number`, `email`, `role`, `status`, `password`, `created_at`) VALUES
+(1, 'John', 'Doe', 'male', '1998-01-15', '09170000001', 'john@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(2, 'Camille', 'Fernandez', 'female', '1998-07-25', '09170000018', 'camille@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(4, 'Ryan', 'Aquino', 'male', '1990-12-19', '09170000015', 'ryan@email.com', 'driver', 'denied', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(5, 'Mark', 'Santos', 'male', '1993-06-11', '09170000011', 'mark@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(6, 'Angela', 'Reyes', 'female', '1998-05-02', '09170000004', 'angela@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(7, 'David', 'Lim', 'male', '1992-08-23', '09170000013', 'david@email.com', 'driver', 'pending', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(8, 'Joshua', 'Lopez', 'male', '1999-09-12', '09170000007', 'joshua@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(9, 'Ella', 'Villanueva', 'female', '1996-01-21', '09170000020', 'ella@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(10, 'Maria', 'Dela Cruz', 'female', '1994-02-05', '09170000012', 'maria@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(11, 'Patricia', 'Ramos', 'female', '1997-04-28', '09170000008', 'patricia@email.com', 'passenger', 'pending', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(12, 'Brian', 'Castro', 'male', '1995-03-07', '09170000017', 'brian@email.com', 'driver', 'pending', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(13, 'Michael', 'Garcia', 'male', '1997-07-18', '09170000003', 'michael@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(14, 'Ashley', 'Navarro', 'female', '1997-11-30', '09170000016', 'ashley@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(15, 'Kevin', 'Torres', 'male', '1996-11-09', '09170000005', 'kevin@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(16, 'Christine', 'Tan', 'female', '1996-09-15', '09170000014', 'christine@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(17, 'Samantha', 'Cruz', 'female', '2000-08-17', '09170000006', 'samantha@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(18, 'Joshua', 'Rivera', 'male', '1991-05-13', '09170000019', 'jrivera@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(19, 'Jane', 'Smith', 'female', '1999-03-22', '09170000002', 'jane@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(20, 'Daniel', 'Mendoza', 'male', '1995-12-14', '09170000009', 'daniel@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
+(21, 'Super', 'Admin', 'rather_not_say', '1985-04-01', '09179999999', 'admin@katrip.com', 'admin', 'active', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', '2026-07-13 21:11:58'),
+(22, 'Francis', 'Reyes', 'male', '2006-05-17', '947-767-0996', 'hans_reyes@dlsu.edu.ph', 'driver', 'pending', '$2y$10$M4ZTO7euDwh/y9uiUcLCK.NWJ3o2qF4HlMCaIlBIzPKGYmbT8BU5O', '2026-07-13 21:13:06');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `ride_id` (`ride_id`),
+  ADD KEY `passenger_id` (`passenger_id`);
+
+--
+-- Indexes for table `driver_documents`
+--
+ALTER TABLE `driver_documents`
+  ADD PRIMARY KEY (`document_id`),
+  ADD KEY `driver_id` (`driver_id`);
+
+--
+-- Indexes for table `driver_profiles`
+--
+ALTER TABLE `driver_profiles`
+  ADD PRIMARY KEY (`driver_id`);
+
+--
+-- Indexes for table `rides`
+--
+ALTER TABLE `rides`
+  ADD PRIMARY KEY (`ride_id`),
+  ADD KEY `driver_id` (`driver_id`),
+  ADD KEY `schedule_id` (`schedule_id`);
+
+--
+-- Indexes for table `ride_landmarks`
+--
+ALTER TABLE `ride_landmarks`
+  ADD PRIMARY KEY (`landmark_id`),
+  ADD KEY `ride_id` (`ride_id`);
+
+--
+-- Indexes for table `ride_schedules`
+--
+ALTER TABLE `ride_schedules`
+  ADD PRIMARY KEY (`schedule_id`),
+  ADD KEY `driver_id` (`driver_id`);
+
+--
+-- Indexes for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `booking_id` (`booking_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `driver_documents`
+--
+ALTER TABLE `driver_documents`
+  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `rides`
+--
+ALTER TABLE `rides`
+  MODIFY `ride_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `ride_landmarks`
+--
+ALTER TABLE `ride_landmarks`
+  MODIFY `landmark_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `ride_schedules`
+--
+ALTER TABLE `ride_schedules`
+  MODIFY `schedule_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `transactions`
+--
+ALTER TABLE `transactions`
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`ride_id`) REFERENCES `rides` (`ride_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`passenger_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `driver_documents`
+--
+ALTER TABLE `driver_documents`
+  ADD CONSTRAINT `driver_documents_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `driver_profiles` (`driver_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `driver_profiles`
+--
+ALTER TABLE `driver_profiles`
+  ADD CONSTRAINT `driver_profiles_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `rides`
+--
+ALTER TABLE `rides`
+  ADD CONSTRAINT `rides_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `driver_profiles` (`driver_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `rides_ibfk_2` FOREIGN KEY (`schedule_id`) REFERENCES `ride_schedules` (`schedule_id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `ride_landmarks`
+--
+ALTER TABLE `ride_landmarks`
+  ADD CONSTRAINT `ride_landmarks_ibfk_1` FOREIGN KEY (`ride_id`) REFERENCES `rides` (`ride_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `ride_schedules`
+--
+ALTER TABLE `ride_schedules`
+  ADD CONSTRAINT `ride_schedules_ibfk_1` FOREIGN KEY (`driver_id`) REFERENCES `driver_profiles` (`driver_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `transactions`
+--
+ALTER TABLE `transactions`
+  ADD CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
