@@ -91,29 +91,40 @@ CREATE TABLE transactions (
 );
 
 -- SAMPLE DATE --
-INSERT INTO users (user_id, first_name, last_name, gender, birthdate, phone_number, email, role, status, password) VALUES
-(1, 'John', 'Doe', 'male', '1990-05-15', '09171234567', 'john.doe@email.com', 'driver', 'active', 'password'),
-(2, 'Jane', 'Smith', 'female', '1993-08-22', '09182345678', 'jane.smith@email.com', 'driver', 'active', 'password'),
-(3, 'Mark', 'Santos', 'male', '1988-11-02', '09193456789', 'mark.santos@email.com', 'driver', 'active', 'password'),
-(4, 'Alice', 'Guanzon', 'female', '1995-03-14', '09204567890', 'alice.g@email.com', 'passenger', 'active', 'password'),
-(5, 'Bob', 'Reyes', 'male', '1998-07-19', '09215678901', 'bob.reyes@email.com', 'passenger', 'active', 'password'),
-(6, 'Charlie', 'Cruz', 'other', '2000-01-25', '09226789012', 'charlie.c@email.com', 'passenger', 'active', 'password'),
-(7, 'Diana', 'Lopez', 'female', '1992-12-05', '09237890123', 'diana.l@email.com', 'passenger', 'active', 'password'),
-(8, 'Evan', 'Torres', 'male', '1994-06-30', '09248901234', 'evan.t@email.com', 'passenger', 'active', 'password'),
-(9, 'Grace', 'Alvarez', 'female', '1997-09-09', '09259012345', 'grace.a@email.com', 'passenger', 'pending', 'password'),
-(10, 'Superadmin', 'KaTrip', 'rather_not_say', '1985-04-01', '09151112222', 'admin@katrip.com', 'admin', 'active', 'admin');
+INSERT INTO users (first_name, last_name, gender, birthdate, phone_number, email, role, status, password) VALUES
+('Camille','Fernandez','female','1998-07-25','09170000018','camille@email.com','driver','active','password'),
+('John','Doe','male','1998-01-15','09170000001','john@email.com','passenger','active',SHA2('password', 256)),
+('Ryan','Aquino','male','1990-12-19','09170000015','ryan@email.com','driver','denied',SHA2('password', 256)),
+('Nicole','Flores','female','1998-10-06','09170000010','nicole@email.com','passenger','active',SHA2('password', 256)),
+('Mark','Santos','male','1993-06-11','09170000011','mark@email.com','driver','active',SHA2('password', 256)),
+('Angela','Reyes','female','1998-05-02','09170000004','angela@email.com','passenger','active',SHA2('password', 256)),
+('David','Lim','male','1992-08-23','09170000013','david@email.com','driver','pending',SHA2('password', 256)),
+('Joshua','Lopez','male','1999-09-12','09170000007','joshua@email.com','passenger','active',SHA2('password', 256)),
+('Ella','Villanueva','female','1996-01-21','09170000020','ella@email.com','driver','active',SHA2('password', 256)),
+('Maria','Dela Cruz','female','1994-02-05','09170000012','maria@email.com','driver','active',SHA2('password', 256)),
+('Patricia','Ramos','female','1997-04-28','09170000008','patricia@email.com','passenger','pending',SHA2('password', 256)),
+('Brian','Castro','male','1995-03-07','09170000017','brian@email.com','driver','pending',SHA2('password', 256)),
+('Michael','Garcia','male','1997-07-18','09170000003','michael@email.com','passenger','active',SHA2('password', 256)),
+('Ashley','Navarro','female','1997-11-30','09170000016','ashley@email.com','driver','active',SHA2('password', 256)),
+('Kevin','Torres','male','1996-11-09','09170000005','kevin@email.com','passenger','active',SHA2('password', 256)),
+('Christine','Tan','female','1996-09-15','09170000014','christine@email.com','driver','active',SHA2('password', 256)),
+('Samantha','Cruz','female','2000-08-17','09170000006','samantha@email.com','passenger','active',SHA2('password', 256)),
+('Joshua','Rivera','male','1991-05-13','09170000019','jrivera@email.com','driver','active',SHA2('password', 256)),
+('Jane','Smith','female','1999-03-22','09170000002','jane@email.com','passenger','active',SHA2('password', 256)),
+('Daniel','Mendoza','male','1995-12-14','09170000009','daniel@email.com','passenger','active',SHA2('password', 256)),
+('Super','Admin','rather_not_say','1985-04-01','09179999999','admin@katrip.com','admin','active',SHA2('admin123', 256));
 
 INSERT INTO driver_profiles (driver_id, license_number, vehicle_model, plate_number, vehicle_color, verification_status) VALUES
-(1, 'N01-12-345678', 'Toyota Vios', 'ABC-1234', 'black', 'verified'),
-(2, 'N02-98-765432', 'Mitsubishi Mirage', 'XYZ-5678', 'white', 'verified'),
-(3, 'N03-45-678901', 'Honda City', 'DEF-9012', 'silver', 'verified'),
-(4, 'N04-11-223344', 'Hyundai Accent', 'GHI-3456', 'red', 'pending'),
-(5, 'N05-55-667788', 'Ford EcoSport', 'JKL-7890', 'blue', 'verified'),
-(6, 'N06-99-001122', 'Suzuki Swift', 'MNO-1234', 'gray', 'verified'),
-(7, 'N07-33-445566', 'Nissan Almera', 'PQR-5678', 'brown', 'denied'),
-(8, 'N08-77-889900', 'Toyota Innova', 'STU-9012', 'green', 'verified'),
-(9, 'N09-22-446688', 'Kia Soluto', 'VWX-3456', 'white', 'pending'),
-(10, 'N10-11-335577', 'Mazda 3', 'YZA-7890', 'black', 'verified');
+(1,'N01-123456','Toyota Innova','ABC1234','black','verified'),
+(3,'N03-654321','Honda City','XYZ5678','white','denied'),
+(5,'N05-456789','Toyota Vios','JKL9012','gray','verified'),
+(7,'N07-223344','Hyundai Accent','MNO3456','red','pending'),
+(9,'N09-998877','Ford Ranger','PQR7890','blue','verified'),
+(10,'N10-112233','Suzuki Swift','STU1234','white','verified'),
+(12,'N12-445566','Mitsubishi Mirage','VWX5678','green','pending'),
+(14,'N14-778899','Toyota Wigo','YZA9012','brown','verified'),
+(16,'N16-991122','Kia Soluto','BCD3456','black','verified'),
+(18,'N18-334455','Nissan Almera','EFG7890','gray','verified');
 
 INSERT INTO driver_documents (document_id, driver_id, document_type, file, uploaded_at) VALUES
 (1, 1, 'license', 'files/docs/d1_license.pdf', CURRENT_TIMESTAMP),
