@@ -56,7 +56,7 @@
     }
 
     function editUser($conn, $user_id, $first_name, $last_name, $gender, $birthdate, $phone_number, $email, $role, $status) {
-        $check = $conn->prepare("SELECT user_id FROM users WHERE email = ? OR phone_number = ? AND user_id != ?");
+        $check = $conn->prepare("SELECT user_id FROM users WHERE (email = ? OR phone_number = ?) AND user_id != ?");
         $check->bind_param("ssi", $email, $phone_number, $user_id);
         $check->execute();
         $result = $check->get_result();
