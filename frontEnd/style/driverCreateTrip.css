@@ -58,7 +58,7 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.06);
     margin: 18px 20px 0 20px;
   }
-  .card-title { font-weight: 700; font-size: 1.05rem; color: #2d1a4e; margin-bottom: 14px; }
+  .card-title { font-family: 'Bloc'; font-weight: 10; font-size: 1.5rem; color: #2d1a4e; margin-bottom: 14px; }
  
   /* LOCATION INPUTS */
   .loc-row { display: flex; align-items: center; gap: 8px; position: relative; }
@@ -206,7 +206,7 @@ body {
     .form-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
     .expand-hint {
       text-align: center; font-size: 0.78rem; color: var(--purple);
-      padding: 4px 0 2px; cursor: pointer; font-weight: 500;
+      padding: 4px 0 20px; cursor: pointer; font-weight: 500;
     }
     .expand-hint { display: block !important; }
   }
