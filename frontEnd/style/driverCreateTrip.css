@@ -161,12 +161,16 @@ body {
  
   /* TOAST */
   #toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: #2d1a4e; color: #fff; padding: 10px 22px; border-radius: 20px;
-    font-size: 0.87rem; z-index: 9999; transition: transform 0.3s ease;
+    position: fixed; top: 84px; left: auto; right: -300px; transform: none;
+    background: var(--danger); color: #fff; padding: 10px 15px; border-radius: 5px;
+    font-size: 0.87rem; z-index: 9999; transition: right 0.3s ease;
     pointer-events: none;
   }
-  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.show { right: 24px; }
+
+  #toast.toast-success { background: #0fbf00; }
+  #toast.toast-error   { background: #ed1c24; }
+  #toast.toast-default { background: #2d1a4e; }
  
   .purple-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pickup); flex-shrink: 0; }
  

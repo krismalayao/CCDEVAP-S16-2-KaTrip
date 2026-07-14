@@ -311,7 +311,7 @@ function addPickup() {
 // ─── Create Ride ──────────────────────────────────────────────────────────────
 async function createRide() {
     if (!state.from || !state.to) {
-        showToast('Please set origin and destination.');
+        showToast('Please set origin and destination.','error');
         return;
     }
 
@@ -344,23 +344,24 @@ async function createRide() {
         });
         const data = await resp.json();
         if (data.status === 'success') {
-            showToast('Ride created! 💜');
+            showToast('Ride created!','success');
             setTimeout(() => { window.location.href = 'driverDashboard.html'; }, 1500);
         } else {
-            showToast(data.message || 'Something went wrong.');
+            showToast(data.message || 'Something went wrong.','error');
         }
     } catch (e) {
         console.error(e);
-        showToast('Could not connect to server.');
+        showToast('Could not connect to server.','error');
     }
 }
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
-function showToast(msg) {
+function showToast(msg, type = 'default') {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.className = ''; // reset classes
+  t.classList.add('show', `toast-${type}`);
+  setTimeout(() => t.classList.remove('show', `toast-${type}`), 3000);
 }
 
 // ─── Mobile Bottom-Sheet Toggle ───────────────────────────────────────────────
