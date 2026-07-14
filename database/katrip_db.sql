@@ -7,6 +7,9 @@
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
+CREATE DATABASE IF NOT EXISTS katrip_db;
+USE katrip_db;
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -286,27 +289,27 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `gender`, `birthdate`, `phone_number`, `email`, `role`, `status`, `password`, `created_at`) VALUES
-(1, 'John', 'Doe', 'male', '1998-01-15', '09170000001', 'john@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(2, 'Camille', 'Fernandez', 'female', '1998-07-25', '09170000018', 'camille@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(4, 'Ryan', 'Aquino', 'male', '1990-12-19', '09170000015', 'ryan@email.com', 'driver', 'denied', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(5, 'Mark', 'Santos', 'male', '1993-06-11', '09170000011', 'mark@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(6, 'Angela', 'Reyes', 'female', '1998-05-02', '09170000004', 'angela@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(7, 'David', 'Lim', 'male', '1992-08-23', '09170000013', 'david@email.com', 'driver', 'pending', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(8, 'Joshua', 'Lopez', 'male', '1999-09-12', '09170000007', 'joshua@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(9, 'Ella', 'Villanueva', 'female', '1996-01-21', '09170000020', 'ella@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(10, 'Maria', 'Dela Cruz', 'female', '1994-02-05', '09170000012', 'maria@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(11, 'Patricia', 'Ramos', 'female', '1997-04-28', '09170000008', 'patricia@email.com', 'passenger', 'pending', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(12, 'Brian', 'Castro', 'male', '1995-03-07', '09170000017', 'brian@email.com', 'driver', 'pending', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(13, 'Michael', 'Garcia', 'male', '1997-07-18', '09170000003', 'michael@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(14, 'Ashley', 'Navarro', 'female', '1997-11-30', '09170000016', 'ashley@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(15, 'Kevin', 'Torres', 'male', '1996-11-09', '09170000005', 'kevin@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(16, 'Christine', 'Tan', 'female', '1996-09-15', '09170000014', 'christine@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(17, 'Samantha', 'Cruz', 'female', '2000-08-17', '09170000006', 'samantha@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(18, 'Joshua', 'Rivera', 'male', '1991-05-13', '09170000019', 'jrivera@email.com', 'driver', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(19, 'Jane', 'Smith', 'female', '1999-03-22', '09170000002', 'jane@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(20, 'Daniel', 'Mendoza', 'male', '1995-12-14', '09170000009', 'daniel@email.com', 'passenger', 'active', '5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8', '2026-07-13 21:11:58'),
-(21, 'Super', 'Admin', 'rather_not_say', '1985-04-01', '09179999999', 'admin@katrip.com', 'admin', 'active', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', '2026-07-13 21:11:58'),
+(1, 'John', 'Doe', 'male', '1998-01-15', '09170000001', 'john@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(2, 'Camille', 'Fernandez', 'female', '1998-07-25', '09170000018', 'camille@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(4, 'Ryan', 'Aquino', 'male', '1990-12-19', '09170000015', 'ryan@email.com', 'driver', 'denied', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(5, 'Mark', 'Santos', 'male', '1993-06-11', '09170000011', 'mark@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(6, 'Angela', 'Reyes', 'female', '1998-05-02', '09170000004', 'angela@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(7, 'David', 'Lim', 'male', '1992-08-23', '09170000013', 'david@email.com', 'driver', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(8, 'Joshua', 'Lopez', 'male', '1999-09-12', '09170000007', 'joshua@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(9, 'Ella', 'Villanueva', 'female', '1996-01-21', '09170000020', 'ella@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(10, 'Maria', 'Dela Cruz', 'female', '1994-02-05', '09170000012', 'maria@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(11, 'Patricia', 'Ramos', 'female', '1997-04-28', '09170000008', 'patricia@email.com', 'passenger', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(12, 'Brian', 'Castro', 'male', '1995-03-07', '09170000017', 'brian@email.com', 'driver', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(13, 'Michael', 'Garcia', 'male', '1997-07-18', '09170000003', 'michael@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(14, 'Ashley', 'Navarro', 'female', '1997-11-30', '09170000016', 'ashley@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(15, 'Kevin', 'Torres', 'male', '1996-11-09', '09170000005', 'kevin@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(16, 'Christine', 'Tan', 'female', '1996-09-15', '09170000014', 'christine@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(17, 'Samantha', 'Cruz', 'female', '2000-08-17', '09170000006', 'samantha@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(18, 'Joshua', 'Rivera', 'male', '1991-05-13', '09170000019', 'jrivera@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(19, 'Jane', 'Smith', 'female', '1999-03-22', '09170000002', 'jane@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(20, 'Daniel', 'Mendoza', 'male', '1995-12-14', '09170000009', 'daniel@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
+(21, 'Super', 'Admin', 'rather_not_say', '1985-04-01', '09179999999', 'admin@katrip.com', 'admin', 'active', '$2a$12$MYcMrT3u6VnoA69TxT2Jk.ka8xawexJvj9EebbDTOAtaK7rTP6kU2', '2026-07-13 21:11:58'),
 (22, 'Francis', 'Reyes', 'male', '2006-05-17', '947-767-0996', 'hans_reyes@dlsu.edu.ph', 'driver', 'pending', '$2y$10$M4ZTO7euDwh/y9uiUcLCK.NWJ3o2qF4HlMCaIlBIzPKGYmbT8BU5O', '2026-07-13 21:13:06');
 
 --
