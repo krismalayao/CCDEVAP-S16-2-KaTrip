@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const endpoint = "../../backEnd/controller/profileController.php";
     const isDriverProfile = document.body.classList.contains("driver-profile-body");
     const saveButton = document.getElementById("profile-save-btn");
-    let uploadCsrfToken = "";
     const fields = {
         name: document.getElementById("profile-name"),
         phone: document.getElementById("profile-phone"),
@@ -88,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(endpoint, { credentials: "same-origin" });
             const data = await response.json();
             if (!response.ok || !data.success) throw new Error(data.message || "Unable to load profile.");
-            uploadCsrfToken = data.csrf_token || uploadCsrfToken;
             populateProfile(data.profile);
         } catch (error) {
             if (fields.name) fields.name.textContent = "Unable to load profile";
@@ -137,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch("../../backEnd/controller/uploadProfilePicture.php", {
                 method: "POST",
                 credentials: "same-origin",
-                headers: { "X-CSRF-Token": uploadCsrfToken },
                 body: formData
             });
             const data = await response.json();

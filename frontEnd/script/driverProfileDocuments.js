@@ -29,7 +29,6 @@ const driverDocuments = {
 };
 
 const pendingUploads = {};
-let documentCsrfToken = "";
 
 function getDocLabel(key) {
     return DRIVER_DOC_TYPES.find((doc) => doc.key === key)?.label || "Document";
@@ -143,7 +142,6 @@ async function loadDriverDocuments() {
     const response = await fetch("../../backEnd/controller/driverDocumentsController.php", { credentials: "same-origin" });
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.message || "Unable to load documents.");
-    documentCsrfToken = data.csrf_token || "";
     DRIVER_DOC_TYPES.forEach(({ key }) => {
         driverDocuments[key] = data.documents[key]?.url || null;
     });
@@ -165,7 +163,6 @@ async function saveDriverDocuments() {
             const response = await fetch("../../backEnd/controller/driverDocumentsController.php", {
                 method: "POST",
                 credentials: "same-origin",
-                headers: { "X-CSRF-Token": documentCsrfToken },
                 body: formData
             });
             const data = await response.json();

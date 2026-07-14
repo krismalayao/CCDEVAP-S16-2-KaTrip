@@ -43,7 +43,7 @@
         if ($profile) {
             $profile['profile_picture_url'] = $profile['profile_picture'] ? '../../backEnd/controller/viewUploadedFile.php?type=profile' : null;
             unset($profile['profile_picture']);
-            profileResponse(200, ["success" => true, "profile" => $profile, "role" => $role, "csrf_token" => uploadCsrfToken()]);
+            profileResponse(200, ["success" => true, "profile" => $profile, "role" => $role]);
         } else {
             profileResponse(404, ["success" => false, "message" => "Profile not found."]);
         }
@@ -109,5 +109,5 @@
     $profile = getProfile($conn, $userId, $role);
     $profile['profile_picture_url'] = $profile['profile_picture'] ? '../../backEnd/controller/viewUploadedFile.php?type=profile' : null;
     unset($profile['profile_picture']);
-    profileResponse(200, ["success" => true, "message" => "Profile saved.", "profile" => $profile, "role" => $role, "csrf_token" => uploadCsrfToken()]);
+    profileResponse(200, ["success" => true, "message" => "Profile saved.", "profile" => $profile, "role" => $role]);
 ?>

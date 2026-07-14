@@ -15,6 +15,7 @@ let pickupIdCounter = 3;
 
 const urlParams  = new URLSearchParams(window.location.search);
 const editRideId = urlParams.get('ride_id');
+const cloneId     = urlParams.get('clone_id');
 
 const BASE_FARE   = 50;
 const FARE_PER_KM = 15;
@@ -424,6 +425,51 @@ async function loadExistingTrip() {
     }
 }
 
+// ─── Load Trip for Cloning ─────────────────────────────────────────────────────
+async function loadCloneTrip() {
+    try {
+        const resp = await fetch(`../../backEnd/controller/getRideForClone.php?ride_id=${cloneId}`);
+        const data = await resp.json();
+        if (data.status !== 'success') {
+            showToast(data.message || 'Could not load this trip.', 'error');
+            return;
+        }
+        const r = data.ride;
+
+        state.from = { name: r.origin_name || r.origin.split(',')[0], display: r.origin, lat: r.origin_lat, lon: r.origin_lng };
+        state.to   = { name: r.destination_name || r.destination.split(',')[0], display: r.destination, lat: r.dest_lat, lon: r.dest_lng };
+        document.getElementById('input-from').value = state.from.name;
+        document.getElementById('input-to').value   = state.to.name;
+        updateMapMarker('from', state.from);
+        updateMapMarker('to', state.to);
+
+        state.pickups = r.landmarks.map(lm => ({
+            id: pickupIdCounter++,
+            value: lm.name,
+            loc: { name: lm.name, display: lm.name, lat: lm.lat, lon: lm.lng }
+        }));
+        if (state.pickups.length === 0) {
+            state.pickups = [{ id: pickupIdCounter++, value: '', loc: null }];
+        }
+        renderPickups();
+        state.pickups.forEach(p => {
+            if (p.loc) {
+                pickupMarkers[p.id] = L.marker([p.loc.lat, p.loc.lon], { icon: makeIcon('var(--pickup)') })
+                    .addTo(map).bindPopup(`Pickup: ${p.loc.name}`);
+            }
+        });
+
+        document.getElementById('passengers').value = r.total_seats;
+        // Date intentionally left as today's default — driver picks a fresh date/time.
+
+        showToast('Trip details loaded. Pick a new date and time.', 'default');
+        await tryRoute();
+    } catch (e) {
+        console.error(e);
+        showToast('Could not load this trip.', 'error');
+    }
+}
+
 // ─── Toast ────────────────────────────────────────────────────────────────────
 function showToast(msg, type = 'default') {
   const t = document.getElementById('toast');
@@ -442,10 +488,16 @@ function toggleSheet() {
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
+document.getElementById('ride-date').min = getLocalDateString();
+
 if (editRideId) {
   loadExistingTrip();
+} else if (cloneId) {
+  document.getElementById('ride-date').value = getLocalDateString();
+  renderPickups();
+  loadCloneTrip();
 } else {
-  document.getElementById('ride-date').min = getLocalDateString();
+  document.getElementById('ride-date').value = getLocalDateString();
   renderPickups();
 }
 

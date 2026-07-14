@@ -11,10 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     uploadJsonResponse(405, ['success' => false, 'message' => 'Method not allowed.']);
 }
 
-if (!verifyUploadCsrf()) {
-    uploadJsonResponse(403, ['success' => false, 'message' => 'Invalid security token.']);
-}
-
 try {
     $userId = (int)$_SESSION['user_id'];
     $allowedMimes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];

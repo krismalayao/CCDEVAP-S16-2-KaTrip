@@ -8,18 +8,6 @@ function uploadJsonResponse(int $status, array $payload): void {
     exit();
 }
 
-function uploadCsrfToken(): string {
-    if (empty($_SESSION['upload_csrf_token'])) {
-        $_SESSION['upload_csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['upload_csrf_token'];
-}
-
-function verifyUploadCsrf(): bool {
-    $provided = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? $_POST['csrf_token'] ?? '';
-    return is_string($provided) && hash_equals(uploadCsrfToken(), $provided);
-}
-
 function storeValidatedUpload(array $file, string $category, int $ownerId, array $allowedMimes, int $maxBytes): array {
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
         throw new RuntimeException('The file could not be uploaded.');

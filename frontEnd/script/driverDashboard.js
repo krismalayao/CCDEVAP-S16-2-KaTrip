@@ -133,11 +133,11 @@ function renderTrips() {
       }
     }
     if (t.status === 'completed') {
-      actions.push(`<button class="btn-sm btn-ghost">View Summary</button>`);
-      actions.push(`<button class="btn-sm btn-outline">Repeat Trip</button>`);
+      actions.push(`<button class="btn-sm btn-ghost" onclick="showSummaryModal(${t.id})">View Summary</button>`);
+      actions.push(`<a href="../driver/driverCreateTrip.html?clone_id=${t.id}" class="btn-sm btn-outline">Repeat Trip</a>`);
     }
     if (t.status === 'cancelled') {
-      actions.push(`<button class="btn-sm btn-outline">Recreate</button>`);
+      actions.push(`<a href="../driver/driverCreateTrip.html?clone_id=${t.id}" class="btn-sm btn-outline">Recreate</a>`);
     }
 
     const pickupText = t.pickups.length ? `${t.pickups.join(', ')}` : '—';
@@ -282,6 +282,37 @@ function confirmCancel() {
       alert('Something went wrong cancelling this trip.');
       hideCancelModal();
     });
+}
+
+function showSummaryModal(id) {
+  const t = trips.find(tr => tr.id === id);
+  if (!t) return;
+
+  document.getElementById('summary-route').innerHTML = `
+    ${t.from}
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    ${t.to}
+  `;
+  document.getElementById('summary-date').textContent = `${formatDate(t.date)} · ${t.time}`;
+
+  document.getElementById('summary-pax').innerHTML =
+    `<span class="capacity-badge ${capClass(t.passengers, t.capacity)}">${t.passengers} / ${t.capacity}</span>`;
+
+  document.getElementById('summary-fare').textContent = `PHP ${t.fare.toFixed(2)}`;
+
+  document.getElementById('summary-pickups').innerHTML = t.pickups.length
+    ? t.pickups.map(p => `
+        <div style="display:flex;align-items:center;gap:8px;padding:4px 0;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#c084fc;flex-shrink:0;"></div>
+          ${p}
+        </div>`).join('')
+    : '<span style="color:#9ca3af;">No pickup stops</span>';
+
+  document.getElementById('summary-modal').style.display = 'flex';
+}
+
+function hideSummaryModal() {
+  document.getElementById('summary-modal').style.display = 'none';
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

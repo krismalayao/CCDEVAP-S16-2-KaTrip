@@ -25,16 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'uploaded_at' => $row['uploaded_at']
         ];
     }
-    uploadJsonResponse(200, ['success' => true, 'documents' => $documents, 'csrf_token' => uploadCsrfToken()]);
+    uploadJsonResponse(200, ['success' => true, 'documents' => $documents]);
     exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     uploadJsonResponse(405, ['success' => false, 'message' => 'Method not allowed.']);
-}
-
-if (!verifyUploadCsrf()) {
-    uploadJsonResponse(403, ['success' => false, 'message' => 'Invalid security token.']);
 }
 
 $documentType = $_POST['document_type'] ?? '';
