@@ -32,11 +32,17 @@
 
     // Build the route: origin -> each pickup landmark, in order -> destination
     $route = [];
-    $route[] = ["label" => $ride['origin'], "type" => "origin"];
+    $route[] = ["label" => $ride['origin'], "type" => "origin",
+        "lat" => $ride['origin_lat'] !== null ? (float) $ride['origin_lat'] : null,
+        "lng" => $ride['origin_lng'] !== null ? (float) $ride['origin_lng'] : null];
     foreach ($ride['landmarks'] as $lm) {
-        $route[] = ["label" => $lm['landmark_name'], "type" => "pickup"];
+        $route[] = ["label" => $lm['landmark_name'], "type" => "pickup",
+            "lat" => $lm['lat'] !== null ? (float) $lm['lat'] : null,
+            "lng" => $lm['lng'] !== null ? (float) $lm['lng'] : null];
     }
-    $route[] = ["label" => $ride['destination'], "type" => "destination"];
+    $route[] = ["label" => $ride['destination'], "type" => "destination",
+        "lat" => $ride['dest_lat'] !== null ? (float) $ride['dest_lat'] : null,
+        "lng" => $ride['dest_lng'] !== null ? (float) $ride['dest_lng'] : null];
 
     // Split passengers by booking status, and total up accepted seats for the fare split
     $acceptedSeats = 0;

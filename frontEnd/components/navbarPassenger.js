@@ -8,7 +8,7 @@ document.getElementById('navbar-mount').innerHTML = `
         <nav class="nav-links">
             <a class="nav-link" href="passengerDashboard.php">Home</a>
             <a class="nav-link" href="myBookings.html">View Bookings</a>
-            <a class="nav-link" href="browseRides.php">Browse Rides</a>
+            <a class="nav-link" href="browseRides.html">Browse Rides</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
@@ -17,7 +17,7 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
             </button>
             <a class="nav-profile-btn" href="passengerProfile.html" aria-label="Profile">
-                <span class="nav-profile-initials">JD</span>
+                <span class="nav-profile-initials"></span>
             </a>
         </div>
     </div>
@@ -25,7 +25,7 @@ document.getElementById('navbar-mount').innerHTML = `
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
         <a class="nav-dropdown-link" href="passengerDashboard.php">Home</a>
         <a class="nav-dropdown-link" href="myBookings.html">View Bookings</a>
-        <a class="nav-dropdown-link" href="browseRides.php">Browse Rides</a>
+        <a class="nav-dropdown-link" href="browseRides.html">Browse Rides</a>
     </div>
 </header>
 `;
@@ -54,3 +54,14 @@ document.querySelectorAll('.nav-link, .nav-dropdown-link').forEach(link => {
         link.classList.add('nav-link-active');
     }
 });
+
+fetch('../../backEnd/controller/profileController.php', { credentials: 'same-origin' })
+    .then(response => response.ok ? response.json() : null)
+    .then(data => {
+        if (!data?.success) return;
+        const initials = `${data.profile.first_name?.[0] || ''}${data.profile.last_name?.[0] || ''}`.toUpperCase() || 'K';
+        document.querySelectorAll('.nav-profile-initials').forEach(element => {
+            element.textContent = initials;
+        });
+    })
+    .catch(() => {});

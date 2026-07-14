@@ -137,7 +137,7 @@ function renderMap() {
     // Did not change much, need help with proper implementation.
     if (map) return;
     map = L.map('map', { zoomControl: true }).setView([14.838, 120.274], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 }
