@@ -110,7 +110,7 @@
 
         <script>
 
-            fetch('../backEnd/dashStats.php')
+            fetch('../backEnd/adminDashController.php')
                 .then(res => res.json())
                 .then(data => {
             
