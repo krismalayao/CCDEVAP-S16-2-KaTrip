@@ -1,6 +1,7 @@
 <?php
     session_start();
     require "../../config/db.php";
+    require "../../config/uploads.php";
 
     function profileResponse($status, $payload) {
         http_response_code($status);
@@ -19,14 +20,14 @@
         $isDriver = ($role === "driver");
         $sql = $isDriver 
             ? "SELECT u.first_name, u.last_name, u.gender, u.phone_number, u.email,
-                      u.created_at, dp.vehicle_model, dp.plate_number, dp.verification_status
+                      u.created_at, u.profile_picture, dp.vehicle_model, dp.plate_number, dp.verification_status
                 FROM users u 
                 LEFT JOIN driver_profiles dp 
                 ON dp.driver_id = u.user_id 
                 WHERE u.user_id = ? 
                 AND u.role = 'driver'"
 
-            : "SELECT first_name, last_name, gender, phone_number, email, created_at 
+            : "SELECT first_name, last_name, gender, phone_number, email, created_at, profile_picture
                FROM users 
                WHERE user_id = ? 
                AND role = 'passenger'";
@@ -40,6 +41,8 @@
     if ($_SERVER["REQUEST_METHOD"] === "GET") {
         $profile = getProfile($conn, $userId, $role);
         if ($profile) {
+            $profile['profile_picture_url'] = $profile['profile_picture'] ? '../../backEnd/controller/viewUploadedFile.php?type=profile' : null;
+            unset($profile['profile_picture']);
             profileResponse(200, ["success" => true, "profile" => $profile, "role" => $role]);
         } else {
             profileResponse(404, ["success" => false, "message" => "Profile not found."]);
@@ -103,5 +106,8 @@
     }
 
     $_SESSION["email"] = $email;
-    profileResponse(200, ["success" => true, "message" => "Profile saved.", "profile" => getProfile($conn, $userId, $role), "role" => $role]);
+    $profile = getProfile($conn, $userId, $role);
+    $profile['profile_picture_url'] = $profile['profile_picture'] ? '../../backEnd/controller/viewUploadedFile.php?type=profile' : null;
+    unset($profile['profile_picture']);
+    profileResponse(200, ["success" => true, "message" => "Profile saved.", "profile" => $profile, "role" => $role]);
 ?>

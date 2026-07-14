@@ -38,7 +38,7 @@ function openDriverDocsModal() {
     const modal = document.getElementById("driver-docs-modal");
     if (!modal) return;
 
-    Object.keys(pendingUploads).forEach((key) => delete pendingUploads[key]);
+    clearPendingUploads();
     renderAllDocumentPreviews();
     modal.classList.add("show");
     modal.setAttribute("aria-hidden", "false");
@@ -89,7 +89,7 @@ function closeDocumentLightbox() {
 }
 
 function getDocumentSrc(key) {
-    if (pendingUploads[key]) return pendingUploads[key];
+    if (pendingUploads[key]) return pendingUploads[key].previewUrl;
     return driverDocuments[key];
 }
 
@@ -128,23 +128,55 @@ function renderAllDocumentPreviews() {
 
 function handleDocumentReupload(key, file) {
     if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        pendingUploads[key] = event.target.result;
-        renderDocumentPreview(key);
-    };
-    reader.readAsDataURL(file);
+    if (pendingUploads[key]?.previewUrl) URL.revokeObjectURL(pendingUploads[key].previewUrl);
+    pendingUploads[key] = { file, previewUrl: URL.createObjectURL(file) };
+    renderDocumentPreview(key);
 }
 
-function saveDriverDocuments() {
-    Object.entries(pendingUploads).forEach(([key, src]) => {
-        driverDocuments[key] = src;
-    });
-
+function clearPendingUploads() {
+    Object.values(pendingUploads).forEach((pending) => URL.revokeObjectURL(pending.previewUrl));
     Object.keys(pendingUploads).forEach((key) => delete pendingUploads[key]);
+}
+
+async function loadDriverDocuments() {
+    const response = await fetch("../../backEnd/controller/driverDocumentsController.php", { credentials: "same-origin" });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || "Unable to load documents.");
+    DRIVER_DOC_TYPES.forEach(({ key }) => {
+        driverDocuments[key] = data.documents[key]?.url || null;
+    });
     renderAllDocumentPreviews();
-    closeDriverDocsModal();
+}
+
+async function saveDriverDocuments() {
+    const saveButton = document.getElementById("driver-docs-save");
+    if (!Object.keys(pendingUploads).length) {
+        closeDriverDocsModal();
+        return;
+    }
+    if (saveButton) saveButton.disabled = true;
+    try {
+        for (const [key, pending] of Object.entries(pendingUploads)) {
+            const formData = new FormData();
+            formData.append("document_type", key);
+            formData.append("document", pending.file);
+            const response = await fetch("../../backEnd/controller/driverDocumentsController.php", {
+                method: "POST",
+                credentials: "same-origin",
+                body: formData
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.message || `Unable to upload ${getDocLabel(key)}.`);
+            driverDocuments[key] = `${data.document.url}&v=${Date.now()}`;
+        }
+        clearPendingUploads();
+        renderAllDocumentPreviews();
+        closeDriverDocsModal();
+    } catch (error) {
+        window.alert(error.message);
+    } finally {
+        if (saveButton) saveButton.disabled = false;
+    }
 }
 
 function initDriverDocumentsModal() {
@@ -211,6 +243,8 @@ function initDriverDocumentsModal() {
             closeDriverDocsModal();
         }
     });
+
+    loadDriverDocuments().catch((error) => console.error(error));
 }
 
 document.addEventListener("DOMContentLoaded", initDriverDocumentsModal);

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
         element.style.cssText = `color:${isError ? "#b42318" : "#277a3d"};font-size:12px;font-weight:bold;margin:8px 0 0;`;
     };
 
-    const showSuccessModal = () => {
+    const showSuccessModal = (title = "Profile saved successfully") => {
         let modal = document.getElementById("profile-save-modal");
         if (!modal) {
             modal = document.createElement("div");
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             modal.setAttribute("aria-labelledby", "profile-save-modal-title");
             modal.innerHTML = `
                 <div class="profile-save-modal-card">
-                    <h3 id="profile-save-modal-title">Profile saved successfully</h3>
+                    <h3 id="profile-save-modal-title"></h3>
                     <button type="button" class="profile-save-modal-ok">OK</button>
                 </div>`;
             document.body.appendChild(modal);
@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 modal.classList.remove("show");
             });
         }
+        modal.querySelector("#profile-save-modal-title").textContent = title;
         modal.classList.add("show");
         modal.querySelector(".profile-save-modal-ok").focus();
     };
@@ -56,6 +57,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".nav-profile-initials").forEach((element) => {
             element.textContent = initials;
         });
+        const avatarPreview = document.getElementById("avatar-preview");
+        if (avatarPreview && profile.profile_picture_url) {
+            avatarPreview.style.backgroundImage = `url('${profile.profile_picture_url}&v=${Date.now()}')`;
+            avatarPreview.style.backgroundSize = "cover";
+            avatarPreview.style.backgroundPosition = "center";
+        }
         if (fields.phone) fields.phone.value = profile.phone_number || "";
         if (fields.email) fields.email.value = profile.email || "";
         if (fields.gender) fields.gender.value = (profile.gender || "").replaceAll("-", "_");
@@ -119,16 +126,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const avatarUpload = document.getElementById("avatar-upload");
     const avatarPreview = document.getElementById("avatar-preview");
-    avatarUpload?.addEventListener("change", (event) => {
+    avatarUpload?.addEventListener("change", async (event) => {
         const file = event.target.files?.[0];
         if (!file || !avatarPreview) return;
-        const reader = new FileReader();
-        reader.onload = (loadEvent) => {
-            avatarPreview.style.backgroundImage = `url('${loadEvent.target.result}')`;
+        const formData = new FormData();
+        formData.append("profile_picture", file);
+        try {
+            const response = await fetch("../../backEnd/controller/uploadProfilePicture.php", {
+                method: "POST",
+                credentials: "same-origin",
+                body: formData
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.message || "Unable to upload profile picture.");
+            avatarPreview.style.backgroundImage = `url('${data.url}&v=${Date.now()}')`;
             avatarPreview.style.backgroundSize = "cover";
             avatarPreview.style.backgroundPosition = "center";
-        };
-        reader.readAsDataURL(file);
+            showSuccessModal("Profile picture updated successfully");
+        } catch (error) {
+            showMessage(error.message, true);
+        } finally {
+            avatarUpload.value = "";
+        }
     });
 
     document.getElementById("logout-btn")?.addEventListener("click", async () => {

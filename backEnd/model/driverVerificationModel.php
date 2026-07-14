@@ -1,14 +1,15 @@
 <?php
     require "../../config/db.php";
+    require_once __DIR__ . "/../../config/uploads.php";
 
     function getAllDriverApps($conn) {
         $stmt = $conn->query("SELECT u.user_id, u.first_name, u.last_name, u.gender,
                               u.birthdate, u.phone_number, u.email, u.status, u.created_at,
                               dp.license_number, dp.vehicle_model, dp.plate_number,
                               dp.vehicle_color, dp.verification_status,
-                              MAX(CASE WHEN dd.document_type = 'license' THEN dd.file END) AS license_file,
-                              MAX(CASE WHEN dd.document_type = 'registration' THEN dd.file END) AS registration_file,
-                              MAX(CASE WHEN dd.document_type = 'insurance' THEN dd.file END) AS insurance_file
+                              MAX(CASE WHEN dd.document_type = 'license' THEN dd.document_id END) AS license_file,
+                              MAX(CASE WHEN dd.document_type = 'registration' THEN dd.document_id END) AS registration_file,
+                              MAX(CASE WHEN dd.document_type = 'insurance' THEN dd.document_id END) AS insurance_file
                               FROM users AS u
                               JOIN driver_profiles AS dp ON u.user_id = dp.driver_id
                               LEFT JOIN driver_documents AS dd ON dp.driver_id = dd.driver_id
@@ -93,71 +94,35 @@
     }
 
     function uploadDriverDocuments($conn, $driver_id, $files) {
-        $uploadDirectory = __DIR__ . "/../../uploads/drivers/";
-
-        if (!is_dir($uploadDirectory)) {
-            mkdir($uploadDirectory, 0777, true);
-        }
-
-        $documents = ["license_file" => "license",
-                      "registration_file" => "registration",
-                      "insurance_file" => "insurance"];
-
-        foreach ($documents as $input => $type) {
-            if(isset($files[$input]) && $files[$input]["error"] == 0){
-                $fileName = time() . "_" . basename($files[$input]["name"]);
-                $target = $uploadDirectory . $fileName;
-
-                move_uploaded_file($files[$input]["tmp_name"], $target);
-
-                $stmt = $conn->prepare("INSERT INTO driver_documents(driver_id, document_type, file)
-                                        VALUES (?, ?, ?);");
-                $stmt->bind_param("iss", $driver_id, $type, $target);
-                $stmt->execute();
-            }
-        }
+        saveDriverDocumentFiles($conn, $driver_id, $files);
     }
 
     function updateDriverDocuments($conn, $driver_id, $files) {
-        $uploadDirectory = "../../uploads/drivers/";
-        if (!is_dir($uploadDirectory)) {
-            mkdir($uploadDirectory, 0777, true);
-        }
+        saveDriverDocumentFiles($conn, $driver_id, $files);
+    }
 
-        $documents = ["license_file" => "license",
-                      "registration_file" => "registration",
-                      "insurance_file" => "insurance"];
-
+    function saveDriverDocumentFiles($conn, $driver_id, $files) {
+        $documents = ["license_file" => "license", "registration_file" => "registration", "insurance_file" => "insurance"];
+        $allowedMimeTypes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'application/pdf' => 'pdf'];
         foreach ($documents as $input => $type) {
-            if (isset($files[$input]) && $files[$input]["error"] == 0) {
-                $fileName = time() . "_" . basename($files[$input]["name"]);
-                $target = $uploadDirectory . $fileName;
-
-                move_uploaded_file($files[$input]["tmp_name"], $target);
-
-                // Check if document already exists
-                $check = $conn->prepare("SELECT document_id 
-                                         FROM driver_documents
-                                         WHERE driver_id = ? 
-                                         AND document_type = ?;");
-                $check->bind_param("is", $driver_id, $type);
-                $check->execute();
-
-                if ($check->get_result()->num_rows > 0) {
-                    // Update existing document
-                    $stmt = $conn->prepare("UPDATE driver_documents
-                                            SET file = ?
-                                            WHERE driver_id = ?
-                                            AND document_type = ?;");
-                    $stmt->bind_param("sis", $target, $driver_id, $type);
-                } else {
-                    // Insert new document
-                    $stmt = $conn->prepare("INSERT INTO driver_documents(driver_id, document_type, file)
-                                            VALUES (?, ?, ?);");
-                    $stmt->bind_param("iss", $driver_id, $type, $target);
-                }
-                $stmt->execute();
+            if (!isset($files[$input]) || $files[$input]['error'] === UPLOAD_ERR_NO_FILE) continue;
+            $stored = storeValidatedUpload($files[$input], 'driver-documents', (int)$driver_id, $allowedMimeTypes, 8 * 1024 * 1024);
+            $check = $conn->prepare('SELECT document_id, file FROM driver_documents WHERE driver_id = ? AND document_type = ? LIMIT 1');
+            $check->bind_param('is', $driver_id, $type);
+            $check->execute();
+            $existing = $check->get_result()->fetch_assoc();
+            if ($existing) {
+                $stmt = $conn->prepare('UPDATE driver_documents SET file = ?, original_name = ?, mime_type = ?, file_size = ?, uploaded_at = CURRENT_TIMESTAMP WHERE document_id = ?');
+                $stmt->bind_param('sssii', $stored['stored_name'], $stored['original_name'], $stored['mime_type'], $stored['file_size'], $existing['document_id']);
+            } else {
+                $stmt = $conn->prepare('INSERT INTO driver_documents (driver_id, document_type, file, original_name, mime_type, file_size) VALUES (?, ?, ?, ?, ?, ?)');
+                $stmt->bind_param('issssi', $driver_id, $type, $stored['stored_name'], $stored['original_name'], $stored['mime_type'], $stored['file_size']);
             }
+            if (!$stmt->execute()) {
+                removePrivateUpload($stored['stored_name']);
+                throw new RuntimeException('Unable to save an uploaded driver document.');
+            }
+            removePrivateUpload($existing['file'] ?? null);
         }
     }
 

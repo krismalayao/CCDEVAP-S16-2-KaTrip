@@ -1,6 +1,10 @@
 <?php
     session_start();
 
+    $loginEmail = $_SESSION['login_email'] ?? '';
+    $loginError = $_SESSION['login_error'] ?? '';
+    unset($_SESSION['login_email'], $_SESSION['login_error']);
+
     if (isset($_SESSION["email"]) && isset($_SESSION["role"])) {
         if ($_SESSION["role"] == "admin") {
             header("Location: ../../frontEnd/admin/adminDashboard.php");
@@ -37,15 +41,18 @@
 
             <form action="../../backEnd/controller/userLoginController.php" method="POST">
                 <label for="email">Email <span class="asterisk">*</span></label><br />
-                <input type="email" id="email" name="email" placeholder="username@email.com" required><br />
+                <input type="email" id="email" name="email" placeholder="username@email.com" value="<?= htmlspecialchars($loginEmail, ENT_QUOTES, 'UTF-8') ?>" required><br />
 
                 <label for="password">Password <span class="asterisk">*</span></label><br />
-                <div class="login-password-feature">
+                <div class="login-password-feature <?= $loginError ? 'login-input-error' : '' ?>">
                     <input type="password" id="password" name="password" placeholder="Input Password" required>
                     <button type="button" id="toggle-button" class="toggle-button">
                         <i id="toggle-icon" class="bx bxs-lock-alt"></i>
                     </button>
                 </div>
+                <?php if ($loginError): ?>
+                    <p class="login-error-message"><?= htmlspecialchars($loginError, ENT_QUOTES, 'UTF-8') ?></p>
+                <?php endif; ?>
 
                 <button type="submit" class="login-button" name="submit">Login</button>
             </form>
