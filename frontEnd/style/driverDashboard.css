@@ -130,6 +130,11 @@ body {
     cursor: pointer; transition: all 0.15s; border: none; text-decoration: none;
     display: inline-flex; align-items: center; gap: 5px;
   }
+  .btn-sm:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: auto; /* keep this so the title tooltip still shows on hover */
+  }
   .btn-primary   { background: #a855f7; color: #fff; }
   .btn-primary:hover { background: #9333ea; }
   .btn-outline   { background: #fff; color: #a855f7; border: 1.5px solid #a855f7; }
@@ -138,6 +143,21 @@ body {
   .btn-danger:hover { background: #fef2f2; }
   .btn-ghost     { background: #f3f4f6; color: #6b7280; }
   .btn-ghost:hover { background: #e5e7eb; }
+  
+
+.trip-route-text {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.trip-route-text .route-part {
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
   /* EMPTY STATE */
   .empty-state { text-align: center; padding: 56px 20px; color: #9ca3af; }

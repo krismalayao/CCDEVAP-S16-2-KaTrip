@@ -55,15 +55,29 @@ function createLandmarks($conn, $rideId, $landmarks) {
 function getRidesByDriver($conn, $driverId) {
     $stmt = $conn->prepare("
         SELECT r.*,
-        COUNT(b.booking_id) AS passenger_count
+               COUNT(b.booking_id) AS passenger_count
         FROM rides r
         LEFT JOIN bookings b ON b.ride_id = r.ride_id AND b.booking_status = 'accepted'
         WHERE r.driver_id = ?
-        ORDER BY r.departure_date DESC, r.departure DESC");
-
+        GROUP BY r.ride_id
+        ORDER BY r.departure_date DESC, r.departure DESC
+    ");
     $stmt->bind_param("i", $driverId);
     $stmt->execute();
-    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $rides = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    // Attach landmarks to each ride
+    foreach ($rides as &$ride) {
+        $stmt2 = $conn->prepare("
+            SELECT * FROM ride_landmarks
+            WHERE ride_id = ? ORDER BY landmark_number ASC
+        ");
+        $stmt2->bind_param("i", $ride['ride_id']);
+        $stmt2->execute();
+        $ride['landmarks'] = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    return $rides;
 }
 
 // ─── Get a single ride with its landmarks and bookings ───────────────────────
@@ -110,8 +124,27 @@ function updateRideStatus($conn, $rideId, $driverId, $status) {
     return $stmt->execute();
 }
 
-// ─── New Functions ─────────────────────────────────────────────────────
+// ─── Update ride details (date, time, seats, fare) ───────────────────────────
+function updateRideDetails($conn, $rideId, $driverId, $data) {
+    $stmt = $conn->prepare("
+        UPDATE rides
+        SET departure_date = ?, departure = ?, total_seats = ?, available_seats = ?, cost = ?
+        WHERE ride_id = ? AND driver_id = ?
+    ");
 
+    $stmt->bind_param(
+        "ssiidii",
+        $data['departure_date'],
+        $data['departure_time'],
+        $data['total_seats'],
+        $data['available_seats'],
+        $data['cost'],
+        $rideId,
+        $driverId
+    );
+
+    return $stmt->execute();
+}
 
 // ─── Get a driver's display info (name + vehicle) ────────────────────────────
 function getDriverProfile($conn, $driverId) {
@@ -154,9 +187,6 @@ function formatRideTime($time) {
     if (!$time) return '';
     return date('g:i A', strtotime($time));
 }
-// ─── End of New Functions ─────────────────────────────────────────────────────
-
-
 
 // ─── Accept or reject a booking ──────────────────────────────────────────────
 function updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status) {

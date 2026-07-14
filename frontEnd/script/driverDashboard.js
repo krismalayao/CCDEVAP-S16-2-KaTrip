@@ -1,23 +1,40 @@
-// ── Trip data (loaded from the backend) ────────────────────────────────────
-let trips = [];
-
-let activeFilter = 'all';
+// ── State ─────────────────────────────────────────────────────────────────────
+let trips          = [];
+let activeFilter   = 'all';
 let cancelTargetId = null;
 
-// ── Load trips from the backend ─────────────────────────────────────────────
-function loadTrips() {
-fetch('../../backEnd/controller/driverDashController.php')
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) {
-        console.error('Failed to load trips:', data.error);
-        return;
-      }
-      trips = data.trips;
-      updateStats();
-      renderTrips();
-    })
-    .catch(err => console.error('Failed to load trips:', err));
+// ── Fetch trips from backend ──────────────────────────────────────────────────
+async function loadTrips() {
+    try {
+        const resp = await fetch('../../backEnd/model/getTrips.php');
+        const data = await resp.json();
+        if (data.status === 'success') {
+            trips = data.rides.map(r => {
+              if (!r.departure_date) {
+                  console.warn('Trip missing departure_date:', r.ride_id);
+              }
+              return {
+                  id:         r.ride_id,
+                  status:     normalizeStatus(r.ride_status),
+                  from:       r.origin,
+                  to:         r.destination,
+                  date:       r.departure_date,
+                  time:       r.departure,
+                  passengers: parseInt(r.total_seats) - parseInt(r.available_seats),
+                  capacity:   parseInt(r.total_seats),
+                  fare:       parseFloat(r.cost),
+                  pickups:    (r.landmarks || []).map(l => l.landmark_name)
+              };
+          });
+        } else {
+            showToast(data.message || 'Failed to load trips.', 'error');
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('Could not connect to server.', 'error');
+    }
+    updateStats();
+    renderTrips();
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
@@ -27,6 +44,11 @@ function updateStats() {
   document.getElementById('stat-total').textContent = trips.length;
   document.getElementById('stat-completed').textContent = completed.length;
   document.getElementById('stat-earned').textContent = `PHP ${earned.toFixed(0)}`;
+}
+
+// ── Map DB status to frontend status ─────────────────────────────────────────
+function normalizeStatus(s) {
+    return { scheduled: 'upcoming', ongoing: 'ongoing', completed: 'completed', cancelled: 'cancelled' }[s] || 'upcoming';
 }
 
 // ── Filter ────────────────────────────────────────────────────────────────────
@@ -52,22 +74,27 @@ function statusLabel(s) {
 }
 
 function formatDate(d) {
-  return new Date(d).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+  if (!d) return '—';
+  const date = new Date(d);
+  if (isNaN(date)) return '—';
+  return date.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
 // Cancel trip button disappears if it's less than 30 minutes before departure.
 function canCancel(t) {
+  if (!t.date || !t.time) return false;
+
   const [time, meridian] = t.time.split(' ');
   let [h, m] = time.split(':').map(Number);
   if (meridian === 'PM' && h !== 12) h += 12;
   if (meridian === 'AM' && h === 12) h = 0;
 
   const departure = new Date(t.date);
+  if (isNaN(departure)) return false;
   departure.setHours(h, m, 0, 0);
 
   return (departure - new Date()) / 60000 >= 30;
 }
-
 
 function renderTrips() {
   const q = document.getElementById('search-input').value.toLowerCase();
@@ -79,7 +106,7 @@ function renderTrips() {
 
   // Sort: ongoing first, then upcoming by date, then completed, then cancelled
   const order = { ongoing: 0, upcoming: 1, completed: 2, cancelled: 3 };
-  list.sort((a, b) => order[a.status] - order[b.status] || a.date.localeCompare(b.date));
+  list.sort((a, b) => order[a.status] - order[b.status] || (a.date || '').localeCompare(b.date || ''));
 
   const container = document.getElementById('trip-list');
   if (!list.length) {
@@ -94,8 +121,14 @@ function renderTrips() {
     }
     if (t.status === 'upcoming') {
       actions.push(`<button class="btn-sm btn-primary" onclick="startTrip(${t.id})">▶ Start Trip</button>`);
-      actions.push(`<button class="btn-sm btn-outline">Edit</button>`);
-      if (canCancel(t)) actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">✕ Cancel</button>`);
+
+      if (canCancel(t)) {
+        actions.push(`<button class="btn-sm btn-outline" onclick="showEditModal(${t.id})">Edit</button>`);
+        actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">✕ Cancel</button>`);
+      } else {
+        actions.push(`<button class="btn-sm btn-outline" disabled title="Trip starts too soon to edit">Edit</button>`);
+        actions.push(`<button class="btn-sm btn-danger" disabled title="Trips can only be cancelled at least 30 minutes before departure">✕ Cancel</button>`);
+    }
     }
     if (t.status === 'completed') {
       actions.push(`<button class="btn-sm btn-ghost">View Summary</button>`);
@@ -110,9 +143,9 @@ function renderTrips() {
     return `<div class="trip-card">
       <div class="trip-card-top">
         <div class="trip-route-text">
-          ${t.from}
+          <span class="route-part" title="${t.from}">${t.from}</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          ${t.to}
+          <span class="route-part" title="${t.to}">${t.to}</span>
         </div>
         <span class="status-badge status-${t.status}">${statusLabel(t.status)}</span>
       </div>
@@ -153,6 +186,67 @@ function startTrip(id) {
   window.location.href = '../driver/driverStartTrip.html?ride_id=' + id;
 }
 
+let editTargetId = null;
+
+function showEditModal(id) {
+  const t = trips.find(tr => tr.id === id);
+  if (!t) return;
+  editTargetId = id;
+
+  document.getElementById('edit-date').value = t.date || '';
+  document.getElementById('edit-time').value = to24Hour(t.time);
+  document.getElementById('edit-capacity').value = t.capacity;
+  document.getElementById('edit-fare').value = t.fare;
+
+  document.getElementById('edit-modal').style.display = 'flex';
+}
+
+function hideEditModal() {
+  document.getElementById('edit-modal').style.display = 'none';
+  editTargetId = null;
+}
+
+function to24Hour(t) {
+  if (!t) return '';
+  const [time, meridian] = t.split(' ');
+  let [h, m] = time.split(':').map(Number);
+  if (meridian === 'PM' && h !== 12) h += 12;
+  if (meridian === 'AM' && h === 12) h = 0;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+
+function confirmEdit() {
+  if (!editTargetId) return hideEditModal();
+
+  const payload = {
+    rideId:      editTargetId,
+    date:        document.getElementById('edit-date').value,
+    time:        document.getElementById('edit-time').value,
+    totalSeats:  parseInt(document.getElementById('edit-capacity').value),
+    fare:        parseFloat(document.getElementById('edit-fare').value)
+  };
+
+  fetch('../../backEnd/controller/editTrip.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        loadTrips();
+      } else {
+        alert(result.error || 'Could not update this trip.');
+      }
+      hideEditModal();
+    })
+    .catch(err => {
+      console.error('Edit request failed:', err);
+      alert('Something went wrong updating this trip.');
+      hideEditModal();
+    });
+}
+
 function showCancelModal(id) {
   cancelTargetId = id;
   document.getElementById('cancel-modal').style.display = 'flex';
@@ -190,3 +284,6 @@ function confirmCancel() {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadTrips();
+
+// Periodically re-render so the cancel/edit buttons disappear if the trip is too close to departure time
+setInterval(renderTrips, 30000);
