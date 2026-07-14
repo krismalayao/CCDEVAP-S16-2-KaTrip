@@ -48,7 +48,7 @@ function displayApplicant(row){
             </p>
             <p>
                 <strong>Gender:</strong>
-                ${row.dataset.gender}
+                ${row.dataset.gender.charAt(0).toUpperCase() + row.dataset.gender.slice(1)}
             </p>
             <p>
                 <strong>Birthdate:</strong>
@@ -76,11 +76,11 @@ function displayApplicant(row){
             </p>
             <p>
                 <strong>Vehicle Color:</strong>
-                ${row.dataset.color}
+                ${row.dataset.color.charAt(0).toUpperCase() + row.dataset.color.slice(1)}
             </p>
             <p>
                 <strong>Status:</strong>
-                ${row.dataset.verification}
+                ${row.dataset.verification.charAt(0).toUpperCase() + row.dataset.verification.slice(1)}
             </p>
 
             <hr>
