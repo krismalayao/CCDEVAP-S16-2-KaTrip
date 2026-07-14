@@ -190,12 +190,12 @@
 }
 
 /* STATUS COLORS */
-.status-pending {
+.status-ongoing {
     color: #f39c12 !important;
     font-weight: bold;
 }
 
-.status-ongoing {
+.status-scheduled {
     color: #0d6efd !important;
     font-weight: bold;
 }

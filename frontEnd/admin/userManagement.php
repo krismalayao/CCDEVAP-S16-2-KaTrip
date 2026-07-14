@@ -91,7 +91,11 @@
                                         <td><?= $user["first_name"] . " " . $user["last_name"] ?></td>
                                         <td><?= $user["email"] ?></td>
                                         <td><?= ucfirst($user["role"]) ?></td>
-                                        <td><?= ucfirst($user["status"]) ?></td>
+                                        <td class="<?php if ($user["status"] == 'active'): echo 'status-active'; 
+                                                        elseif($user["status"] == 'pending'): echo 'status-pending'; 
+                                                        elseif($user["status"] == 'suspended'): echo 'status-suspended'; 
+                                                        elseif ($user["status"] == 'denied'): echo 'status-denied'; endif; ?>">
+                                                        <?= ucfirst($user["status"]) ?></td>
                                         <td data-date="<?= date("Y-m-d", strtotime($user["created_at"])) ?>">
                                             <?= date("F j, Y", strtotime($user["created_at"])) ?>
                                         </td>

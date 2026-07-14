@@ -89,7 +89,11 @@
                                         <td><?= $trip["destination"] ?></td>
                                         <td class="center"><?= date("g:i A", strtotime($trip["departure"])) ?></td>
                                         <td class="center"><?= $trip["seats"] ?></td>
-                                        <td><?= ucfirst($trip["ride_status"]) ?></td>
+                                        <td class="<?php if ($trip["ride_status"] == 'scheduled'): echo 'status-scheduled'; 
+                                                        elseif($trip["ride_status"] == 'ongoing'): echo 'status-ongoing'; 
+                                                        elseif($trip["ride_status"] == 'completed'): echo 'status-completed'; 
+                                                        elseif($trip["ride_status"] == 'cancelled'): echo 'status-cancelled'; endif; ?>">
+                                                        <?= ucfirst($trip["ride_status"]) ?></td>
                                     </tr>
                                 <?php endforeach ?>
                             <?php endif ?>

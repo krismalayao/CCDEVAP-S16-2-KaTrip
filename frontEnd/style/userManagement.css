@@ -159,13 +159,24 @@
     text-align: center;
 }
 
-.status-active {
-    color: var(--success) !important;
+.status-active,
+.status-verified {
+    color: #198754 !important;
     font-weight: bold;
 }
 
-.status-inactive {
-    color: var(--danger) !important;
+.status-denied {
+    color: #dc3545 !important;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #f39c12 !important;
+    font-weight: bold;
+}
+
+.status-suspended {
+    color: #08a3bb !important;
     font-weight: bold;
 }
 
