@@ -7,6 +7,7 @@
     $pass = trim($_POST["password"] ?? "");
 
     if (empty($email) || empty($pass)) {
+        $_SESSION['login_email'] = $email;
         header("Location: ../../frontEnd/public/loginPage.php");
         exit();
     }
@@ -34,6 +35,8 @@
             exit();
         }
     } else {
+        $_SESSION['login_email'] = $email;
+        $_SESSION['login_error'] = 'The password you entered is incorrect';
         header("Location: ../../frontEnd/public/loginPage.php");
         exit();
     }

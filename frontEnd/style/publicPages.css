@@ -618,3 +618,18 @@
     background-color: #9e9e9e; 
     color: #2c3e50; 
 }
+
+.login-password-feature.login-input-error {
+    outline: none;
+}
+
+.login-password-feature.login-input-error input {
+    border: 2px solid #d93025;
+}
+
+.login-error-message {
+    color: #d93025;
+    text-align: left !important;
+    margin: 4px 0 10px !important;
+    font-size: 12px !important;
+}
