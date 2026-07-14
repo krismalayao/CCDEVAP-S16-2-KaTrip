@@ -1,102 +1,4 @@
-let selectedApplicant = null;
-let selectedApplicationId = null;
 let confirmCallback = null;
-
-function selectApplicant(id, event) {
-    selectedApplicant = id;
-    const applicant = driverApplications[id];
-
-    if (!applicant) {
-        console.error("Applicant not found:", id);
-        return;
-    }
-
-    document.querySelectorAll(".applicant-card").forEach(card => card.classList.remove("active"));
-
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add("active");
-        
-        const radio = event.currentTarget.querySelector("input[name='selectedApplicant']");
-        if (radio) radio.checked = true;
-    }
-
-    renderApplicant(applicant);
-}
-
-function renderApplicant(applicant) {
-    const profileViewer = document.getElementById("profileViewer");
-
-    profileViewer.innerHTML = `
-        <div class="profile-box">
-            <br /><h3>User Information</h3>
-            <p><strong>User ID:</strong> ${applicant.user_id}</p>
-            <p><strong>Full Name:</strong> ${applicant.first_name} ${applicant.last_name}</p>
-            <p><strong>Gender:</strong> ${applicant.gender}</p>
-            <p><strong>Phone Number:</strong> ${applicant.phone_number}</p>
-            <p><strong>Email:</strong> ${applicant.email}</p>
-            <hr />
-            <h3>Driver Profile</h3>
-            <p><strong>License Number:</strong> ${applicant.driver_profile.license_number}</p>
-            <p><strong>Vehicle Model:</strong> ${applicant.driver_profile.vehicle_model}</p>
-            <p><strong>Plate Number:</strong> ${applicant.driver_profile.plate_number}</p>
-            <p><strong>Status:</strong> ${applicant.driver_profile.verification_status}</p>
-            <hr />
-            <h3>Uploaded Documents</h3>
-            <p><strong>Driver's License:</strong> <a href="${applicant.documents.license}" target="_blank">View File</a></p>
-            <p><strong>Vehicle Registration:</strong> <a href="${applicant.documents.registration}" target="_blank">View File</a></p>
-            <p><strong>Vehicle Insurance:</strong> <a href="${applicant.documents.insurance}" target="_blank">View File</a></p>
-        </div>
-    `;
-
-    const decisionButtons = document.getElementById("decisionButtons");
-    if (decisionButtons) {
-        decisionButtons.style.display = "flex";
-    }
-}
-
-function approveApplicant() {
-    if (!selectedApplicant) {
-        alert("Please select an applicant first.");
-        return;
-    }
-
-    const applicant = driverApplications[selectedApplicant];
-    applicant.driver_profile.verification_status = "Verified";
-
-    renderApplicant(applicant);
-    updateTableStatus(selectedApplicant, "Verified", "status-verified");
-
-    alert(`${applicant.first_name} ${applicant.last_name} has been approved.`);
-}
-
-function rejectApplicant() {
-    if (!selectedApplicant) {
-        alert("Please select an applicant first.");
-        return;
-    }
-
-    const applicant = driverApplications[selectedApplicant];
-    applicant.driver_profile.verification_status = "Rejected";
-
-    renderApplicant(applicant);
-    updateTableStatus(selectedApplicant, "Rejected", "status-rejected");
-
-    alert(`${applicant.first_name} ${applicant.last_name} has been rejected.`);
-}
-
-function updateTableStatus(id, statusText, newClassName) {
-    const row = document.querySelector(`tr.applicant-card[onclick*='${id}']`);
-    
-    if (row) {
-        const statusCell = row.cells[2]; 
-        
-        if (statusCell) {
-            statusCell.textContent = statusText;
-            statusCell.className = ""; 
-            statusCell.classList.add(newClassName);
-        }
-    }
-}
 
 const searchInput = document.getElementById("searchInput");
 if (searchInput) {
@@ -120,12 +22,6 @@ if (statusFilter) {
                 return; 
             }
 
-            const onclickAttr = card.getAttribute("onclick");
-            if (!onclickAttr) return;
-            
-            const id = onclickAttr.match(/'([^']+)'/)[1];
-            const applicant = driverApplications[id];
-
             if (!applicant) {
                 card.style.display = "none";
                 return;
@@ -143,155 +39,193 @@ if (statusFilter) {
 }
 
 function getSelectedApplicant() {
-    const selected = document.querySelector("input[name='selectedApplicant']:checked");
-    if (!selected) {
-        alert("Please select an applicant.");
-        return null;
+    return document.querySelector(".selectedApplicant:checked");
+}
+
+function updateActionButtons() {
+    const selected = getSelectedApplicant();
+    const editButton = document.getElementById("editButton");
+    const deleteButton = document.getElementById("deleteButton");
+
+    if (editButton) {
+        editButton.disabled = !selected;
     }
-    return selected.value;
+
+    if (deleteButton) {
+        deleteButton.disabled = !selected;
+    }
+}
+
+function displayApplicant(row){
+    const profileViewer = document.getElementById("profileViewer");
+
+    profileViewer.innerHTML = `
+        <div class="profile-box">
+            <h3>User Information</h3>
+            <p>
+                <strong>Name:</strong>
+                ${row.cells[1].textContent}
+            </p>
+            <p>
+                <strong>Gender:</strong>
+                ${row.dataset.gender}
+            </p>
+            <p>
+                <strong>Birthdate:</strong>
+                ${row.dataset.birthdate}
+            </p>
+            <p>
+                <strong>Phone:</strong>
+                ${row.dataset.phone}
+            </p>
+
+            <hr>
+
+            <h3>Driver Profile</h3>
+            <p>
+                <strong>License Number:</strong>
+                ${row.dataset.license}
+            </p>
+            <p>
+                <strong>Vehicle:</strong>
+                ${row.dataset.vehicle}
+            </p>
+            <p>
+                <strong>Plate Number:</strong>
+                ${row.dataset.plate}
+            </p>
+            <p>
+                <strong>Vehicle Color:</strong>
+                ${row.dataset.color}
+            </p>
+            <p>
+                <strong>Status:</strong>
+                ${row.dataset.verification}
+            </p>
+
+            <hr>
+
+            <h3>Uploaded Documents</h3>
+            <p>
+                <strong>Driver License:</strong>
+                ${
+                    row.dataset.licenseFile 
+                    ? `<a href="${row.dataset.licenseFile}" target="_blank">View File</a>`
+                    : "No File"
+                }
+            </p>
+            <p>
+                <strong>Vehicle Registration:</strong>
+                ${
+                    row.dataset.registrationFile 
+                    ? `<a href="${row.dataset.registrationFile}" target="_blank">View File</a>`
+                    : "No File"
+                }
+            </p>
+            <p>
+                <strong>Vehicle Insurance:</strong>
+                ${
+                    row.dataset.insuranceFile
+                    ? `<a href="${row.dataset.insuranceFile}" target="_blank">View File</a>`
+                    : "No File"
+                }
+            </p>
+        </div>
+    `;
+
+    document.getElementById("approveDriverId").value = row.querySelector(".selectedApplicant").value;
+    document.getElementById("denyDriverId").value = row.querySelector(".selectedApplicant").value;
 }
 
 function openAddModal() {
+    const modal = document.getElementById("applicationModal");
+
     document.getElementById("modalTitle").textContent = "Add Application";
-    clearModal();
-    document.getElementById("applicationModal").classList.add("show");
-    selectedApplicationId = null;
+    document.getElementById("formAction").value = "addDriverApplication";
+    
+    document.querySelector(".modal-content").reset();
+    document.getElementById("driver_id").value = "";
+
+    document.getElementById("verificationStatus").value = "pending";
+    modal.classList.add("show");
 }
 
 function openEditModal() {
-    const id = getSelectedApplicant();
-    if (!id) return;
+    const selected = getSelectedApplicant();
 
-    const data = driverApplications[id];
-    if (!data) return;
+    if (!selected) {
+        alert("Please select an applicant first.");
+        return;
+    }
 
-    selectedApplicationId = id;
+    const row = selected.closest("tr");
+
     document.getElementById("modalTitle").textContent = "Edit Application";
-    document.getElementById("firstName").value = data.first_name;
-    document.getElementById("lastName").value = data.last_name;
-    document.getElementById("gender").value = data.gender;
-    document.getElementById("phoneNumber").value = data.phone_number;
-    document.getElementById("email").value = data.email;
-    document.getElementById("licenseNumber").value = data.driver_profile.license_number;
-    document.getElementById("vehicleModel").value = data.driver_profile.vehicle_model;
-    document.getElementById("plateNumber").value = data.driver_profile.plate_number;
+    document.getElementById("formAction").value = "editDriverApplication";
+    
+    document.getElementById("driver_id").value = selected.value;
+
+    const name = row.cells[1].textContent.trim().split(" ");
+    document.querySelector("input[name='first_name']").value = name[0];
+    document.querySelector("input[name='last_name']").value = name.slice(1).join(" ");
+    document.querySelector("input[name='birthdate']").value = row.dataset.birthdate;
+    document.querySelector("input[name='phone_number']").value = row.dataset.phone;
+    document.querySelector("input[name='email']").value = row.dataset.email;
+    document.querySelector("select[name='gender']").value = row.dataset.gender;
+
+    document.querySelector("input[name='license_number']").value = row.dataset.license;
+    document.querySelector("input[name='vehicle_model']").value = row.dataset.vehicle;
+    document.querySelector("input[name='plate_number']").value = row.dataset.plate;
+    document.querySelector("select[name='vehicle_color']").value = row.dataset.color;
+    document.querySelector("select[name='verification_status']").value = row.dataset.verification;
+
     document.getElementById("applicationModal").classList.add("show");
 }
 
 function closeModal() {
-    document.getElementById("applicationModal").classList.remove("show");
+    const modal = document.getElementById("applicationModal");
+
+    if (modal) {
+        modal.classList.remove("show");
+    }
 }
 
 function clearModal() {
     document.querySelectorAll("#applicationModal input").forEach(input => input.value = "");
-    document.getElementById("gender").selectedIndex = 0;
-}
-
-function saveApplication() {
-    const firstName = document.getElementById("firstName").value;
-    const lastName = document.getElementById("lastName").value;
-    const gender = document.getElementById("gender").value;
-    const phoneNumber = document.getElementById("phoneNumber").value;
-    const email = document.getElementById("email").value;
-    const licenseNumber = document.getElementById("licenseNumber").value;
-    const vehicleModel = document.getElementById("vehicleModel").value;
-    const plateNumber = document.getElementById("plateNumber").value;
-    const verificationStatus = document.getElementById("verificationStatus").value;
-
-    if (!firstName || !lastName || !email) {
-        alert("Please fill out at least Name and Email fields.");
-        return;
-    }
-
-    const idToUpdate = selectedApplicationId || selectedApplicant;
-
-    if (idToUpdate) {
-        const app = driverApplications[idToUpdate];
-
-        app.first_name = firstName;
-        app.last_name = lastName;
-        app.gender = gender;
-        app.phone_number = phoneNumber;
-        app.email = email;
-        app.driver_profile.license_number = licenseNumber;
-        app.driver_profile.vehicle_model = vehicleModel;
-        app.driver_profile.plate_number = plateNumber;
-        app.driver_profile.verification_status = verificationStatus;
-
-        renderApplicant(app);
-
-        const row = document.querySelector(`tr.applicant-card[onclick*='${idToUpdate}']`);
-        if (row) {
-            row.cells[1].textContent = `${firstName} ${lastName}`;
-            row.cells[2].textContent = verificationStatus;
-            row.cells[2].className = ""; 
-            row.cells[2].classList.add(`status-${verificationStatus.toLowerCase()}`);
-        }
-
-    } else {
-        const newId = "U" + String(Object.keys(driverApplications).length + 3).padStart(3, '0');
-
-        driverApplications[newId] = {
-            user_id: newId,
-            first_name: firstName,
-            last_name: lastName,
-            gender: gender,
-            phone_number: phoneNumber,
-            email: email,
-            driver_profile: {
-                license_number: licenseNumber,
-                vehicle_model: vehicleModel,
-                plate_number: plateNumber,
-                verification_status: verificationStatus
-            },
-            documents: { license: "#", registration: "#", insurance: "#" }
-        };
-
-        const tableBody = document.querySelector("#applicantTable tbody");
-        if (tableBody) {
-            const newRow = document.createElement("tr");
-            newRow.className = "applicant-card";
-            newRow.setAttribute("onclick", `selectApplicant('${newId}', event)`);
-            
-            const today = new Date().toLocaleDateString('en-US', {
-                month: '2-digit', day: '2-digit', year: 'numeric'
-            });
-
-            newRow.innerHTML = `
-                <td><input type="radio" name="selectedApplicant" value="${newId}" autocomplete="off"></td>
-                <td>${firstName} ${lastName}</td>
-                <td class="status-${verificationStatus.toLowerCase()}">${verificationStatus}</td>
-                <td>${today}</td>
-            `;
-            tableBody.appendChild(newRow);
-        }
-    }
-
-    closeModal();
-    clearModal();
+    document.getElementById("select[name='gender']").selectedIndex = 0;
 }
 
 function deleteApplication() {
-    const id = getSelectedApplicant();
+    const selected = getSelectedApplicant();
 
-    if (!id) return;
+    if (!selected) {
+        alert("Please select an applicant first.");
+        return;
+    }
 
-    openConfirmModal(
-        "Delete Application",
-        "Are you sure you want to delete this application?",
-        () => {
-            delete driverApplications[id];
+    const row = selected.closest("tr");
+    const name = row.cells[1].textContent.trim();
 
-            const row = document.querySelector(`tr.applicant-card[onclick*='${id}']`);
-            if (row) {
-                row.remove();
-            }
+    openConfirmModal("Confirm Delete", `Are you sure you want to delete ${name}?`,
+        function() {
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "../../backEnd/controller/driverVerificationController.php";
 
-            document.getElementById("profileViewer").innerHTML = `
-                <p>Select an applicant from the table to view profile information and uploaded documents.</p>
-            `;
-            document.getElementById("decisionButtons").style.display = "none";
-            selectedApplicant = null;
+            const action = document.createElement("input");
+            action.type = "hidden";
+            action.name = "action";
+            action.value = "deleteDriverApplication";
+
+            const ids = document.createElement("input");
+            ids.type = "hidden";
+            ids.name = "driver_ids";
+            ids.value = JSON.stringify([selected.value]);
+
+            form.appendChild(action);
+            form.appendChild(ids);
+            document.body.appendChild(form);
+            form.submit();
         }
     );
 }
@@ -315,24 +249,88 @@ function handleConfirmYes() {
     closeConfirmModal();
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    selectedApplicant = null;
+document.addEventListener("DOMContentLoaded",()=>{
+    const radios = document.querySelectorAll(".selectedApplicant");
 
-    document.querySelectorAll("input[name='selectedApplicant']").forEach(radio => {
-        radio.checked = false;
+    radios.forEach(radio=>{
+        radio.addEventListener("change",()=>{
+            const row = radio.closest("tr");
+            displayApplicant(row);
+            updateActionButtons();
+        });
     });
 
-    const decisionButtons = document.getElementById("decisionButtons");
-    if (decisionButtons) {
-        decisionButtons.style.display = "none";
+    const confirmYesBtn = document.getElementById("confirmYesBtn");
+
+    if (confirmYesBtn) {
+        confirmYesBtn.onclick=function(){
+            if (confirmCallback) {
+                confirmCallback();
+            }
+
+            closeConfirmModal();
+        };
     }
 
-    const profileViewer = document.getElementById("profileViewer");
-    if (profileViewer) {
-        profileViewer.innerHTML = `
-            <p style="color: var(--grey-text); text-align: center; margin-top: 20px;">
-                Select an applicant from the table to view profile information and uploaded documents.
-            </p>
-        `;
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get("message");
+
+    if (message === "successfulAdd") {
+        alert("Driver application successfully added.");
+    }
+
+    if (message === "duplicateAdd") {
+        alert("Cannot add driver. Email or phone number already exists.");
+    }
+
+    if (message === "successfulEdit") {
+        alert("Driver application successfully edited.");
+    }
+
+    if (message === "duplicateEdit") {
+        alert("Cannot edit driver. Email or phone number already exists.");
+    }
+
+    if(message === "successfulApprove") {
+        alert("Driver successfully approved.");
+    }
+
+    if (message === "successfulDeny") {
+        alert("Driver successfully denied.");
+    }
+
+    if (message === "successfulDelete") {
+        alert("Driver application deleted.");
+    }
+
+    if (message) {
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
     }
 });
+
+function searchApplicants() {
+    const value = document.getElementById("searchInput").value.toLowerCase();
+
+    document.querySelectorAll(".applicant-card").forEach(row=>{
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(value) ? "" : "none";
+    });
+}
+
+function filterApplicants() {
+    const filter =document.getElementById("statusFilter").value.toLowerCase();
+
+    document.querySelectorAll(".applicant-card").forEach(row=>{
+        const status =row.dataset.verification.toLowerCase();
+
+        if (filter==="all" || status===filter) {
+            row.style.display="";
+        } else {
+            row.style.display="none";
+        }
+    });
+}
