@@ -408,7 +408,49 @@ function openReservationToast(bookingId) {
 
   document.body.appendChild(toast);
 
+  let pollTimer;
+  let stopped = false;
+  const stopPolling = () => {
+    stopped = true;
+    if (pollTimer) clearTimeout(pollTimer);
+  };
+  const updateReservationStatus = async () => {
+    if (stopped) return;
+    try {
+      const response = await fetch(`../../backEnd/controller/passengerBookingStatus.php?booking_id=${encodeURIComponent(bookingId)}`, { credentials: 'same-origin' });
+      const status = await response.json();
+      if (status.booking_status === 'accepted' && status.ride_status === 'ongoing') {
+        toast.querySelector('h3').textContent = 'Trip started';
+        toast.querySelector('p').textContent = 'The driver has started the trip.';
+        toast.querySelector('.reservation-loading').remove();
+        toast.querySelector('.reservation-cancel').textContent = 'Close';
+        stopPolling();
+      } else if (status.booking_status === 'accepted') {
+        toast.querySelector('h3').textContent = 'Reservation approved';
+        toast.querySelector('p').textContent = 'The driver accepted your reservation.';
+        toast.querySelector('.reservation-loading').remove();
+        toast.querySelector('.reservation-cancel').textContent = 'Close';
+        stopPolling();
+      } else if (status.booking_status === 'rejected' || status.booking_status === 'cancelled') {
+        toast.querySelector('h3').textContent = status.booking_status === 'rejected' ? 'Reservation rejected' : 'Reservation cancelled';
+        toast.querySelector('p').textContent = 'This reservation is no longer active.';
+        toast.querySelector('.reservation-loading').remove();
+        toast.querySelector('.reservation-cancel').textContent = 'Close';
+        stopPolling();
+      }
+    } catch (error) {
+      console.warn('Could not refresh reservation status:', error);
+    }
+    if (!stopped) pollTimer = setTimeout(updateReservationStatus, 4000);
+  };
+  updateReservationStatus();
+
   toast.querySelector('.reservation-cancel').addEventListener('click', () => {
+
+    if (stopped) {
+      toast.remove();
+      return;
+    }
 
     fetch('../../backEnd/controller/cancelController.php', {
       method: 'POST',
@@ -420,6 +462,7 @@ function openReservationToast(bookingId) {
     .then(res => res.json())
     .then(data => {
       if (data.success) {
+        stopPolling();
         toast.remove();
       } else {
         alert(data.message);

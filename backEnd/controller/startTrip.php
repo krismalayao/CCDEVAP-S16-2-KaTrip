@@ -35,6 +35,13 @@
         exit();
     }
 
+    foreach ($ride['bookings'] as $booking) {
+        if ($booking['booking_status'] === 'pending') {
+            echo json_encode(["success" => false, "error" => "Please approve or reject all pending reservations before starting the trip."]);
+            exit();
+        }
+    }
+
     $ok = updateRideStatus($conn, $rideId, $driverId, 'ongoing');
     echo json_encode(["success" => (bool) $ok]);
 ?>
