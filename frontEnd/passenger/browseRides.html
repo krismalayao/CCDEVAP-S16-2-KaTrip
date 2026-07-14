@@ -49,7 +49,12 @@
                 </div>
 
                 <div class="browserides-filter-panel hidden" id="panel-pickup">
-                    <p class="browserides-filter-hint">Showing rides nearest to your location first</p>
+                    <form class="browserides-form" id="pickup-form">
+                        <div class="browserides-input-wrapper">
+                            <input class="browserides-input" id="pickup-input" type="text" placeholder="Enter pickup point" autocomplete="off">
+                            <div class="browserides-suggestions" id="pickup-suggestions"></div>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="browserides-ride-list" id="ride-list"></div>
