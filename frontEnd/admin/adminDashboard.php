@@ -1,11 +1,11 @@
 <?php
     session_start();
 
-    require "../../config/db.php"; 
-    require "../../backEnd/model/userSessionModel.php"; 
+    require "../../config/db.php";
+    require "../../backEnd/model/userSessionModel.php";
 
     if (!isset($_SESSION["email"]) || $_SESSION["role"] !== "admin") {
-        header("Location: ../public/loginPage.php"); 
+        header("Location: ../public/loginPage.php");
         exit();
     }
 
@@ -14,7 +14,7 @@
 
     if (!$user) {
         session_destroy();
-        header("Location: ../public/loginPage.php"); 
+        header("Location: ../public/loginPage.php");
     }
 ?>
 
@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="../style/adminDashboard.css" />
         <link rel="stylesheet" href="../style/navbarAdmin.css">
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
 
     <body>
@@ -34,37 +35,37 @@
         <script src="../components/navbarAdmin.js"></script>
 
         <div class="dashboard-container">
-            <main class="main-content-container"> 
+            <main class="main-content-container">
                 
-                <div class="topbar"> 
+                <div class="topbar">
                     <div class="topbar-title-group">
                         <h1>Admin Dashboard</h1>
                         <p class="topbar-subtitle">System status overview and core metrics</p>
                     </div>
                 </div>
 
-                <div class="stats-grid"> 
+                <div class="stats-grid">
                     <div class="stat-card">
                         <div class="label">Total Passengers</div>
-                        <div class="value" id="metric-passengers">128</div> 
+                        <div class="value" id="metric-passengers">128</div>
                         <div class="sub">Registered users</div>
                     </div>
 
                     <div class="stat-card stat-card-green">
                         <div class="label">Total Drivers</div>
-                        <div class="value" id="metric-drivers">34</div> 
+                        <div class="value" id="metric-drivers">34</div>
                         <div class="sub">Verified accounts only</div>
                     </div>
 
                     <div class="stat-card stat-card-yellow">
                         <div class="label">Pending Verifications</div>
-                        <div class="value" id="metric-pending">7</div> 
+                        <div class="value" id="metric-pending">7</div>
                         <div class="sub">Awaiting document review</div>
                     </div>
 
                     <div class="stat-card stat-card-red">
                         <div class="label">Total Trips Today</div>
-                        <div class="value" id="metric-trips">21</div> 
+                        <div class="value" id="metric-trips">21</div>
                         <div class="sub">Scheduled &amp; ongoing</div>
                     </div>
                 </div>
@@ -72,102 +73,24 @@
                 <div class="charts-row">
                     <div class="chart-card">
                         <h3>Trips This Week</h3>
-                        <div class="bar-chart">
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:55px" title="Mon: 11"></div>
-                                <div class="bar-label">Mon</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:80px" title="Tue: 16"></div>
-                                <div class="bar-label">Tue</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:65px" title="Wed: 13"></div>
-                                <div class="bar-label">Wed</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:100px" title="Thu: 20"></div>
-                                <div class="bar-label">Thu</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:90px" title="Fri: 18"></div>
-                                <div class="bar-label">Fri</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:40px" title="Sat: 8"></div>
-                                <div class="bar-label">Sat</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:25px" title="Sun: 5"></div>
-                                <div class="bar-label">Sun</div>
-                            </div>
-                        </div>
+                        <canvas id="chartTripsWeek"></canvas>
                     </div>
 
                     <div class="chart-card">
                         <h3>User Breakdown</h3>
-                        <div class="donut-placeholder">
-                            <div class="donut-ring"></div>
-                            <div class="donut-legend">
-                                <div class="legend-item">
-                                    <div class="legend-dot" style="background:#6a0dad"></div>
-                                    <span>Passengers (52%)</span> 
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-dot" style="background:#a855f7"></div>
-                                    <span>Drivers (26%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-dot" style="background:#d8b4fe"></div>
-                                    <span>Pending (22%)</span>
-                                </div>
-                            </div>
-                        </div>
+                        <canvas id="chartUserBreakdown"></canvas>
                     </div>
                 </div>
 
                 <div class="bottom-row">
                     <div class="chart-card chart-card-wide">
                         <h3>Trips Completed Over Time</h3>
-                        <div class="bar-chart">
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:30px" title="Jan: 30"></div>
-                                <div class="bar-label">Jan</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:52px" title="Feb: 52"></div>
-                                <div class="bar-label">Feb</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:41px" title="Mar: 41"></div>
-                                <div class="bar-label">Mar</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:78px" title="Apr: 78"></div>
-                                <div class="bar-label">Apr</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:65px" title="May: 65"></div>
-                                <div class="bar-label">May</div>
-                            </div>
-                            <div class="bar-wrap">
-                                <div class="bar" style="height:100px" title="Jun: 120"></div>
-                                <div class="bar-label">Jun</div>
-                            </div>
-                        </div>
+                        <canvas id="chartTripsOverTime"></canvas>
                     </div>
 
                     <div class="chart-card">
                         <h3>Trip Status Breakdown</h3>
-                        <div class="donut-placeholder">
-                            <div class="status-donut-ring"></div>
-                            <div class="donut-legend">
-                                <div class="legend-item"><div class="legend-dot" style="background:#6a0dad"></div><span>Scheduled (40)</span></div>
-                                <div class="legend-item"><div class="legend-dot" style="background:#a855f7"></div><span>Ongoing (15)</span></div>
-                                <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div><span>Completed (120)</span></div>
-                                <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div><span>Cancelled (18)</span></div>
-                            </div>
-                        </div>
+                        <canvas id="chartTripStatus"></canvas>
                     </div>
                 </div>
 
@@ -181,6 +104,89 @@
                 </div>
             </main>
         </div>
-        
+
+
+
+
+        <script>
+
+            fetch('../backEnd/dashStats.php')
+                .then(res => res.json())
+                .then(data => {
+            
+                    document.getElementById('metric-passengers').textContent = data.stats.passengers;
+                    document.getElementById('metric-drivers').textContent = data.stats.drivers;
+                    document.getElementById('metric-pending').textContent = data.stats.pending;
+                    document.getElementById('metric-trips').textContent = data.stats.tripsToday;
+
+                    // Trips
+                    new Chart(document.getElementById('chartTripsWeek'), {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(data.tripsThisWeek),
+                            datasets: [{
+                                label: 'Trips',
+                                data: Object.values(data.tripsThisWeek),
+                                backgroundColor: '#a855f7'
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                        }
+                    });
+
+                    // Users
+                    new Chart(document.getElementById('chartUserBreakdown'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Passengers', 'Drivers', 'Pending'],
+                            datasets: [{
+                                data: [
+                                    data.userBreakdown.passengers,
+                                    data.userBreakdown.drivers,
+                                    data.userBreakdown.pending
+                                ],
+                                backgroundColor: ['#6a0dad', '#a855f7', '#d8b4fe']}]
+                        }
+                    });
+
+                    // Trips Over Time
+                    new Chart(document.getElementById('chartTripsOverTime'), {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(data.tripsOverTime),
+                            datasets: [{
+                                label: 'Completed Trips',
+                                data: Object.values(data.tripsOverTime),
+                                backgroundColor: '#6a0dad'
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                        }
+                    });
+
+                    // Trip Status Breakdown
+                    new Chart(document.getElementById('chartTripStatus'), {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Scheduled', 'Ongoing', 'Completed', 'Cancelled'],
+                            datasets: [{
+                                data: [
+                                    data.tripStatus.scheduled,
+                                    data.tripStatus.ongoing,
+                                    data.tripStatus.completed,
+                                    data.tripStatus.cancelled
+                                ],
+                                backgroundColor: ['#6a0dad', '#a855f7', '#22c55e', '#ef4444']}]
+                        }
+                    });
+                })
+                .catch(err => console.error('Failed to load dashboard data:', err));
+
+        </script>
+
     </body>
 </html>
