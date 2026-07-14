@@ -151,16 +151,16 @@ CREATE TABLE `rides` (
 --
 
 INSERT INTO `rides` (`ride_id`, `driver_id`, `schedule_id`, `destination`, `departure`, `origin`, `total_seats`, `available_seats`, `cost`, `ride_status`, `origin_lat`, `origin_lng`, `dest_lat`, `dest_lng`, `departure_date`) VALUES
-(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
-(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, NULL),
-(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
-(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, NULL),
-(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, NULL),
-(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
-(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
-(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, NULL),
-(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, NULL),
-(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, NULL);
+(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-17'),
+(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, '2026-07-14'),
+(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-10'),
+(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, '2026-07-13'),
+(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, '2026-07-12'),
+(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-12'),
+(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-15'),
+(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-17'),
+(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, '2026-07-13'),
+(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-19');
 
 -- --------------------------------------------------------
 

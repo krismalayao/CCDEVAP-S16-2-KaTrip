@@ -87,6 +87,7 @@
 
 .bookings-content {
     width: 100%;
+    margin-top: 20px;
 }
 
 .tab-panel {
@@ -97,6 +98,20 @@
 
 .tab-panel.active {
     display: flex;
+}
+
+.bookings-content .empty-state {
+    width: 100%;
+    min-height: 180px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #8b8792 !important;
+    font-size: 0.95rem;
+    padding: 42px 24px;
+    margin: 0;
 }
 
 .booking-card-item {
@@ -230,11 +245,17 @@
 }
 
 .status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 28px;
+    box-sizing: border-box;
+    padding: 5px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
     font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.02em;
 }
 
 .status-badge.pending {
@@ -250,6 +271,12 @@
 .status-badge.completed {
     background-color: #e2e3e5;
     color: #383d41;
+}
+
+.status-badge.cancelled,
+.status-badge.rejected {
+    background-color: #f8d7da;
+    color: #b4232f;
 }
 
 @media screen and (max-width: 480px) {
