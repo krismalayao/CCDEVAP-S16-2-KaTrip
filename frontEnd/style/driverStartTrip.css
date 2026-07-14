@@ -119,6 +119,11 @@ body {
       font-size: 12px; font-weight: 700;
       padding: 3px 10px; border-radius: 20px;
     }
+
+    .pax-badge.pax-low  { background: #dcfce7; color: #16a34a; }
+    .pax-badge.pax-mid  { background: #ffedd5; color: #ea580c; }
+    .pax-badge.pax-full { background: #fee2e2; color: #dc2626; }
+
     .pax-list { display: flex; flex-direction: column; gap: 8px; }
     .pax-row {
       display: flex; align-items: center; gap: 10px;
@@ -160,7 +165,21 @@ body {
       transition: background 0.2s;
     }
     .btn-cancel:hover { background: #666; }
- 
+    
+    .btn-confirm-end {
+      width: 100%;
+      padding: 12px;
+      background: #ef4444;
+      border: none;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    .modal-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    
     /* ── MAP ── */
     .map-wrapper { flex: 1; position: relative; }
     #map { width: 100%; height: 100%; z-index: 0; }

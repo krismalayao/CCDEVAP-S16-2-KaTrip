@@ -35,7 +35,17 @@ function renderTripDetails() {
 
     document.getElementById('fare-per-pax').textContent = `PHP ${tripData.farePerPax.toFixed(2)}`;
     document.getElementById('fare-total').textContent = `PHP ${tripData.fareTotal.toFixed(2)}`;
-    document.getElementById('pax-badge').textContent = tripData.paxBadge;
+    
+    const paxBadgeEl = document.getElementById('pax-badge');
+    paxBadgeEl.textContent = tripData.paxBadge;
+    paxBadgeEl.classList.remove('pax-low', 'pax-mid', 'pax-full');
+    const [current, total] = tripData.paxBadge.split('/').map(s => parseInt(s.trim()));
+    if (!isNaN(current) && !isNaN(total) && total > 0) {
+        const ratio = current / total;
+        if (ratio >= 1) paxBadgeEl.classList.add('pax-full');
+        else if (ratio >= 0.5) paxBadgeEl.classList.add('pax-mid');
+        else paxBadgeEl.classList.add('pax-low');
+        }
 
     renderRoute();
     renderPassengers();
@@ -54,7 +64,7 @@ function renderRoute() {
                     <div class="r-dot ${dotClass}"></div>
                     ${!isLast ? '<div class="r-dash"></div>' : ''}
                 </div>
-                <div class="route-label ${labelClass}">${stop.label}</div>
+                <div class="route-label ${labelClass}" title="${stop.address || ''}">${stop.label}</div>
             </div>`;
     }).join('');
 }
@@ -168,6 +178,37 @@ document.getElementById('btn-proceed').addEventListener('click', () => {
         .catch(err => {
             console.error('Start trip failed:', err);
             alert('Something went wrong starting this trip.');
+        });
+});
+
+// For the "Cancel" modal.
+document.querySelector('.btn-cancel').addEventListener('click', () => {
+    document.getElementById('cancel-modal').classList.add('visible');
+});
+
+document.getElementById('btn-keep-trip').addEventListener('click', () => {
+    document.getElementById('cancel-modal').classList.remove('visible');
+});
+
+document.getElementById('btn-confirm-cancel').addEventListener('click', () => {
+    fetch('../../backEnd/controller/cancelTrip.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rideId })
+    })
+        .then(res => res.json())
+        .then(result => {
+            document.getElementById('cancel-modal').classList.remove('visible');
+            if (result.success) {
+                window.location.href = '../driver/driverDashboard.html';
+            } else {
+                alert(result.error || 'Could not cancel this trip.');
+            }
+        })
+        .catch(err => {
+            console.error('Cancel request failed:', err);
+            alert('Something went wrong cancelling this trip.');
+            document.getElementById('cancel-modal').classList.remove('visible');
         });
 });
 

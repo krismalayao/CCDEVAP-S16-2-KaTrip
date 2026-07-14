@@ -69,7 +69,7 @@ function renderRoute() {
       current ? '<span class="stop-badge current">You are here</span>' : '';
     return `<div class="route-item"><div class="route-icon-col"><div class="r-dot ${dotClass}"></div>
       ${index < tripData.route.length - 1 ? `<div class="r-dash ${done ? 'done' : ''}"></div>` : ''}</div>
-      <div class="route-label-wrap"><div class="route-label ${done ? 'muted' : 'bold'}">${stop.label}${badge}</div></div></div>`;
+      <div class="route-label-wrap"><div class="route-label ${done ? 'muted' : 'bold'}" title="${stop.address || ''}">${stop.label}${badge}</div></div></div>`;
   }).join('');
 }
 

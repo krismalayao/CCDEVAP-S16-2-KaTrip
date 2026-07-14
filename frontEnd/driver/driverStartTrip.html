@@ -64,12 +64,23 @@
     <!-- ── MAP + MODAL ── -->
     <div class="map-wrapper">
       <div id="map"></div>
+
       <div class="modal-backdrop" id="modal">
         <div class="modal">
           <div class="modal-title">Start Ride?</div>
           <p class="modal-body">Some seats are still <strong>available</strong>,<br>but you may proceed with the trip as scheduled.</p>
           <button class="btn-proceed" id="btn-proceed">Proceed</button>
           <button class="btn-wait"    id="btn-wait">Wait for more</button>
+        </div>
+      </div>
+
+      <div class="modal-backdrop" id="cancel-modal">
+        <div class="modal">
+          <div class="modal-icon">⚠️</div>
+          <div class="modal-title">Cancel this trip?</div>
+          <p class="modal-body">Passengers who booked this ride will be notified. This cannot be undone.</p>
+          <button class="btn-confirm-end" id="btn-confirm-cancel">Yes, Cancel Trip</button>
+          <button class="btn-wait" id="btn-keep-trip">Keep Trip</button>
         </div>
       </div>
     </div>
