@@ -134,10 +134,10 @@ function swapLocations() {
 function updateMapMarker(side, loc) {
   if (side === 'from') {
     if (fromMarker) map.removeLayer(fromMarker);
-    fromMarker = L.marker([loc.lat, loc.lon], { icon: makeIcon('#a855f7') }).addTo(map);
+    fromMarker = L.marker([loc.lat, loc.lon], { icon: makeIcon('#9854cb') }).addTo(map);
   } else {
     if (toMarker) map.removeLayer(toMarker);
-    toMarker = L.marker([loc.lat, loc.lon], { icon: makeIcon('#ef4444') }).addTo(map);
+    toMarker = L.marker([loc.lat, loc.lon], { icon: makeIcon('var(--destination)') }).addTo(map);
   }
   fitMapBounds();
 }
@@ -173,7 +173,7 @@ try {
   state.routeDuration = data.routes[0].duration;        // already in seconds
 
   routeLayer = L.polyline(coords, {
-    color: '#a855f7', weight: 4, opacity: 0.7, dashArray: '8 6'
+    color: '#000', weight: 3, opacity: 0.7, dashArray: '8 6'
   }).addTo(map);
 
 } catch (e) {
@@ -286,7 +286,7 @@ function selectPickupLoc(id, idx) {
   document.getElementById(`pickup-input-${id}`).value = loc.name;
   el.style.display = 'none';
   if (pickupMarkers[id]) map.removeLayer(pickupMarkers[id]);
-  pickupMarkers[id] = L.marker([loc.lat, loc.lon], { icon: makeIcon('#d946ef') })
+  pickupMarkers[id] = L.marker([loc.lat, loc.lon], { icon: makeIcon('var(--pickup)') })
     .addTo(map)
     .bindPopup(`Pickup: ${loc.name}`);
   fitMapBounds();
@@ -309,13 +309,50 @@ function addPickup() {
 }
 
 // ─── Create Ride ──────────────────────────────────────────────────────────────
-function createRide() {
-  if (!state.from || !state.to) {
-    showToast('Please set origin and destination.');
-    return;
-  }
-  showToast('Ride created!');
-  // TODO: POST trip data to backend
+async function createRide() {
+    if (!state.from || !state.to) {
+        showToast('Please set origin and destination.');
+        return;
+    }
+
+    const fare    = parseFloat(document.getElementById('fare-display').textContent.replace('PHP ', '')) || 0;
+    const seats   = parseInt(document.getElementById('passengers').value) || 4;
+    const date    = document.getElementById('ride-date').value;
+    const time    = document.getElementById('ride-time').value;
+
+    const payload = {
+        origin:         state.from.display,
+        origin_lat:     state.from.lat,
+        origin_lng:     state.from.lon,
+        destination:    state.to.display,
+        dest_lat:       state.to.lat,
+        dest_lng:       state.to.lon,
+        departure_date: date,
+        departure_time: time,
+        total_seats:    seats,
+        cost:           fare,
+        landmarks:      state.pickups
+            .filter(p => p.loc)
+            .map(p => ({ name: p.value, lat: p.loc.lat, lng: p.loc.lon }))
+    };
+
+    try {
+        const resp = await fetch('../../backEnd/model/createTrip.php', {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify(payload)
+        });
+        const data = await resp.json();
+        if (data.status === 'success') {
+            showToast('Ride created! 💜');
+            setTimeout(() => { window.location.href = 'driverDashboard.html'; }, 1500);
+        } else {
+            showToast(data.message || 'Something went wrong.');
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('Could not connect to server.');
+    }
 }
 
 // ─── Toast ────────────────────────────────────────────────────────────────────
