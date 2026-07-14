@@ -321,20 +321,22 @@ async function createRide() {
     const time    = document.getElementById('ride-time').value;
 
     const payload = {
-        origin:         state.from.display,
-        origin_lat:     state.from.lat,
-        origin_lng:     state.from.lon,
-        destination:    state.to.display,
-        dest_lat:       state.to.lat,
-        dest_lng:       state.to.lon,
-        departure_date: date,
-        departure_time: time,
-        total_seats:    seats,
-        cost:           fare,
-        landmarks:      state.pickups
-            .filter(p => p.loc)
-            .map(p => ({ name: p.value, lat: p.loc.lat, lng: p.loc.lon }))
-    };
+      origin:         state.from.display,
+      origin_name:    state.from.name,
+      origin_lat:     state.from.lat,
+      origin_lng:     state.from.lon,
+      destination:    state.to.display,
+      destination_name: state.to.name,
+      dest_lat:       state.to.lat,
+      dest_lng:       state.to.lon,
+      departure_date: date,
+      departure_time: time,
+      total_seats:    seats,
+      cost:           fare,
+      landmarks:      state.pickups
+          .filter(p => p.loc)
+          .map(p => ({ name: p.value, lat: p.loc.lat, lng: p.loc.lon }))
+  };
 
     try {
         const resp = await fetch('../../backEnd/model/createTrip.php', {

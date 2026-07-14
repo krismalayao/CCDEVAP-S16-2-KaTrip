@@ -17,7 +17,9 @@ async function loadTrips() {
                   id:         r.ride_id,
                   status:     normalizeStatus(r.ride_status),
                   from:       r.origin,
+                  fromName:   r.origin_name || r.origin.split(',')[0],
                   to:         r.destination,
+                  toName:     r.destination_name || r.destination.split(',')[0],
                   date:       r.departure_date,
                   time:       r.departure,
                   passengers: parseInt(r.total_seats) - parseInt(r.available_seats),
@@ -143,9 +145,9 @@ function renderTrips() {
     return `<div class="trip-card">
       <div class="trip-card-top">
         <div class="trip-route-text">
-          <span class="route-part" title="${t.from}">${t.from}</span>
+          <span class="route-part" title="${t.from}">${t.fromName}</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          <span class="route-part" title="${t.to}">${t.to}</span>
+          <span class="route-part" title="${t.to}">${t.toName}</span>
         </div>
         <span class="status-badge status-${t.status}">${statusLabel(t.status)}</span>
       </div>

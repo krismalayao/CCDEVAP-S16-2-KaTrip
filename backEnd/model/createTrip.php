@@ -31,17 +31,19 @@ foreach ($required as $field) {
 }
 
 $driverId = $_SESSION['user_id'];
-$data     = [
-    'origin'         => $body['origin'],
-    'origin_lat'     => floatval($body['origin_lat']),
-    'origin_lng'     => floatval($body['origin_lng']),
-    'destination'    => $body['destination'],
-    'dest_lat'       => floatval($body['dest_lat']),
-    'dest_lng'       => floatval($body['dest_lng']),
-    'departure_date' => $body['departure_date'],
-    'departure_time' => $body['departure_time'],
-    'total_seats'    => intval($body['total_seats']),
-    'cost'           => floatval($body['cost']),
+$data = [
+    'origin'          => $body['origin'],
+    'origin_name'     => $body['origin_name'] ?? null,
+    'origin_lat'      => floatval($body['origin_lat']),
+    'origin_lng'      => floatval($body['origin_lng']),
+    'destination'     => $body['destination'],
+    'destination_name'=> $body['destination_name'] ?? null,
+    'dest_lat'        => floatval($body['dest_lat']),
+    'dest_lng'        => floatval($body['dest_lng']),
+    'departure_date'  => $body['departure_date'],
+    'departure_time'  => $body['departure_time'],
+    'total_seats'     => intval($body['total_seats']),
+    'cost'            => floatval($body['cost']),
 ];
 $landmarks = $body['landmarks'] ?? []; // array of { name, lat, lng }
 

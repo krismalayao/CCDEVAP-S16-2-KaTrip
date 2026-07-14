@@ -7,11 +7,11 @@
 function createRide($conn, $driverId, $data) {
     $stmt = $conn->prepare("
         INSERT INTO rides (
-            driver_id, origin, origin_lat, origin_lng,
-            destination, dest_lat, dest_lng,
+            driver_id, origin, origin_name, origin_lat, origin_lng,
+            destination, destination_name, dest_lat, dest_lng,
             departure_date, departure, total_seats, available_seats,
             cost, ride_status, schedule_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'scheduled', NULL)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'scheduled', NULL)
     ");
 
     if (!$stmt) {
@@ -20,12 +20,14 @@ function createRide($conn, $driverId, $data) {
     }
 
     $stmt->bind_param(
-        "isddsddssiid",
+        "issddssddssiid",
         $driverId,
-        $data['origin'],         $data['origin_lat'],   $data['origin_lng'],
-        $data['destination'],    $data['dest_lat'],      $data['dest_lng'],
-        $data['departure_date'], $data['departure_time'],
-        $data['total_seats'],    $data['total_seats'],
+        $data['origin'],          $data['origin_name'],
+        $data['origin_lat'],      $data['origin_lng'],
+        $data['destination'],     $data['destination_name'],
+        $data['dest_lat'],        $data['dest_lng'],
+        $data['departure_date'],  $data['departure_time'],
+        $data['total_seats'],     $data['total_seats'],
         $data['cost']
     );
 
