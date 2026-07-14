@@ -1,51 +1,24 @@
-// ── Sample trip data ──────────────────────────────────────────────────────────
-let trips = [
-  {
-    id: 1, status: 'ongoing',
-    from: 'Makati CBD', to: 'Espana, Manila',
-    date: '2026-06-17', time: '7:00 AM',
-    passengers: 3, capacity: 4, fare: 92.33,
-    pickups: ['Sta. Mesa', 'Quiapo'],
-  },
-  {
-    id: 2, status: 'upcoming',
-    from: 'BGC, Taguig', to: 'Quezon Ave, QC',
-    date: '2026-06-18', time: '8:30 AM',
-    passengers: 2, capacity: 4, fare: 120.00,
-    pickups: ['Mandaluyong'],
-  },
-  {
-    id: 3, status: 'upcoming',
-    from: 'Alabang, Muntinlupa', to: 'Ortigas, Pasig',
-    date: '2026-06-19', time: '6:45 AM',
-    passengers: 4, capacity: 4, fare: 210.50,
-    pickups: ['Sucat', 'Magallanes'],
-  },
-  {
-    id: 4, status: 'completed',
-    from: 'Novaliches, QC', to: 'Intramuros, Manila',
-    date: '2026-06-15', time: '7:15 AM',
-    passengers: 3, capacity: 4, fare: 155.00,
-    pickups: ['Balintawak'],
-  },
-  {
-    id: 5, status: 'completed',
-    from: 'Las Pinas', to: 'Binondo, Manila',
-    date: '2026-06-12', time: '6:00 AM',
-    passengers: 4, capacity: 4, fare: 198.75,
-    pickups: ['Paranaque', 'Pasay'],
-  },
-  {
-    id: 6, status: 'cancelled',
-    from: 'Antipolo', to: 'Makati CBD',
-    date: '2026-06-10', time: '9:00 AM',
-    passengers: 1, capacity: 4, fare: 175.00,
-    pickups: [],
-  },
-];
+// ── Trip data (loaded from the backend) ────────────────────────────────────
+let trips = [];
 
 let activeFilter = 'all';
 let cancelTargetId = null;
+
+// ── Load trips from the backend ─────────────────────────────────────────────
+function loadTrips() {
+fetch('../../backEnd/controller/driverDashController.php')
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        console.error('Failed to load trips:', data.error);
+        return;
+      }
+      trips = data.trips;
+      updateStats();
+      renderTrips();
+    })
+    .catch(err => console.error('Failed to load trips:', err));
+}
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
 function updateStats() {
@@ -82,7 +55,7 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
-//Cancel trip button disappears if it's at least 30 minutes before departure
+// Cancel trip button disappears if it's less than 30 minutes before departure.
 function canCancel(t) {
   const [time, meridian] = t.time.split(' ');
   let [h, m] = time.split(':').map(Number);
@@ -175,10 +148,9 @@ function renderTrips() {
 }
 
 function startTrip(id) {
-  trips = trips.map(t => t.id === id ? { ...t, status: 'ongoing' } : t);
-  updateStats();
-  renderTrips();
-  window.location.href = '../driver/driverStartTrip.html';
+  // Note: The  ride_status change to 'ongoing' in driverStartTrip.html
+  // once the driver confirms via the "Proceed" modal there, not here.
+  window.location.href = '../driver/driverStartTrip.html?ride_id=' + id;
 }
 
 function showCancelModal(id) {
@@ -190,14 +162,31 @@ function hideCancelModal() {
   cancelTargetId = null;
 }
 function confirmCancel() {
-  if (cancelTargetId) {
-    trips = trips.map(t => t.id === cancelTargetId ? { ...t, status: 'cancelled' } : t);
-    updateStats();
-    renderTrips();
+  if (!cancelTargetId) {
+    hideCancelModal();
+    return;
   }
-  hideCancelModal();
+
+  fetch('../../backEnd/controller/cancelTrip.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rideId: cancelTargetId })
+  })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        loadTrips(); // refresh from the server so list reflects the real state
+      } else {
+        alert(result.error || 'Could not cancel this trip.');
+      }
+      hideCancelModal();
+    })
+    .catch(err => {
+      console.error('Cancel request failed:', err);
+      alert('Something went wrong cancelling this trip.');
+      hideCancelModal();
+    });
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-updateStats();
-renderTrips();
+loadTrips();

@@ -1,85 +1,188 @@
 // -----------------------------------------------------------------------------
 // START TRIP PAGE
 // -----------------------------------------------------------------------------
-    // ── Map ──────────────────────────────────────────────────────────────────
-    function makeIcon(color) {
-      return L.divIcon({
-        className: '',
-        html: `<svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                 <path d="M14 0C6.27 0 0 6.27 0 14c0 9.63 14 22 14 22s14-12.37 14-22C28 6.27 21.73 0 14 0z" fill="${color}"/>
-                 <circle cx="14" cy="14" r="5" fill="white"/>
-               </svg>`,
-        iconSize: [28, 36], iconAnchor: [14, 36], popupAnchor: [0, -36]
-      });
-    }
- 
-    const stops = [
-      { lat: 14.8302, lon: 120.2842, color: '#9854cb', label: 'Olongapo City Hall (Origin)' },
-      { lat: 14.8270, lon: 120.2800, color: '#deacf5', label: 'SM City Olongapo (Pickup 1)' },
-      { lat: 14.8420, lon: 120.2720, color: '#deacf5', label: 'Subic Bay Freeport Zone Gate (Pickup 2)' },
-      { lat: 14.8550, lon: 120.2650, color: '#ff3434', label: 'Subic Bay Boardwalk (Destination)' },
-    ];
- 
-    const map = L.map('map', { zoomControl: true }).setView([14.838, 120.274], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
- 
-    stops.forEach(s => {
-      L.marker([s.lat, s.lon], { icon: makeIcon(s.color) })
-        .addTo(map)
-        .bindPopup(s.label);
-    });
- 
-    const latlngs = stops.map(s => [s.lat, s.lon]);
-    L.polyline(latlngs, {
-      color: '#9854cb', weight: 4, opacity: 0.7, dashArray: '8 6'
-    }).addTo(map);
- 
-    map.fitBounds(latlngs, { padding: [40, 40] });
- 
-    // ── Modal ────────────────────────────────────────────────────────────────
-    document.getElementById('btn-start').addEventListener('click', () => {
-      document.getElementById('modal').classList.add('visible');
-    });
-    document.getElementById('btn-wait').addEventListener('click', () => {
-      document.getElementById('modal').classList.remove('visible');
-    });
-    document.getElementById('btn-proceed').addEventListener('click', () => {
-      document.getElementById('modal').classList.remove('visible');
-      window.location.href = '../driver/driverOngoing.html';
-    });
- 
-    // ── Passenger actions ────────────────────────────────────────────────────
-    function removePax(btn) {
-      const row = btn.closest('.pax-row');
-      row.style.transition = 'opacity 0.2s';
-      row.style.opacity = '0';
-      setTimeout(() => row.remove(), 200);
-    }
- 
-    function acceptPax(btn) {
-      const row = btn.closest('.pax-row');
-      row.classList.remove('pending');
-      // swap accept button out, leave only remove
-      btn.remove();
-    }
- 
-    // ── Mobile bottom-sheet toggle ───────────────────────────────────────────
-    function toggleSheet() {
-        const panel = document.getElementById('panel') // or document.querySelector('.panel')
-        panel.classList.toggle('collapsed');
-        document.querySelector('.expand-hint').textContent =
-            panel.classList.contains('collapsed') ? 'Show details' : 'Hide details';
-    }
- 
-    // Collapse sheet on mobile by default
-    if (window.innerWidth <= 640) {
-      document.getElementById('panel').classList.add('collapsed');
+const params = new URLSearchParams(window.location.search);
+const rideId = params.get('ride_id');
+
+let tripData = null;
+let map = null;
+
+if (!rideId) {
+    alert('No trip selected.');
+    window.location.href = '../driver/driverDashboard.html';
+}
+
+// ── Load trip details from the backend ──────────────────────────────────────
+function loadTripDetails() {
+    fetch(`../../backEnd/controller/getTripDetails.php?ride_id=${rideId}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                window.location.href = '../driver/driverDashboard.html';
+                return;
+            }
+            tripData = data;
+            renderTripDetails();
+        })
+        .catch(err => console.error('Failed to load trip details:', err));
+}
+
+function renderTripDetails() {
+    document.getElementById('driver-name').textContent = tripData.driverName;
+    document.getElementById('driver-sub').textContent = tripData.vehicleInfo;
+    document.getElementById('driver-avatar').textContent = tripData.driverName.charAt(0).toUpperCase();
+
+    document.getElementById('fare-per-pax').textContent = `PHP ${tripData.farePerPax.toFixed(2)}`;
+    document.getElementById('fare-total').textContent = `PHP ${tripData.fareTotal.toFixed(2)}`;
+    document.getElementById('pax-badge').textContent = tripData.paxBadge;
+
+    renderRoute();
+    renderPassengers();
+    renderMap();
+}
+
+function renderRoute() {
+    const el = document.getElementById('route-list');
+    el.innerHTML = tripData.route.map((stop, i) => {
+        const isLast = i === tripData.route.length - 1;
+        const dotClass = stop.type === 'destination' ? 'red' : stop.type === 'pickup' ? 'pickup' : '';
+        const labelClass = stop.type === 'origin' || stop.type === 'destination' ? 'bold' : '';
+        return `
+            <div class="route-item">
+                <div class="route-icon-col">
+                    <div class="r-dot ${dotClass}"></div>
+                    ${!isLast ? '<div class="r-dash"></div>' : ''}
+                </div>
+                <div class="route-label ${labelClass}">${stop.label}</div>
+            </div>`;
+    }).join('');
+}
+
+function renderPassengers() {
+    const el = document.getElementById('pax-list');
+
+    if (tripData.passengers.length === 0) {
+        el.innerHTML = '<p style="text-align:center;color:#888;padding:12px;">No passengers yet.</p>';
+        return;
     }
 
-    if (window.innerWidth <= 640) {
-  const panel = document.querySelector('.panel');
-  panel.classList.add('collapsed');
-  document.querySelector('.expand-hint').textContent = 'Show details';
+    el.innerHTML = tripData.passengers.map(p => {
+        const isPending = p.status === 'pending';
+        const initial = p.name.charAt(0).toUpperCase();
+
+        const actions = isPending
+            ? `<button class="btn-ico accept" onclick="acceptPax(${p.bookingId})" aria-label="Accept">
+                  <i class='bx bx-check-circle'></i>
+              </button>
+              <button class="btn-ico remove" onclick="removePax(${p.bookingId}, true)" aria-label="Remove">
+                  <i class='bx bx-x-circle'></i>
+              </button>`
+            : `<button class="btn-ico remove" onclick="removePax(${p.bookingId}, false)" aria-label="Remove">
+                  <i class='bx bx-x-circle'></i>
+              </button>`;
+
+        return `
+            <div class="pax-row ${isPending ? 'pending' : ''}">
+                <div class="pax-avatar">${initial}</div>
+                <div class="pax-info">
+                    <div class="pax-name">${p.name}</div>
+                    <div class="pax-fee">PHP ${p.fee.toFixed(2)}</div>
+                </div>
+                <div class="pax-actions">${actions}</div>
+            </div>`;
+    }).join('');
 }
+
+// ── Passenger actions ────────────────────────────────────────────────────────
+function acceptPax(bookingId) {
+    updateBooking(bookingId, 'accepted');
+}
+
+function removePax(bookingId, isPending) {
+    updateBooking(bookingId, isPending ? 'rejected' : 'cancelled');
+    // A pending request gets rejected. An already-accepted passenger gets their booking cancelled.
+}
+
+function updateBooking(bookingId, status) {
+    fetch('../../backEnd/controller/manageBooking.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId, rideId, status })
+    })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+                loadTripDetails(); // refresh counts from server
+            } else {
+                alert(result.error || 'Could not update this passenger.');
+            }
+        })
+        .catch(err => console.error('Booking update failed:', err));
+}
+
+// ── Map ──────────────────────────────────────────────────────────────────────
+function makeIcon(color) { //Brought
+    return L.divIcon({
+        className: '',
+        html: `<svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 0C6.27 0 0 6.27 0 14c0 9.63 14 22 14 22s14-12.37 14-22C28 6.27 21.73 0 14 0z" fill="${color}"/>
+                <circle cx="14" cy="14" r="5" fill="white"/>
+              </svg>`,
+        iconSize: [28, 36], iconAnchor: [14, 36], popupAnchor: [0, -36]
+    });
+}
+
+function renderMap() {
+    // Did not change much, need help with proper implementation.
+    if (map) return;
+    map = L.map('map', { zoomControl: true }).setView([14.838, 120.274], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+}
+
+// ── Modal ────────────────────────────────────────────────────────────────────
+//For the "Start Trip" modal.
+document.getElementById('btn-start').addEventListener('click', () => {
+    document.getElementById('modal').classList.add('visible');
+});
+document.getElementById('btn-wait').addEventListener('click', () => {
+    document.getElementById('modal').classList.remove('visible');
+});
+document.getElementById('btn-proceed').addEventListener('click', () => {
+    fetch('../../backEnd/controller/startTrip.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rideId })
+    })
+        .then(res => res.json()) 
+        .then(result => {
+            document.getElementById('modal').classList.remove('visible');
+            if (result.success) {
+                window.location.href = `../driver/driverOngoing.html?ride_id=${rideId}`;
+            } else {
+                alert(result.error || 'Could not start this trip.');
+            }
+        })
+        .catch(err => {
+            console.error('Start trip failed:', err);
+            alert('Something went wrong starting this trip.');
+        });
+});
+
+// ── Mobile bottom-sheet toggle ───────────────────────────────────────────────
+function toggleSheet() {
+    const panel = document.getElementById('panel');
+    panel.classList.toggle('collapsed');
+    document.querySelector('.expand-hint').textContent =
+        panel.classList.contains('collapsed') ? 'Show details' : 'Hide details';
+}
+
+if (window.innerWidth <= 640) {
+    document.getElementById('panel').classList.add('collapsed');
+    document.querySelector('.expand-hint').textContent = 'Show details';
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+loadTripDetails();
