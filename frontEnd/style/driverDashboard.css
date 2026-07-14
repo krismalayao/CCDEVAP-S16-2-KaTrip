@@ -131,16 +131,18 @@ body {
     display: inline-flex; align-items: center; gap: 5px;
   }
   .btn-sm:disabled {
-  opacity: 0.45;
+  opacity: 0.5;
   cursor: not-allowed;
   pointer-events: auto; /* keep this so the title tooltip still shows on hover */
+  color: rgb(0, 0, 0);
+  border-color: rgb(0, 0, 0);
   }
   .btn-primary   { background: #a855f7; color: #fff; }
-  .btn-primary:hover { background: #9333ea; }
-  .btn-outline   { background: #fff; color: #a855f7; border: 1.5px solid #a855f7; }
-  .btn-outline:hover { background: #faf5ff; }
-  .btn-danger    { background: #fff; color: #ef4444; border: 1.5px solid #fca5a5; }
-  .btn-danger:hover { background: #fef2f2; }
+  .btn-primary:hover { background: var(--success); }
+  .btn-outline   { background: rgba(0, 0, 0, 0.188); color: #00000089; }
+  .btn-outline:hover { background: rgba(169, 85, 247, 0.188); color: #a855f7; }
+  .btn-danger    { background: rgba(0, 0, 0, 0.188); color: #00000089; }
+  .btn-danger:hover { background: rgba(239, 68, 68, 0.188); color: #ef4444; }
   .btn-ghost     { background: #f3f4f6; color: #6b7280; }
   .btn-ghost:hover { background: #e5e7eb; }
   
