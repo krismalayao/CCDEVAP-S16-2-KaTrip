@@ -133,11 +133,11 @@ function renderTrips() {
       }
     }
     if (t.status === 'completed') {
-      actions.push(`<button class="btn-sm btn-ghost">View Summary</button>`);
-      actions.push(`<button class="btn-sm btn-outline">Repeat Trip</button>`);
+      actions.push(`<button class="btn-sm btn-ghost" onclick="showSummaryModal(${t.id})">View Summary</button>`);
+      actions.push(`<a href="../driver/driverCreateTrip.html?clone_id=${t.id}" class="btn-sm btn-outline">Repeat Trip</a>`);
     }
     if (t.status === 'cancelled') {
-      actions.push(`<button class="btn-sm btn-outline">Recreate</button>`);
+      actions.push(`<a href="../driver/driverCreateTrip.html?clone_id=${t.id}" class="btn-sm btn-outline">Recreate</a>`);
     }
 
     const pickupText = t.pickups.length ? `${t.pickups.join(', ')}` : '—';
@@ -282,6 +282,23 @@ function confirmCancel() {
       alert('Something went wrong cancelling this trip.');
       hideCancelModal();
     });
+}
+
+function showSummaryModal(id) {
+  const t = trips.find(tr => tr.id === id);
+  if (!t) return;
+
+  document.getElementById('summary-body').innerHTML = `
+    <div><strong>Route:</strong> ${t.from} → ${t.to}</div>
+    <div><strong>Date:</strong> ${formatDate(t.date)} at ${t.time}</div>
+    <div><strong>Passengers:</strong> ${t.passengers} / ${t.capacity}</div>
+    <div><strong>Fare Collected:</strong> PHP ${t.fare.toFixed(2)}</div>
+    <div><strong>Pickups:</strong> ${t.pickups.length ? t.pickups.join(', ') : '—'}</div>
+  `;
+  document.getElementById('summary-modal').style.display = 'flex';
+}
+function hideSummaryModal() {
+  document.getElementById('summary-modal').style.display = 'none';
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────

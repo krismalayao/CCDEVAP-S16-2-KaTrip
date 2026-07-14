@@ -89,7 +89,16 @@
             </div>
         </div>
         </div>
+    </div>
 
+    <!-- VIEW SUMMARY MODAL -->
+    <div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;" id="summary-modal">
+    <div style="background:#fff;border-radius:20px;padding:32px 28px;max-width:380px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+        <h2 style="font-size:1.1rem;color:#2d1a4e;font-weight:700;margin-bottom:16px;">Trip Summary</h2>
+        <div id="summary-body" style="font-size:0.88rem;color:#374151;line-height:1.9;"></div>
+        <button onclick="hideSummaryModal()" style="width:100%;margin-top:20px;padding:12px;border:none;background:#7c3aed;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#fff;font-weight:700;">Close</button>
+    </div>
+    </div>
     <script src="../script/driverDashboard.js"></script>
     </body>
 </html>
