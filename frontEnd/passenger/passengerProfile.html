@@ -10,7 +10,6 @@
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
     </head>
     <body class="passenger-profile-body">
-        <!-- TO DO: Change Nav Bar -->
         <div id="navbar-mount"></div>
 
         <div class="profile-container">
@@ -31,7 +30,7 @@
                 </div>
                 
                 <div class="name-display">
-                    <h2>Juan Dela Rosa</h2>
+                    <h2 id="profile-name">Loading profile...</h2>
                 </div>
             </section>
             <section class="profile-details">
@@ -39,7 +38,7 @@
                 <div class="profile-field-group">
                     <label for="profile-phone">Number</label>
                     <div class="profile-input-wrapper">
-                        <input type="text" id="profile-phone" value="0987 654 3210">
+                        <input type="text" id="profile-phone" value="" autocomplete="tel">
                         <button class="profile-field-edit-btn" aria-label="Edit number"></button>
                     </div>
                 </div>
@@ -48,7 +47,7 @@
                 <div class="profile-field-group">
                     <label for="profile-email">E-mail</label>
                     <div class="profile-input-wrapper">
-                        <input type="email" id="profile-email" value="example@gmail.com">
+                        <input type="email" id="profile-email" value="" autocomplete="email">
                         <button class="profile-field-edit-btn" aria-label="Edit email"></button>
                     </div>
                 </div>
@@ -57,7 +56,7 @@
                 <div class="profile-field-group">
                     <label for="profile-password">Password</label>
                     <div class="profile-input-wrapper">
-                        <input type="password" id="profile-password" value="••••••••">
+                        <input type="password" id="profile-password" value="" placeholder="Enter a new password to change it" autocomplete="new-password">
                         <button class="profile-field-edit-btn" aria-label="Edit password"></button>
                     </div>
                 </div>
@@ -67,11 +66,11 @@
                     <label for="profile-gender">Gender</label>
                     <div class="profile-input-wrapper profile-dropdown-wrapper">
                         <select id="profile-gender">
-                            <option value="Male" selected>Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Non-Binary">Non-binary</option>
-                            <option value="Others">Others</option>
-                            <option value="Prefer not to say">Prefer not to say</option>
+                            <option value="" selected disabled>Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="rather_not_say">Rather not say</option>
                         </select>
                         <button class="profile-field-edit-btn" aria-label="Edit gender"></button>
                     </div>
@@ -79,8 +78,8 @@
 
                 <!-- Account Creation Date -->
                 <div class="profile-metadata">
-                    <p>Created at 2026-05-30</p>
-                    <button type="submit" class="profile-save-btn">Save</button>
+                    <p id="profile-created-at">Loading...</p>
+                    <button type="button" class="profile-save-btn" id="profile-save-btn">Save</button>
                 </div>
             </section>
         </div>

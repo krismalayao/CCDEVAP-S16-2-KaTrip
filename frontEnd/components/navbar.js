@@ -17,7 +17,7 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
             </button>
             <a class="nav-profile-btn" href="driverProfile.html" aria-label="Profile">
-                <span class="nav-profile-initials">JD</span>
+                <span class="nav-profile-initials"></span>
             </a>
         </div>
     </div>
@@ -54,3 +54,14 @@ document.querySelectorAll('.nav-link, .nav-dropdown-link').forEach(link => {
         link.classList.add('nav-link-active');
     }
 });
+
+fetch('../../backEnd/controller/profileController.php', { credentials: 'same-origin' })
+    .then(response => response.ok ? response.json() : null)
+    .then(data => {
+        if (!data?.success) return;
+        const initials = `${data.profile.first_name?.[0] || ''}${data.profile.last_name?.[0] || ''}`.toUpperCase() || 'K';
+        document.querySelectorAll('.nav-profile-initials').forEach(element => {
+            element.textContent = initials;
+        });
+    })
+    .catch(() => {});
