@@ -64,8 +64,11 @@ INSERT INTO `bookings` (`booking_id`, `ride_id`, `passenger_id`, `seat_reserved`
 CREATE TABLE `driver_documents` (
   `document_id` int(11) NOT NULL,
   `driver_id` int(11) NOT NULL,
-  `document_type` enum('license','registration','insurance') NOT NULL,
+  `document_type` enum('license','vehicle','registration','insurance') NOT NULL,
   `file` varchar(255) NOT NULL,
+  `original_name` varchar(255) DEFAULT NULL,
+  `mime_type` varchar(100) DEFAULT NULL,
+  `file_size` int(10) UNSIGNED DEFAULT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -281,6 +284,7 @@ CREATE TABLE `users` (
   `role` enum('passenger','driver','admin') NOT NULL,
   `status` enum('active','pending','suspended','denied') NOT NULL DEFAULT 'pending',
   `password` varchar(250) NOT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -329,6 +333,7 @@ ALTER TABLE `bookings`
 --
 ALTER TABLE `driver_documents`
   ADD PRIMARY KEY (`document_id`),
+  ADD UNIQUE KEY `unique_driver_document` (`driver_id`,`document_type`),
   ADD KEY `driver_id` (`driver_id`);
 
 --
