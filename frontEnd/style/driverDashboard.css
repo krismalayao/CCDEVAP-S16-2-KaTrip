@@ -131,7 +131,7 @@ body {
     display: inline-flex; align-items: center; gap: 5px;
   }
   .btn-sm:disabled {
-  opacity: 0.5;
+  opacity: 0.25;
   cursor: not-allowed;
   pointer-events: auto; /* keep this so the title tooltip still shows on hover */
   color: rgb(0, 0, 0);

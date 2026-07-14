@@ -126,26 +126,41 @@ function updateRideStatus($conn, $rideId, $driverId, $status) {
     return $stmt->execute();
 }
 
-// ─── Update ride details (date, time, seats, fare) ───────────────────────────
+// ─── Update full ride details (route, schedule, seats, fare) ─────────────────
 function updateRideDetails($conn, $rideId, $driverId, $data) {
     $stmt = $conn->prepare("
         UPDATE rides
-        SET departure_date = ?, departure = ?, total_seats = ?, available_seats = ?, cost = ?
+        SET origin = ?, origin_name = ?, origin_lat = ?, origin_lng = ?,
+            destination = ?, destination_name = ?, dest_lat = ?, dest_lng = ?,
+            departure_date = ?, departure = ?, total_seats = ?, available_seats = ?, cost = ?
         WHERE ride_id = ? AND driver_id = ?
     ");
 
     $stmt->bind_param(
-        "ssiidii",
-        $data['departure_date'],
-        $data['departure_time'],
-        $data['total_seats'],
-        $data['available_seats'],
+        "ssddssddssiidii",
+        $data['origin'],          $data['origin_name'],
+        $data['origin_lat'],      $data['origin_lng'],
+        $data['destination'],     $data['destination_name'],
+        $data['dest_lat'],        $data['dest_lng'],
+        $data['departure_date'],  $data['departure_time'],
+        $data['total_seats'],     $data['available_seats'],
         $data['cost'],
-        $rideId,
-        $driverId
+        $rideId,                  $driverId
     );
 
     return $stmt->execute();
+}
+
+// ─── Replace all pickup stops for a ride (used on edit) ──────────────────────
+function replaceLandmarks($conn, $rideId, $landmarks) {
+    $del = $conn->prepare("DELETE FROM ride_landmarks WHERE ride_id = ?");
+    $del->bind_param("i", $rideId);
+    $del->execute();
+
+    if (!empty($landmarks)) {
+        return createLandmarks($conn, $rideId, $landmarks);
+    }
+    return true;
 }
 
 // ─── Get a driver's display info (name + vehicle) ────────────────────────────

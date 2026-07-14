@@ -125,11 +125,11 @@ function renderTrips() {
       actions.push(`<button class="btn-sm btn-primary" onclick="startTrip(${t.id})">▶ Start Trip</button>`);
 
       if (canCancel(t)) {
-        actions.push(`<button class="btn-sm btn-outline" onclick="showEditModal(${t.id})">Edit</button>`);
-        actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">Cancel</button>`);
+          actions.push(`<a href="../driver/driverCreateTrip.html?ride_id=${t.id}" class="btn-sm btn-outline">Edit</a>`);
+          actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">Cancel</button>`);
       } else {
-        actions.push(`<button class="btn-sm btn-outline" disabled title="Trip starts too soon to edit">Edit</button>`);
-        actions.push(`<button class="btn-sm btn-danger" disabled title="Trips can only be cancelled at least 30 minutes before departure">Cancel</button>`);
+          actions.push(`<button class="btn-sm btn-outline" disabled title="Trip starts too soon to edit">Edit</button>`);
+          actions.push(`<button class="btn-sm btn-danger" disabled title="Trips can only be cancelled at least 30 minutes before departure">Cancel</button>`);
       }
     }
     if (t.status === 'completed') {

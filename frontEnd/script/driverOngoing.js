@@ -134,8 +134,24 @@ function openEndModal() { document.getElementById('end-modal').classList.add('vi
 function closeEndModal() { document.getElementById('end-modal').classList.remove('visible'); }
 function confirmEnd() {
   closeEndModal();
-  showToast('Trip ended! Redirecting...');
-  setTimeout(() => { window.location.href = '../driver/driverDashboard.html'; }, 1800);
+  fetch('../../backEnd/controller/endTrip.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ rideId })
+  })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        showToast('Trip ended! Redirecting...');
+        setTimeout(() => { window.location.href = '../driver/driverDashboard.html'; }, 1800);
+      } else {
+        alert(result.error || 'Could not end this trip.');
+      }
+    })
+    .catch(err => {
+      console.error('End trip failed:', err);
+      alert('Something went wrong ending this trip.');
+    });
 }
 function showToast(message) {
   const toast = document.getElementById('toast');

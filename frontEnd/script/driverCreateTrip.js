@@ -13,6 +13,9 @@ const state = {
 
 let pickupIdCounter = 3;
 
+const urlParams  = new URLSearchParams(window.location.search);
+const editRideId = urlParams.get('ride_id');
+
 const BASE_FARE   = 50;
 const FARE_PER_KM = 15;
 
@@ -308,6 +311,14 @@ function addPickup() {
   renderPickups();
 }
 
+// ─── Date Helper ─────────────────────────────────────────────────────────────
+function getLocalDateString(date = new Date()) {
+    const year  = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day   = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
 // ─── Create Ride ──────────────────────────────────────────────────────────────
 async function createRide() {
     if (!state.from || !state.to) {
@@ -315,45 +326,101 @@ async function createRide() {
         return;
     }
 
-    const fare    = parseFloat(document.getElementById('fare-display').textContent.replace('PHP ', '')) || 0;
-    const seats   = parseInt(document.getElementById('passengers').value) || 4;
-    const date    = document.getElementById('ride-date').value;
-    const time    = document.getElementById('ride-time').value;
+    const fare  = parseFloat(document.getElementById('fare-display').textContent.replace('PHP ', '')) || 0;
+    const seats = parseInt(document.getElementById('passengers').value) || 4;
+    const date  = document.getElementById('ride-date').value;
+    const time  = document.getElementById('ride-time').value;
 
     const payload = {
-      origin:         state.from.display,
-      origin_name:    state.from.name,
-      origin_lat:     state.from.lat,
-      origin_lng:     state.from.lon,
-      destination:    state.to.display,
-      destination_name: state.to.name,
-      dest_lat:       state.to.lat,
-      dest_lng:       state.to.lon,
-      departure_date: date,
-      departure_time: time,
-      total_seats:    seats,
-      cost:           fare,
-      landmarks:      state.pickups
-          .filter(p => p.loc)
-          .map(p => ({ name: p.value, lat: p.loc.lat, lng: p.loc.lon }))
-  };
+        origin:            state.from.display,
+        origin_name:       state.from.name,
+        origin_lat:        state.from.lat,
+        origin_lng:        state.from.lon,
+        destination:       state.to.display,
+        destination_name:  state.to.name,
+        dest_lat:          state.to.lat,
+        dest_lng:          state.to.lon,
+        departure_date:    date,
+        departure_time:    time,
+        total_seats:       seats,
+        cost:              fare,
+        landmarks: state.pickups
+            .filter(p => p.loc)
+            .map(p => ({ name: p.value, lat: p.loc.lat, lng: p.loc.lon }))
+    };
+
+    const endpoint = editRideId
+        ? '../../backEnd/controller/editTrip.php'
+        : '../../backEnd/model/createTrip.php';
+
+    if (editRideId) payload.rideId = parseInt(editRideId);
 
     try {
-        const resp = await fetch('../../backEnd/model/createTrip.php', {
+        const resp = await fetch(endpoint, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify(payload)
         });
         const data = await resp.json();
-        if (data.status === 'success') {
-            showToast('Ride created!','success');
+        const ok = editRideId ? data.success : data.status === 'success';
+        if (ok) {
+            showToast(editRideId ? 'Trip updated!' : 'Ride created!', 'success');
             setTimeout(() => { window.location.href = 'driverDashboard.html'; }, 1500);
         } else {
-            showToast(data.message || 'Something went wrong.','error');
+            showToast(data.error || data.message || 'Something went wrong.','error');
         }
     } catch (e) {
         console.error(e);
         showToast('Could not connect to server.','error');
+    }
+}
+
+// ─── Load Existing Trip for Editing ───────────────────────────────────────────
+async function loadExistingTrip() {
+    try {
+        const resp = await fetch(`../../backEnd/controller/getRideForEdit.php?ride_id=${editRideId}`);
+        const data = await resp.json();
+        if (data.status !== 'success') {
+            showToast(data.message || 'Could not load this trip.', 'error');
+            setTimeout(() => { window.location.href = 'driverDashboard.html'; }, 1500);
+            return;
+        }
+        const r = data.ride;
+
+        state.from = { name: r.origin_name || r.origin.split(',')[0], display: r.origin, lat: r.origin_lat, lon: r.origin_lng };
+        state.to   = { name: r.destination_name || r.destination.split(',')[0], display: r.destination, lat: r.dest_lat, lon: r.dest_lng };
+        document.getElementById('input-from').value = state.from.name;
+        document.getElementById('input-to').value   = state.to.name;
+        updateMapMarker('from', state.from);
+        updateMapMarker('to', state.to);
+
+        state.pickups = r.landmarks.map((lm, i) => ({
+            id: pickupIdCounter++,
+            value: lm.name,
+            loc: { name: lm.name, display: lm.name, lat: lm.lat, lon: lm.lng }
+        }));
+        if (state.pickups.length === 0) {
+            state.pickups = [{ id: pickupIdCounter++, value: '', loc: null }];
+        }
+        renderPickups();
+        state.pickups.forEach(p => {
+            if (p.loc) {
+                pickupMarkers[p.id] = L.marker([p.loc.lat, p.loc.lon], { icon: makeIcon('var(--pickup)') })
+                    .addTo(map).bindPopup(`Pickup: ${p.loc.name}`);
+            }
+        });
+
+        document.getElementById('ride-date').value  = r.departure_date;
+        document.getElementById('ride-time').value  = r.departure;
+        document.getElementById('passengers').value = r.total_seats;
+
+        document.querySelector('.card-title').textContent = 'Where to?'; // unchanged, page still says "Where to?"
+        document.getElementById('create-btn').textContent = 'Save Changes';
+
+        await tryRoute(); // draws path, recalculates fare/travel time
+    } catch (e) {
+        console.error(e);
+        showToast('Could not load this trip.', 'error');
     }
 }
 
@@ -375,8 +442,12 @@ function toggleSheet() {
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
-document.getElementById('ride-date').value = new Date().toISOString().split('T')[0];
-renderPickups();
+if (editRideId) {
+  loadExistingTrip();
+} else {
+  document.getElementById('ride-date').min = getLocalDateString();
+  renderPickups();
+}
 
 if (window.innerWidth <= 640) {
   document.querySelector('.panel').classList.add('collapsed');
