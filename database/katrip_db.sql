@@ -3,12 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2026 at 01:08 AM
+-- Generation Time: Jul 15, 2026 at 01:27 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
-
-CREATE DATABASE IF NOT EXISTS katrip_db;
-USE katrip_db;
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -64,11 +61,8 @@ INSERT INTO `bookings` (`booking_id`, `ride_id`, `passenger_id`, `seat_reserved`
 CREATE TABLE `driver_documents` (
   `document_id` int(11) NOT NULL,
   `driver_id` int(11) NOT NULL,
-  `document_type` enum('license','vehicle','registration','insurance') NOT NULL,
+  `document_type` enum('license','registration','insurance') NOT NULL,
   `file` varchar(255) NOT NULL,
-  `original_name` varchar(255) DEFAULT NULL,
-  `mime_type` varchar(100) DEFAULT NULL,
-  `file_size` int(10) UNSIGNED DEFAULT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -146,24 +140,37 @@ CREATE TABLE `rides` (
   `origin_lng` decimal(10,7) DEFAULT NULL,
   `dest_lat` decimal(10,7) DEFAULT NULL,
   `dest_lng` decimal(10,7) DEFAULT NULL,
-  `departure_date` date DEFAULT NULL
+  `departure_date` date DEFAULT NULL,
+  `origin_name` varchar(255) DEFAULT NULL,
+  `destination_name` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rides`
 --
 
-INSERT INTO `rides` (`ride_id`, `driver_id`, `schedule_id`, `destination`, `departure`, `origin`, `total_seats`, `available_seats`, `cost`, `ride_status`, `origin_lat`, `origin_lng`, `dest_lat`, `dest_lng`, `departure_date`) VALUES
-(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-17'),
-(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, '2026-07-14'),
-(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-10'),
-(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, '2026-07-13'),
-(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, '2026-07-12'),
-(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-12'),
-(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-15'),
-(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-17'),
-(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, '2026-07-13'),
-(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-19');
+INSERT INTO `rides` (`ride_id`, `driver_id`, `schedule_id`, `destination`, `departure`, `origin`, `total_seats`, `available_seats`, `cost`, `ride_status`, `origin_lat`, `origin_lng`, `dest_lat`, `dest_lng`, `departure_date`, `origin_name`, `destination_name`) VALUES
+(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'completed', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(23, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '08:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 366.00, 'cancelled', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-15', NULL, NULL),
+(24, 5, NULL, 'University of Santo Tomas, España Boulevard, Barangay 470, Sampaloc, Fourth District, Manila, Capita', '07:00', 'Jana\'s Place and Halo-Halo, Josephine Bracken Street, Potol, Sinonoc, Dapitan, Zamboanga del Norte, ', 4, 4, 36397.00, 'completed', 8.6566039, 123.4245964, 14.6098426, 120.9894646, '2026-07-14', 'Jana\'s Place and Halo-Halo', 'University of Santo Tomas'),
+(25, 5, NULL, 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', '07:00', 'De La Salle University - Dasmariñas, Francisco Barzaga Road, San Antonio de Padua 1, Bagong Bayan, D', 4, 4, 692.00, 'completed', 14.3241795, 120.9585550, 14.5351818, 120.9815994, '2026-07-17', 'De La Salle University - Dasmariñas', 'SM Mall of Asia'),
+(26, 5, NULL, 'SM Araneta City, General Aguinaldo Avenue, Araneta City, Socorro, Cubao, 3rd District, Quezon City, ', '07:00', 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', 4, 4, 414.00, 'cancelled', 14.5351818, 120.9815994, 14.6191370, 121.0556642, '2026-07-18', 'SM Mall of Asia', 'SM Araneta City'),
+(27, 5, NULL, 'Glorietta, Palm Drive, Ayala Center Makati, San Lorenzo, District I, Makati, Southern Manila Distric', '07:00', 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', 4, 4, 210.00, 'completed', 14.5351818, 120.9815994, 14.5512330, 121.0253209, '2026-07-16', 'SM Mall of Asia', 'Glorietta'),
+(28, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '07:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 290.00, 'cancelled', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-15', 'DLSU Amphitheater', 'ZERØ Studio'),
+(29, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '07:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 290.00, 'completed', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-15', 'DLSU Amphitheater', 'ZERØ Studio'),
+(30, 5, NULL, 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', '07:00', 'Alabang Town Center, Alabang-Zapote Road, Cupang, Muntinlupa District 2, Muntinlupa, Southern Manila', 4, 4, 489.00, 'completed', 14.4236675, 121.0297176, 14.5351818, 120.9815994, '2026-07-16', 'Alabang Town Center', 'SM Mall of Asia'),
+(31, 5, NULL, 'Alabang Town Center, Alabang-Zapote Road, Cupang, Muntinlupa District 2, Muntinlupa, Southern Manila', '07:00', 'University of Santo Tomas, España Boulevard, Barangay 470, Sampaloc, Fourth District, Manila, Capita', 4, 4, 657.00, 'ongoing', 14.6098426, 120.9894646, 14.4236675, 121.0297176, '2026-07-15', 'University of Santo Tomas', 'Alabang Town Center'),
+(32, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '07:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 290.00, 'scheduled', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-18', 'DLSU Amphitheater', 'ZERØ Studio'),
+(33, 5, NULL, 'Ortigas, EDSA, Wack-Wack Greenhills, Mandaluyong, Eastern Manila District, Metro Manila, 1555, Phili', '07:00', 'Makati, Southern Manila District, Metro Manila, Philippines', 4, 4, 214.00, 'scheduled', 14.5567949, 121.0211226, 14.5878938, 121.0567297, '2026-07-15', 'Makati', 'Ortigas');
 
 -- --------------------------------------------------------
 
@@ -201,7 +208,12 @@ INSERT INTO `ride_landmarks` (`landmark_id`, `ride_id`, `landmark_name`, `landma
 (13, 8, 'San Fernando Exit', 2, NULL, NULL, NULL),
 (14, 9, 'Commonwealth Avenue', 1, NULL, NULL, NULL),
 (15, 9, 'España Boulevard', 2, NULL, NULL, NULL),
-(16, 10, 'South Luzon Expressway', 1, NULL, NULL, NULL);
+(16, 10, 'South Luzon Expressway', 1, NULL, NULL, NULL),
+(19, 25, 'SM Southmall', 1, 14.4324991, 121.0100751, NULL),
+(20, 26, 'BGC', 1, 14.5453984, 121.0459970, NULL),
+(23, 27, 'DLSU Amphitheater', 1, 14.5644408, 120.9934590, NULL),
+(24, 30, 'SM Southmall', 1, 14.4324991, 121.0100751, NULL),
+(25, 33, 'Ayala', 1, 14.5491978, 121.0279020, NULL);
 
 -- --------------------------------------------------------
 
@@ -284,7 +296,6 @@ CREATE TABLE `users` (
   `role` enum('passenger','driver','admin') NOT NULL,
   `status` enum('active','pending','suspended','denied') NOT NULL DEFAULT 'pending',
   `password` varchar(250) NOT NULL,
-  `profile_picture` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -333,7 +344,6 @@ ALTER TABLE `bookings`
 --
 ALTER TABLE `driver_documents`
   ADD PRIMARY KEY (`document_id`),
-  ADD UNIQUE KEY `unique_driver_document` (`driver_id`,`document_type`),
   ADD KEY `driver_id` (`driver_id`);
 
 --
@@ -398,13 +408,13 @@ ALTER TABLE `driver_documents`
 -- AUTO_INCREMENT for table `rides`
 --
 ALTER TABLE `rides`
-  MODIFY `ride_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ride_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `ride_landmarks`
 --
 ALTER TABLE `ride_landmarks`
-  MODIFY `landmark_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `landmark_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `ride_schedules`
