@@ -1,4 +1,11 @@
 let confirmCallback = null;
+let filters = {
+    search: "",
+    status: "all"
+};
+
+const rowsPerPage = 9;
+let currentPage = 1;
 
 const searchInput = document.getElementById("searchInput");
 if (searchInput) {
@@ -7,33 +14,6 @@ if (searchInput) {
         document.querySelectorAll(".applicant-card").forEach(card => {
             const name = card.textContent.toLowerCase();
             card.style.display = name.includes(searchValue) ? "" : "none";
-        });
-    });
-}
-
-const statusFilter = document.getElementById("statusFilter");
-if (statusFilter) {
-    statusFilter.addEventListener("change", function () {
-        const selectedStatus = this.value.toLowerCase(); 
-
-        document.querySelectorAll(".applicant-card").forEach(card => {
-            if (selectedStatus === "all") {
-                card.style.display = "";
-                return; 
-            }
-
-            if (!applicant) {
-                card.style.display = "none";
-                return;
-            }
-
-            const currentStatus = applicant.driver_profile.verification_status.toLowerCase();
-
-            if (currentStatus === selectedStatus) {
-                card.style.display = "";
-            } else {
-                card.style.display = "none";
-            }
         });
     });
 }
@@ -310,27 +290,95 @@ document.addEventListener("DOMContentLoaded",()=>{
             window.location.pathname
         );
     }
+
+    applyFilters();
 });
 
 function searchApplicants() {
-    const value = document.getElementById("searchInput").value.toLowerCase();
+    const input = document.getElementById("searchInput");
 
-    document.querySelectorAll(".applicant-card").forEach(row=>{
-        const text = row.textContent.toLowerCase();
-        row.style.display = text.includes(value) ? "" : "none";
-    });
+    filters.search = input.value.toLowerCase().trim();
+
+    currentPage = 1;
+    applyFilters();
 }
 
 function filterApplicants() {
-    const filter =document.getElementById("statusFilter").value.toLowerCase();
+    const select = document.getElementById("statusFilter");
 
-    document.querySelectorAll(".applicant-card").forEach(row=>{
-        const status =row.dataset.verification.toLowerCase();
+    filters.status = select.value.toLowerCase();
 
-        if (filter==="all" || status===filter) {
-            row.style.display="";
-        } else {
-            row.style.display="none";
-        }
+    currentPage = 1;
+    applyFilters();
+}
+
+function applyFilters() {
+    const table = document.getElementById("applicantTable");
+
+    if (!table) return;
+
+    const tbody = table.querySelector("tbody");
+    const allRows = Array.from(tbody.querySelectorAll(".applicant-card"));
+    
+    const filteredRows = allRows.filter(row => {
+        const name = row.cells[1].textContent.toLowerCase();
+        const matchesSearch = name.includes(filters.search);
+        const status = row.dataset.verification.toLowerCase();
+        const matchesStatus = filters.status === "all" || status === filters.status;
+        return matchesSearch && matchesStatus;
     });
+
+    const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
+    if (currentPage > totalPages) {
+        currentPage = 1;
+    }
+
+    // Hide everything first
+    allRows.forEach(row => {
+        row.style.display = "none";
+    });
+
+    // Show current page only
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    filteredRows.slice(start,end).forEach(row=>{
+        row.style.display="";
+    });
+
+    renderPagination(totalPages);
+}
+
+function renderPagination(totalPages) {
+    const container = document.getElementById("pagination");
+
+    if (!container) return;
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    const wrapper = document.createElement("div");
+    const prev = document.createElement("button");
+    
+    prev.textContent = "<";
+    prev.disabled = currentPage === 1;
+    prev.onclick = () => {
+        currentPage--;
+        applyFilters();
+    };
+
+    const label = document.createElement("span");
+    label.textContent = ` ${currentPage} of ${totalPages} `;
+
+    const next = document.createElement("button");
+    next.textContent = ">";
+
+    next.disabled = currentPage === totalPages;
+    next.onclick = () => {
+        currentPage++;
+        applyFilters();
+    };
+
+    wrapper.append(prev,label,next);
+    container.appendChild(wrapper);
 }
