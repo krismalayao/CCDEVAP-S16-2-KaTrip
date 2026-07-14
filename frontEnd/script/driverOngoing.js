@@ -1,160 +1,156 @@
-  // ── Trip data ──────────────────────────────────────────────────────────────
-  const stops = [
-    { id: 0, lat: 14.8302, lon: 120.2842, color: '#9854cb', label: 'Olongapo City Hall',           state: 'done' },
-    { id: 1, lat: 14.8270, lon: 120.2800, color: '#deacf5', label: 'SM City Olongapo',             state: 'current' },
-    { id: 2, lat: 14.8420, lon: 120.2720, color: '#deacf5', label: 'Subic Bay Freeport Zone Gate', state: 'next' },
-    { id: 3, lat: 14.8550, lon: 120.2650, color: '#ff3434', label: 'Subic Bay Boardwalk',          state: 'upcoming' },
-  ];
+const rideId = new URLSearchParams(window.location.search).get('ride_id');
+let tripData = null;
+let currentStopIdx = 0;
+let map;
 
-  const passengers = [
-    { initials: 'R', name: 'Robin',  dropStop: 3, onBoard: true },
-    { initials: 'R', name: 'Ronald', dropStop: 2, onBoard: true },
-    { initials: 'P', name: 'Pia',    dropStop: 3, onBoard: true },
-  ];
+if (!rideId) {
+  alert('No ongoing trip selected.');
+  window.location.href = '../driver/driverDashboard.html';
+}
 
-  let currentStopIdx = 1;
+function makeIcon(color, big = false) {
+  const w = big ? 32 : 28;
+  const h = big ? 41 : 36;
+  return L.divIcon({
+    className: '',
+    html: `<svg width="${w}" height="${h}" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 0C6.27 0 0 6.27 0 14c0 9.63 14 22 14 22s14-12.37 14-22C28 6.27 21.73 0 14 0z" fill="${color}"/>
+      <circle cx="14" cy="14" r="5" fill="white"/>
+    </svg>`,
+    iconSize: [w, h], iconAnchor: [w / 2, h], popupAnchor: [0, -h]
+  });
+}
 
-  // ── Map ────────────────────────────────────────────────────────────────────
-  function makeIcon(color, big) {
-    const w = big ? 32 : 28, h = big ? 41 : 36;
-    return L.divIcon({
-      className: '',
-      html: `<svg width="${w}" height="${h}" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-               <path d="M14 0C6.27 0 0 6.27 0 14c0 9.63 14 22 14 22s14-12.37 14-22C28 6.27 21.73 0 14 0z" fill="${color}"/>
-               <circle cx="14" cy="14" r="5" fill="white"/>
-             </svg>`,
-      iconSize: [w, h], iconAnchor: [w/2, h], popupAnchor: [0, -h]
-    });
+function money(value) {
+  return `PHP ${Number(value || 0).toFixed(2)}`;
+}
+
+async function loadTrip() {
+  try {
+    const response = await fetch(`../../backEnd/controller/getTripDetails.php?ride_id=${encodeURIComponent(rideId)}`);
+    const data = await response.json();
+    if (!response.ok || data.error) throw new Error(data.error || 'Could not load this trip.');
+    tripData = data;
+    tripData.route.forEach((stop, index) => { stop.state = index === 0 ? 'current' : 'upcoming'; });
+    renderTrip();
+    await renderMap();
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+    window.location.href = '../driver/driverDashboard.html';
   }
+}
 
-  const map = L.map('map', { zoomControl: true }).setView([14.838, 120.274], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+function renderTrip() {
+  const route = tripData.route;
+  const accepted = tripData.passengers.filter(passenger => passenger.status === 'accepted');
+  document.getElementById('trip-route-summary').innerHTML =
+    `${route[0].label} <i class='bx bx-right-arrow-alt'></i> ${route[route.length - 1].label}`;
+  document.getElementById('driver-name').textContent = tripData.driverName;
+  document.getElementById('driver-sub').textContent = tripData.vehicleInfo;
+  document.getElementById('driver-avatar').textContent = tripData.driverName.charAt(0).toUpperCase();
+  document.getElementById('fare-per-pax').textContent = money(tripData.farePerPax);
+  document.getElementById('collected').textContent = money(accepted.reduce((total, p) => total + Number(p.fee), 0));
+  document.getElementById('pax-count').textContent = `(${accepted.length} on board)`;
+  document.getElementById('pax-grid').innerHTML = accepted.length ? accepted.map(p => `
+    <div class="pax-chip"><div class="chip-avatar">${p.name.charAt(0).toUpperCase()}</div>
+      <div><div class="chip-name">${p.name}</div><div class="chip-stop">${p.seats} seat${p.seats === 1 ? '' : 's'}</div></div>
+    </div>`).join('') : '<span class="empty-state">No passengers on board.</span>';
+  renderRoute();
+  updateNextStop();
+}
+
+function renderRoute() {
+  document.getElementById('route-list').innerHTML = tripData.route.map((stop, index) => {
+    const done = stop.state === 'done';
+    const current = stop.state === 'current';
+    const dotClass = done ? 'done' : stop.type === 'destination' ? 'red' : stop.type === 'pickup' ? 'pickup' : '';
+    const badge = done ? '<span class="stop-badge done">Done</span>' :
+      current ? '<span class="stop-badge current">You are here</span>' : '';
+    return `<div class="route-item"><div class="route-icon-col"><div class="r-dot ${dotClass}"></div>
+      ${index < tripData.route.length - 1 ? `<div class="r-dash ${done ? 'done' : ''}"></div>` : ''}</div>
+      <div class="route-label-wrap"><div class="route-label ${done ? 'muted' : 'bold'}">${stop.label}${badge}</div></div></div>`;
+  }).join('');
+}
+
+async function renderMap() {
+  map = L.map('map', { zoomControl: true }).setView([14.5995, 120.9842], 12);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap © CARTO'
   }).addTo(map);
 
-  const markerRefs = [];
-  stops.forEach((s, i) => {
-    const color = s.state === 'done' ? '#9854cb' : s.state === 'current' ? '#9854cb' : s.state === 'next' ? '#deacf5' : '#ff3434';
-    const m = L.marker([s.lat, s.lon], { icon: makeIcon(color, s.state === 'current') })
-      .addTo(map).bindPopup(s.label);
-    markerRefs.push(m);
+  const stops = tripData.route.filter(stop => Number.isFinite(stop.lat) && Number.isFinite(stop.lng));
+  if (!stops.length) return;
+  stops.forEach(stop => {
+    const color = stop.type === 'destination' ? '#ff3434' : stop.type === 'pickup' ? '#e2aaf1' : '#9854cb';
+    L.marker([stop.lat, stop.lng], { icon: makeIcon(color, stop.state === 'current') }).addTo(map).bindPopup(stop.label);
   });
 
-  const latlngs = stops.map(s => [s.lat, s.lon]);
-  L.polyline(latlngs, { color: '#9854cb', weight: 4, opacity: 0.7, dashArray: '8 6' }).addTo(map);
-  map.fitBounds(latlngs, { padding: [60, 60] });
+  const points = stops.map(stop => [stop.lat, stop.lng]);
+  map.fitBounds(points, { padding: [40, 40] });
+  if (stops.length < 2) return;
 
-  // ── Render route list ──────────────────────────────────────────────────────
-  function renderRoute() {
-    const el = document.getElementById('route-list');
-    el.innerHTML = stops.map((s, i) => {
-      const isLast = i === stops.length - 1;
-      const isDone = s.state === 'done';
-      const isCurrent = s.state === 'current';
-      const isNext = s.state === 'next';
-      const dotClass = isDone ? 'done' : isCurrent ? '' : s.id === 3 ? 'red' : 'pickup';
-      const labelClass = isDone ? 'muted' : 'bold';
-      const badge = isDone ? '<span class="stop-badge done">Done</span>'
-                  : isCurrent ? '<span class="stop-badge current">You are here</span>'
-                  : isNext ? '<span class="stop-badge next">Next</span>' : '';
-      return `
-        <div class="route-item">
-          <div class="route-icon-col">
-            <div class="r-dot ${dotClass}"></div>
-            ${!isLast ? `<div class="r-dash ${isDone ? 'done' : ''}"></div>` : ''}
-          </div>
-          <div class="route-label-wrap">
-            <div class="route-label ${labelClass}">${s.label}${badge}</div>
-          </div>
-        </div>`;
-    }).join('');
+  try {
+    const waypoints = stops.map(stop => `${stop.lng},${stop.lat}`).join(';');
+    const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${waypoints}?overview=full&geometries=geojson`);
+    const data = await response.json();
+    if (!data.routes?.length) throw new Error('No driving route found.');
+    const route = data.routes[0];
+    L.polyline(route.geometry.coordinates.map(([lng, lat]) => [lat, lng]), {
+      color: '#000', weight: 3, opacity: 0.7, dashArray: '8 6'
+    }).addTo(map);
+    const minutes = Math.round(route.duration / 60);
+    document.getElementById('travel-time').textContent = minutes >= 60
+      ? `${Math.floor(minutes / 60)} hr ${minutes % 60} min` : `${minutes} min`;
+  } catch (error) {
+    console.warn('Using a direct route fallback:', error);
+    L.polyline(points, { color: '#9854cb', weight: 4, opacity: 0.6, dashArray: '8 6' }).addTo(map);
+    document.getElementById('travel-time').textContent = 'Unavailable';
   }
+}
 
-  // ── Render passengers ──────────────────────────────────────────────────────
-  function renderPassengers() {
-    const onBoard = passengers.filter(p => p.onBoard);
-    document.getElementById('pax-count').textContent = `(${onBoard.length} on board)`;
-    document.getElementById('pax-grid').innerHTML = passengers.map(p => `
-      <div class="pax-chip ${!p.onBoard ? 'dropped' : ''}">
-        <div class="chip-avatar">${p.initials}</div>
-        <div>
-          <div class="chip-name">${p.name}</div>
-          <div class="chip-stop">${p.onBoard ? 'Drop: ' + stops[p.dropStop].label.split(' ')[0] : 'Dropped off'}</div>
-        </div>
-      </div>`).join('');
-  }
+function updateNextStop() {
+  const stop = tripData.route[currentStopIdx];
+  const card = document.getElementById('next-stop-card');
+  if (!stop) { card.style.display = 'none'; return; }
+  card.style.display = 'flex';
+  document.getElementById('next-stop-name').textContent = stop.label;
+  document.getElementById('next-stop-eta').textContent = stop.type === 'destination' ? 'Final destination' : 'Current stop';
+}
 
-  // ── Update next stop display ───────────────────────────────────────────────
-  function updateNextStop() {
-    const next = stops.find(s => s.state === 'next' || s.state === 'current');
-    const card = document.getElementById('next-stop-card');
-    if (!next || next.state === 'upcoming') {
-      card.style.display = 'none'; return;
-    }
-    const isFinal = next.id === stops.length - 1;
-    document.getElementById('next-stop-name').textContent = next.label;
-    document.getElementById('next-stop-eta').textContent = isFinal ? 'Final destination' : '~8 min away';
-  }
-
-  // ── Mark arrived ───────────────────────────────────────────────────────────
-  function markArrived() {
-    const curr = stops[currentStopIdx];
-    if (!curr) return;
-
-    curr.state = 'done';
-    showToast(`Arrived at ${curr.label}`);
-
-    // Drop off any passengers whose stop this is
-    passengers.forEach(p => { if (p.dropStop === curr.id) p.onBoard = false; });
-
-    currentStopIdx++;
-    if (currentStopIdx < stops.length) {
-      stops[currentStopIdx].state = currentStopIdx === stops.length - 1 ? 'current' : 'current';
-      if (currentStopIdx + 1 < stops.length) stops[currentStopIdx + 1].state = 'next';
-    }
-
-    if (currentStopIdx >= stops.length) {
-      document.getElementById('next-stop-card').style.display = 'none';
-      showToast('All stops completed! You may end the trip.');
-    }
-
-    renderRoute();
-    renderPassengers();
-    updateNextStop();
-    document.getElementById('modal-stops').textContent = `${currentStopIdx} / ${stops.length}`;
-  }
-
-  // ── End modal ──────────────────────────────────────────────────────────────
-  function openEndModal()  { document.getElementById('end-modal').classList.add('visible'); }
-  function closeEndModal() { document.getElementById('end-modal').classList.remove('visible'); }
-  function confirmEnd() {
-    closeEndModal();
-    showToast('Trip ended! Redirecting…');
-    setTimeout(() => { window.location.href = '../driver/driverDashboard.html'; }, 1800);
-  }
-
-  // ── Toast ──────────────────────────────────────────────────────────────────
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-  }
-
-  // ── Mobile sheet ───────────────────────────────────────────────────────────
-  function toggleSheet() {
-    const panel = document.getElementById('panel');
-    const hint  = document.querySelector('.expand-hint');
-    panel.classList.toggle('collapsed');
-    hint.textContent = panel.classList.contains('collapsed') ? 'Show details' : 'Hide details';
-  }
-
-  if (window.innerWidth <= 640) {
-    document.getElementById('panel').classList.add('collapsed');
-    document.querySelector('.expand-hint').textContent = 'Show details';
-  }
-
-  // ── Init ───────────────────────────────────────────────────────────────────
+function markArrived() {
+  const stop = tripData.route[currentStopIdx];
+  if (!stop) return;
+  stop.state = 'done';
+  currentStopIdx += 1;
+  if (tripData.route[currentStopIdx]) tripData.route[currentStopIdx].state = 'current';
   renderRoute();
-  renderPassengers();
   updateNextStop();
+  document.getElementById('modal-stops').textContent = `${currentStopIdx} / ${tripData.route.length}`;
+  showToast(`Arrived at ${stop.label}`);
+}
+
+function openEndModal() { document.getElementById('end-modal').classList.add('visible'); }
+function closeEndModal() { document.getElementById('end-modal').classList.remove('visible'); }
+function confirmEnd() {
+  closeEndModal();
+  showToast('Trip ended! Redirecting...');
+  setTimeout(() => { window.location.href = '../driver/driverDashboard.html'; }, 1800);
+}
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+function toggleSheet() {
+  const panel = document.getElementById('panel');
+  panel.classList.toggle('collapsed');
+  document.querySelector('.expand-hint').textContent = panel.classList.contains('collapsed') ? 'Show details' : 'Hide details';
+}
+if (window.innerWidth <= 640) {
+  document.getElementById('panel').classList.add('collapsed');
+  document.querySelector('.expand-hint').textContent = 'Show details';
+}
+
+loadTrip();

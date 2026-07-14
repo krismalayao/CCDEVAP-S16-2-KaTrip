@@ -1,79 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KaTrip - Driver</title>
-    <link rel="stylesheet" href="../style/driverDashboard.css">
-    <link rel="stylesheet" href="../style/navbar.css">
-    <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
-</head>
-<body>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>KaTrip - Driver</title>
+        <link rel="stylesheet" href="../style/driverDashboard.css">
+        <link rel="stylesheet" href="../style/navbar.css">
+        <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+    </head>
+    <body>
 
-<div id="navbar-mount"></div>
-<script src="../components/navbar.js"></script>
+    <div id="navbar-mount"></div>
+    <script src="../components/navbar.js"></script>
 
-    <div class="page">
+        <div class="page">
 
-    <div class="page-header">
-        <h1 class="page-title">My Trips</h1>
-        <a href="../driver/driverCreateTrip.html" class="new-trip-btn">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-        New Trip
-        </a>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats-row">
-        <div class="stat-card">
-        <div class="stat-label">Total Trips</div>
-        <div class="stat-value" id="stat-total">0</div>
-        <div class="stat-sub">All time</div>
+        <div class="page-header">
+            <h1 class="page-title">My Trips</h1>
+            <a href="../driver/driverCreateTrip.html" class="new-trip-btn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            New Trip
+            </a>
         </div>
-        <div class="stat-card">
-        <div class="stat-label">Completed</div>
-        <div class="stat-value" id="stat-completed">0</div>
-        <div class="stat-sub">Successfully done</div>
+
+        <!-- STATS -->
+        <div class="stats-row">
+            <div class="stat-card">
+            <div class="stat-label">Total Trips</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-sub">All time</div>
+            </div>
+            <div class="stat-card">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" id="stat-completed">0</div>
+            <div class="stat-sub">Successfully done</div>
+            </div>
+            <div class="stat-card">
+            <div class="stat-label">Total Earned</div>
+            <div class="stat-value" id="stat-earned">PHP 0</div>
+            <div class="stat-sub">From completed trips</div>
+            </div>
         </div>
-        <div class="stat-card">
-        <div class="stat-label">Total Earned</div>
-        <div class="stat-value" id="stat-earned">PHP 0</div>
-        <div class="stat-sub">From completed trips</div>
+
+        <!-- SEARCH -->
+        <div class="search-wrap">
+            <input class="search-input" id="search-input" placeholder="Search by destination or date…" oninput="filterTrips()"/>
         </div>
-    </div>
 
-    <!-- SEARCH -->
-    <div class="search-wrap">
-        <input class="search-input" id="search-input" placeholder="Search by destination or date…" oninput="filterTrips()"/>
-    </div>
-
-    <!-- FILTER TABS -->
-    <div class="filter-tabs">
-        <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
-        <button class="filter-tab" onclick="setFilter('ongoing', this)">Ongoing</button>
-        <button class="filter-tab" onclick="setFilter('upcoming', this)">Upcoming</button>
-        <button class="filter-tab" onclick="setFilter('completed', this)">Completed</button>
-        <button class="filter-tab" onclick="setFilter('cancelled', this)">Cancelled</button>
-    </div>
-
-    <!-- TRIP LIST -->
-    <div id="trip-list"></div>
-
-    </div>
-
-    <!-- CANCEL MODAL -->
-    <div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;" id="cancel-modal">
-    <div style="background:#fff;border-radius:20px;padding:32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-        <div style="font-size:2.2rem;margin-bottom:12px;">⚠️</div>
-        <h2 style="font-size:1.1rem;color:#2d1a4e;font-weight:700;margin-bottom:8px;">Cancel this trip?</h2>
-        <p style="font-size:0.87rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">Passengers who booked this ride will be notified. This cannot be undone.</p>
-        <div style="display:flex;gap:10px;">
-        <button onclick="hideCancelModal()" style="flex:1;padding:12px;border:1.5px solid #e5e7eb;background:#fff;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#374151;font-weight:500;">Keep Trip</button>
-        <button onclick="confirmCancel()" style="flex:1;padding:12px;background:#ef4444;border:none;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#fff;font-weight:700;">Cancel Trip</button>
+        <!-- FILTER TABS -->
+        <div class="filter-tabs">
+            <button class="filter-tab active" onclick="setFilter('all', this)">All</button>
+            <button class="filter-tab" onclick="setFilter('ongoing', this)">Ongoing</button>
+            <button class="filter-tab" onclick="setFilter('upcoming', this)">Upcoming</button>
+            <button class="filter-tab" onclick="setFilter('completed', this)">Completed</button>
+            <button class="filter-tab" onclick="setFilter('cancelled', this)">Cancelled</button>
         </div>
-    </div>
-    </div>
 
-<script src="../script/driverDashboard.js"></script>
-</body>
+        <!-- TRIP LIST -->
+        <div id="trip-list"></div>
+
+        </div>
+
+        <!-- CANCEL MODAL -->
+        <div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;" id="cancel-modal">
+        <div style="background:#fff;border-radius:20px;padding:32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+            <div style="font-size:2.2rem;margin-bottom:12px;">⚠️</div>
+            <h2 style="font-size:1.1rem;color:#2d1a4e;font-weight:700;margin-bottom:8px;">Cancel this trip?</h2>
+            <p style="font-size:0.87rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">Passengers who booked this ride will be notified. This cannot be undone.</p>
+            <div style="display:flex;gap:10px;">
+            <button onclick="hideCancelModal()" style="flex:1;padding:12px;border:1.5px solid #e5e7eb;background:#fff;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#374151;font-weight:500;">Keep Trip</button>
+            <button onclick="confirmCancel()" style="flex:1;padding:12px;background:#ef4444;border:none;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#fff;font-weight:700;">Cancel Trip</button>
+            </div>
+        </div>
+        </div>
+
+    <script src="../script/driverDashboard.js"></script>
+    </body>
 </html>

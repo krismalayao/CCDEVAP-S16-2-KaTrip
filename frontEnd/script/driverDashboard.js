@@ -90,7 +90,7 @@ function renderTrips() {
   container.innerHTML = list.map(t => {
     const actions = [];
     if (t.status === 'ongoing') {
-      actions.push(`<a href="../driver/driverOngoing.html" class="btn-sm btn-primary">▶ View Live Trip</a>`);
+      actions.push(`<a href="../driver/driverOngoing.html?ride_id=${t.id}" class="btn-sm btn-primary">▶ View Live Trip</a>`);
     }
     if (t.status === 'upcoming') {
       actions.push(`<button class="btn-sm btn-primary" onclick="startTrip(${t.id})">▶ Start Trip</button>`);
