@@ -150,7 +150,24 @@ function renderMap() {
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
-}
+    
+    // ── Back to Dashboard control ──────────────────────────────────────────────
+    const BackControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd: function () {
+        const container = L.DomUtil.create('div', 'leaflet-bar back-control');
+        container.innerHTML = `
+        <a href="driverDashboard.html" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </a>`;
+        L.DomEvent.disableClickPropagation(container);
+        return container;
+    }
+    });
+    map.addControl(new BackControl());
+    }
 
 // ── Modal ────────────────────────────────────────────────────────────────────
 //For the "Start Trip" modal.

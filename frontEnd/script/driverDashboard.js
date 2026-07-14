@@ -142,7 +142,7 @@ function renderTrips() {
 
     const pickupText = t.pickups.length ? `${t.pickups.join(', ')}` : '—';
 
-    return `<div class="trip-card">
+    return `<div class="trip-card trip-card-${t.status}">
       <div class="trip-card-top">
         <div class="trip-route-text">
           <span class="route-part" title="${t.from}">${t.fromName}</span>
