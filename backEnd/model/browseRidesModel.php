@@ -18,6 +18,7 @@ function getAvailableRides($conn)
         LEFT JOIN ride_schedules rs
             ON r.schedule_id = rs.schedule_id
         WHERE r.ride_status = 'scheduled'
+        AND r.available_seats != 0
         ORDER BY rs.start_date ASC, rs.departure_time ASC, r.departure ASC
     ";
 

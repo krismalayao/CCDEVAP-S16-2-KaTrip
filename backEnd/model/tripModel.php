@@ -55,12 +55,12 @@ function createLandmarks($conn, $rideId, $landmarks) {
 function getRidesByDriver($conn, $driverId) {
     $stmt = $conn->prepare("
         SELECT r.*,
-               COUNT(b.booking_id) AS passenger_count
+        COUNT(b.booking_id) AS passenger_count
         FROM rides r
         LEFT JOIN bookings b ON b.ride_id = r.ride_id AND b.booking_status = 'accepted'
         WHERE r.driver_id = ?
-        ORDER BY r.departure_date DESC, r.departure DESC
-    ");
+        ORDER BY r.departure_date DESC, r.departure DESC");
+
     $stmt->bind_param("i", $driverId);
     $stmt->execute();
     return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -80,8 +80,8 @@ function getRideById($conn, $rideId, $driverId) {
     // Attach landmarks
     $stmt2 = $conn->prepare("
         SELECT * FROM ride_landmarks
-        WHERE ride_id = ? ORDER BY landmark_number ASC
-    ");
+        WHERE ride_id = ? ORDER BY landmark_number ASC");
+
     $stmt2->bind_param("i", $rideId);
     $stmt2->execute();
     $ride['landmarks'] = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -91,8 +91,8 @@ function getRideById($conn, $rideId, $driverId) {
         SELECT b.*, u.first_name, u.last_name
         FROM bookings b
         JOIN users u ON u.user_id = b.passenger_id
-        WHERE b.ride_id = ? AND b.booking_status IN ('pending', 'accepted')
-    ");
+        WHERE b.ride_id = ? AND b.booking_status IN ('pending', 'accepted')");
+
     $stmt3->bind_param("i", $rideId);
     $stmt3->execute();
     $ride['bookings'] = $stmt3->get_result()->fetch_all(MYSQLI_ASSOC);
@@ -104,11 +104,59 @@ function getRideById($conn, $rideId, $driverId) {
 function updateRideStatus($conn, $rideId, $driverId, $status) {
     $stmt = $conn->prepare("
         UPDATE rides SET ride_status = ?
-        WHERE ride_id = ? AND driver_id = ?
-    ");
+        WHERE ride_id = ? AND driver_id = ?");
+
     $stmt->bind_param("sii", $status, $rideId, $driverId);
     return $stmt->execute();
 }
+
+// ─── New Functions ─────────────────────────────────────────────────────
+
+
+// ─── Get a driver's display info (name + vehicle) ────────────────────────────
+function getDriverProfile($conn, $driverId) {
+    $stmt = $conn->prepare("
+        SELECT u.first_name, u.last_name,
+            d.vehicle_model, d.plate_number, d.vehicle_color
+        FROM users u
+        JOIN driver_profiles d ON d.driver_id = u.user_id
+        WHERE u.user_id = ?");
+
+    $stmt->bind_param("i", $driverId);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+
+// ─── Get landmarks for a ride ─────────────────────────────────
+function getLandmarksForRide($conn, $rideId) {
+    $stmt = $conn->prepare("
+        SELECT landmark_name, lat, lng
+        FROM ride_landmarks
+        WHERE ride_id = ?
+        ORDER BY landmark_number ASC");
+
+    $stmt->bind_param("i", $rideId);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
+
+function mapRideStatusToGroup($rideStatus) {
+    if ($rideStatus == 'scheduled') return 'upcoming';
+    if ($rideStatus == 'ongoing') return 'ongoing';
+    if ($rideStatus == 'completed') return 'completed';
+    if ($rideStatus == 'cancelled') return 'cancelled';
+    return 'upcoming';
+}
+
+
+function formatRideTime($time) {
+    if (!$time) return '';
+    return date('g:i A', strtotime($time));
+}
+// ─── End of New Functions ─────────────────────────────────────────────────────
+
+
 
 // ─── Accept or reject a booking ──────────────────────────────────────────────
 function updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status) {

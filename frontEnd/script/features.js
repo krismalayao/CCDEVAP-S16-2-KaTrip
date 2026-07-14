@@ -238,7 +238,7 @@ function renderRides(list) {
             <span class="browserides-meta-value">${dateLabel}</span>
           </div>
           <div class="browserides-meta-item">
-            <span class="browserides-meta-label">CAPACITY:</span>
+            <span class="browserides-meta-label">SEATS LEFT:</span>
             <span class="browserides-capacity-badge" style="background:${capacity.color}">${capacity.label}</span>
           </div>
           <div class="browserides-meta-item">
@@ -330,7 +330,7 @@ function openRideDetailsModal(rideId) {
               <span class="view-details-modal-value">${ride.start_date || 'TBA'}</span>
             </div>
             <div class="view-details-modal-meta-item">
-              <span class="view-details-modal-label">Seats</span>
+              <span class="view-details-modal-label">Seats Left</span>
               <span class="view-details-modal-seat">${ride.available_seats || 0} / ${ride.total_seats || 0}</span>
             </div>
           </div>
@@ -346,11 +346,40 @@ function openRideDetailsModal(rideId) {
               <span class="view-details-modal-label">ESTIMATED FARE</span>
               <span class="view-details-modal-price">₱${Number(ride.cost || 0).toFixed(2)}</span>
             </div>
+
+            <button class="reserve-seat-btn" id= "reserve-seat-btn" data-ride-id="${ride.ride_id}">
+              Reserve Seat
+            </button>
           </div>
         </div>
       `;
 
       document.body.appendChild(modal);
+
+      const reserveBtn = modal.querySelector('.reserve-seat-btn');
+
+      if (reserveBtn) {
+        reserveBtn.addEventListener('click', () => {
+
+          const rideId = reserveBtn.dataset.rideId;
+
+          fetch('../../backEnd/controller/reserveController.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `ride_id=${rideId}`
+          })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              openReservationToast(data.booking_id);
+            } else {
+              alert(data.message);
+            }
+          });
+        });
+      }
 
       modal.querySelector('.view-details-modal-close').addEventListener('click', () => modal.remove());
       modal.addEventListener('click', (event) => {
@@ -364,6 +393,40 @@ function openRideDetailsModal(rideId) {
     });
 }
 
+function openReservationToast(bookingId) {
+  const toast = document.createElement('div');
+  toast.classList.add('reservation-toast');
+
+  toast.innerHTML = `
+    <div class="reservation-toast-card">
+      <div class="reservation-loading"></div>
+      <h3>Waiting for driver approval</h3>
+      <p>Your reservation request has been sent.</p>
+      <button class="reservation-cancel">Cancel Reservation</button>
+    </div>
+  `;
+
+  document.body.appendChild(toast);
+
+  toast.querySelector('.reservation-cancel').addEventListener('click', () => {
+
+    fetch('../../backEnd/controller/cancelController.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `booking_id=${bookingId}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        toast.remove();
+      } else {
+        alert(data.message);
+      }
+    });
+  });
+}
 function initBrowseRidesAutocomplete() {
   const rideList = document.getElementById('ride-list');
   const destinationInput = document.getElementById('destination-input');

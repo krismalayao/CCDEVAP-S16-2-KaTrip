@@ -1260,12 +1260,6 @@ body {
     font-size: 13px;
 }
 
-.view-details-modal-footer {
-    border-top: 1px solid var(--purple-light);
-    padding-top: 12px;
-    margin-top: 5px;
-}
-
 .view-details-modal-price {
     display: block;
     margin-top: 4px;
@@ -1274,7 +1268,129 @@ body {
     font-weight: 800;
 }
 
+/* RESERVE SEAT BUTTON */
+.reserve-seat-btn {
+    background: var(--purple);
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-family: 'Helvetica Now', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 12px rgba(152, 84, 203, 0.3);
+}
+
+.reserve-seat-btn:hover {
+    background: var(--purple-dark);
+    box-shadow: 0 6px 16px rgba(100, 55, 160, 0.35);
+}
+
+.reserve-seat-btn:active {
+    transform: scale(0.96);
+}
+
+.view-details-modal-footer {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-top: 15px;
+    border-top: 1px solid var(--purple-light);
+    padding-top: 12px;
+}
+
+
+
 /* END OF VIEW DETAILS MODAL */
+
+/* WAITING FOR RESERVATION APPROVAL MODAL*/
+
+/* RESERVATION TOAST (BOTTOM RIGHT) */
+.reservation-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* Card */
+.reservation-toast-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  padding: 14px 16px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  min-width: 280px;
+  max-width: 320px;
+  animation: slideIn 0.25s ease;
+}
+
+/* Text */
+.reservation-toast-content h4 {
+  margin: 0;
+  font-size: 14px;
+  color: var(--purple-dark);
+  font-family: 'Helvetica Now', sans-serif;
+}
+
+.reservation-toast-content p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #666;
+  font-family: 'Helvetica Now', sans-serif;
+}
+
+/* Spinner */
+.reservation-loading {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #eee;
+  border-top: 3px solid var(--purple);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Cancel button */
+.reservation-cancel {
+  margin-left: auto;
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reservation-cancel:hover {
+  background: #c91c22;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* END OF RESERVATION MODAL */
 
 /* UPCOMING RIDES */
 .passenger-ride-card.empty {
