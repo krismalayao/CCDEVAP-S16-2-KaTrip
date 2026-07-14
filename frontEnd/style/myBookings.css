@@ -26,10 +26,11 @@
 .bookings-heading {
     font-family: 'Bloc';
     font-size: 26px;
+    line-height: normal;
     font-weight: 400;
     letter-spacing: 0.5px;
     color: var(--purple-dark);
-    margin-bottom: 5px;
+    margin: 0;
 }
 
 .bookings-card {
@@ -279,7 +280,7 @@
     color: #b4232f;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 600px) {
     .bookings-layout {
         padding: 20px 10px;
     }

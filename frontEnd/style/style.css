@@ -404,31 +404,34 @@ body {
     display: flex;
     justify-content: center;
     min-height: calc(100vh - 52px);
-    padding: 35px 20px 50px 20px;
+    padding: 40px 20px 50px;
     background: var(--bg);
 }
 
 .browserides-main {
     width: 100%;
     max-width: 660px;
-    border-radius: 12px;
+    box-sizing: border-box;
+    border-radius: 20px;
     background: var(--bg-card);
-    padding: 20px 40px 30px 40px;
+    padding: 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
 }
 
 .browserides-heading {
     font-family: 'Bloc';
     font-size: 26px;
+    line-height: normal;
     font-weight: 400;
     letter-spacing: 0.5px;
     color: var(--purple-dark);
-    margin-bottom: 22px;
+    margin: 0 0 24px;
 }
 
 .browserides-card {
     background: var(--purple-light);
-    border-radius: 14px;
-    padding: 22px 22px 28px 22px;
+    border-radius: 16px;
+    padding: 16px;
 }
 
 .browserides-filters {
@@ -702,12 +705,20 @@ body {
 }
 
 @media (max-width: 600px) {
+    .browserides-layout {
+        padding: 20px 10px;
+    }
+
     .browserides-main {
-        padding: 0 16px;
+        padding: 16px;
+    }
+
+    .browserides-heading {
+        margin-bottom: 16px;
     }
 
     .browserides-card {
-        padding: 18px 14px;
+        padding: 16px;
     }
 
     .browserides-filter-btn {
