@@ -172,8 +172,15 @@ function initDriverApplicationSubmit() {
             if (data.status !== 'success') throw new Error(data.message);
             const modal = document.getElementById('application-success-modal');
             document.getElementById('application-success-message').textContent = data.message;
+            const isExistingApplication = Boolean(data.existing_application);
+            const closeButton = document.getElementById('application-success-close');
+            closeButton.textContent = isExistingApplication ? 'Return to Passenger Dashboard' : 'Continue to Login';
             modal.hidden = false;
-            document.getElementById('application-success-close').addEventListener('click', () => {
+            closeButton.addEventListener('click', () => {
+                if (isExistingApplication) {
+                    window.location.href = '../passenger/passengerDashboard.php';
+                    return;
+                }
                 window.location.href = '../public/loginPage.php';
             });
         } catch (error) {

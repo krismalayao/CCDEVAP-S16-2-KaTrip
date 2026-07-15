@@ -90,7 +90,7 @@ function displayApplicant(row){
                 <strong>Driver License:</strong>
                 ${
                     row.dataset.licenseFile 
-                    ? `<a href="${row.dataset.licenseFile}" target="_blank">View File</a>`
+                    ? `<a href="#" class="document-link" data-document-url="${row.dataset.licenseFile}" data-document-title="Driver License">View File</a>`
                     : "No File"
                 }
             </p>
@@ -98,7 +98,7 @@ function displayApplicant(row){
                 <strong>Vehicle Picture:</strong>
                 ${
                     row.dataset.vehicleFile
-                    ? `<a href="${row.dataset.vehicleFile}" target="_blank">View File</a>`
+                    ? `<a href="#" class="document-link" data-document-url="${row.dataset.vehicleFile}" data-document-title="Vehicle Picture">View File</a>`
                     : "No File"
                 }
             </p>
@@ -106,7 +106,7 @@ function displayApplicant(row){
                 <strong>Vehicle Registration:</strong>
                 ${
                     row.dataset.registrationFile 
-                    ? `<a href="${row.dataset.registrationFile}" target="_blank">View File</a>`
+                    ? `<a href="#" class="document-link" data-document-url="${row.dataset.registrationFile}" data-document-title="Vehicle Registration">View File</a>`
                     : "No File"
                 }
             </p>
@@ -114,7 +114,7 @@ function displayApplicant(row){
                 <strong>Vehicle Insurance:</strong>
                 ${
                     row.dataset.insuranceFile
-                    ? `<a href="${row.dataset.insuranceFile}" target="_blank">View File</a>`
+                    ? `<a href="#" class="document-link" data-document-url="${row.dataset.insuranceFile}" data-document-title="Vehicle Insurance">View File</a>`
                     : "No File"
                 }
             </p>
@@ -135,6 +135,29 @@ function displayApplicant(row){
             decisionButtons.style.display = "none";
         }
     }
+}
+
+function closeDocumentModal() {
+    const modal = document.getElementById("documentModal");
+    const image = document.getElementById("documentModalImage");
+    if (!modal) return;
+
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    if (image) image.removeAttribute("src");
+}
+
+function openDocumentModal(url, title) {
+    const modal = document.getElementById("documentModal");
+    const image = document.getElementById("documentModalImage");
+    const heading = document.getElementById("documentModalTitle");
+    if (!modal || !image) return;
+
+    heading.textContent = title || "Uploaded Document";
+    image.src = url;
+    image.alt = heading.textContent;
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
 }
 
 function openAddModal() {
@@ -250,6 +273,24 @@ function handleConfirmYes() {
 }
 
 document.addEventListener("DOMContentLoaded",()=>{
+    document.addEventListener("click", (event) => {
+        const documentLink = event.target.closest(".document-link");
+        if (documentLink) {
+            event.preventDefault();
+            openDocumentModal(documentLink.dataset.documentUrl, documentLink.dataset.documentTitle);
+            return;
+        }
+
+        if (event.target.id === "documentModal" || event.target.id === "documentModalBackdrop") {
+            closeDocumentModal();
+        }
+    });
+
+    document.getElementById("documentModalClose")?.addEventListener("click", closeDocumentModal);
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeDocumentModal();
+    });
+
     const radios = document.querySelectorAll(".selectedApplicant");
 
     radios.forEach(radio=>{

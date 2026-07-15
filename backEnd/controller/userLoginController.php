@@ -15,7 +15,18 @@
     $user = getUserEmail($conn, $email);
 
     if ($user && password_verify($pass, $user["password"])) {
+        if ($user["role"] === "driver" && $user["status"] === "pending") {
+            $_SESSION['login_email'] = $email;
+            $_SESSION['login_error'] = 'Your driver application is still pending approval.';
+            header("Location: ../../frontEnd/public/loginPage.php");
+            exit();
+        }
+
         if ($user["status"] === "suspended" || $user["status"] === "denied") {
+            $_SESSION['login_email'] = $email;
+            $_SESSION['login_error'] = $user["status"] === "denied"
+                ? 'Your driver application was not approved.'
+                : 'Your account is currently suspended.';
             header("Location: ../../frontEnd/public/loginPage.php");
             exit();
         }

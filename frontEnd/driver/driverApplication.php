@@ -1,7 +1,10 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['driver_registration_verified'])) {
+$isNewDriverRegistration = isset($_SESSION['driver_registration_verified']);
+$isPassengerUpgrade = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'passenger';
+
+if (!$isNewDriverRegistration && !$isPassengerUpgrade) {
     header('Location: ../public/registerPage.html');
     exit;
 }
@@ -18,7 +21,7 @@ if (!isset($_SESSION['driver_registration_verified'])) {
     <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
 </head>
 <body class="driver-application-body">
-    <div id="navbar-public"></div>
+    <div id="<?= $isPassengerUpgrade ? 'navbar-mount' : 'navbar-public' ?>"></div>
 
     <div class="application-layout">
         <h1 class="application-heading">Become a KaTrip Driver</h1>
@@ -106,7 +109,7 @@ if (!isset($_SESSION['driver_registration_verified'])) {
 
             <!-- Agreement Checkbox -->
             <div class="form-checkbox-group">
-                <input type="checkbox" id="agreement_check" required>
+                <input type="checkbox" id="agreement_check" name="agreement_check" value="1" required>
                 <label for="agreement_check">
                     I acknowledge that the submitted documents will be used for verification and safety purposes within the platform. <span class="required">*</span>
                 </label>
@@ -126,7 +129,7 @@ if (!isset($_SESSION['driver_registration_verified'])) {
         </div>
     </div>
     
-    <script src="../components/navbarPublic.js"></script>
+    <script src="../components/<?= $isPassengerUpgrade ? 'navbarPassenger.js' : 'navbarPublic.js' ?>"></script>
     <script src="../script/features.js"></script>
 </body>
 </html>

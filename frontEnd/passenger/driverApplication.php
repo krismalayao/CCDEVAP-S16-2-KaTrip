@@ -1,3 +1,21 @@
+<?php
+session_start();
+require "../../config/db.php";
+
+if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'passenger') {
+    header('Location: ../public/loginPage.php');
+    exit;
+}
+
+$applicationStatus = null;
+$statusQuery = $conn->prepare('SELECT verification_status FROM driver_profiles WHERE driver_id = ? LIMIT 1');
+$statusQuery->bind_param('i', $_SESSION['user_id']);
+$statusQuery->execute();
+$application = $statusQuery->get_result()->fetch_assoc();
+if ($application) {
+    $applicationStatus = $application['verification_status'];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,11 +33,18 @@
     <div class="application-layout">
         <h1 class="application-heading">Become a KaTrip Driver</h1>
 
-        <form class="application-form">
+        <?php if ($applicationStatus): ?>
+            <div class="application-pending-message">
+                <h2>Application Already Submitted</h2>
+                <p>Your driver application is currently <strong><?= htmlspecialchars(ucfirst($applicationStatus)) ?></strong><?= $applicationStatus === 'pending' ? ' and awaiting verification.' : '.' ?></p>
+                <a href="passengerDashboard.php" class="application-back-link">Return to Passenger Dashboard</a>
+            </div>
+        <?php else: ?>
+        <form class="application-form" id="driver-application-form">
             <!-- Driver's License Number Input -->
             <div class="form-group">
                 <label for="license_number">Driver's License Number <span class="required">*</span></label>
-                <input type="text" id="license_number" placeholder="A01-23-456789" required>
+                <input type="text" id="license_number" name="license_number" placeholder="A01-23-456789" required>
             </div>
 
             <!-- Driver's License Image Upload -->
@@ -27,7 +52,7 @@
                 <label>Upload Driver's License <span class="required">*</span></label>
                 <p class="upload-hint">Make sure the <span class="highlight">License Number</span> is clear and readable</p>
                 <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
-                    <input type="file" id="license_file" accept=".png, .jpg, .jpeg" hidden>
+                    <input type="file" id="license_file" name="license_file" accept=".png, .jpg, .jpeg" required hidden>
                     <div class="upload-icon-placeholder"></div>
                 </div>
             </div>
@@ -37,7 +62,7 @@
                 <div class="form-group relative-input">
                     <label for="vehicle_model">Vehicle Model <span class="required">*</span></label>
                     <div class="search-input-wrapper">
-                        <input type="text" id="vehicle_model" required>
+                        <input type="text" id="vehicle_model" name="vehicle_model" required>
                         <div class="search-icon-placeholder"></div>
                     </div>
                 </div>
@@ -45,14 +70,14 @@
                 <!-- Vehicle Plate Number Input -->
                 <div class="form-group">
                     <label for="plate_number">Plate Number <span class="required">*</span></label>
-                    <input type="text" id="plate_number" placeholder="ABC 1234" required>
+                    <input type="text" id="plate_number" name="plate_number" placeholder="ABC 1234" required>
                 </div>
                 
                 <!-- Vehicle Color Input -->
                 <div class="form-group">
                     <label for="vehicle_color">Color</label>
                     <div class="select-wrapper">
-                        <select id="vehicle_color">
+                        <select id="vehicle_color" name="vehicle_color">
                             <option value="" selected></option>
                             <option value="black">Black</option>
                             <option value="white">White</option>
@@ -71,7 +96,7 @@
                 <label>Upload Vehicle Picture <span class="required">*</span></label>
                 <p class="upload-hint">Make sure the <span class="highlight">front of the vehicle</span> and <span class="highlight">license plate</span> is clear and readable</p>
                 <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
-                    <input type="file" id="vehicle_file" accept=".png, .jpg, .jpeg" hidden>
+                    <input type="file" id="vehicle_file" name="vehicle_file" accept=".png, .jpg, .jpeg" required hidden>
                     <div class="upload-icon-placeholder"></div>
                 </div>
             </div>
@@ -81,7 +106,7 @@
                 <label>Upload Vehicle Registration <span class="required">*</span></label>
                 <p class="upload-hint">To be submitted for verification and community accountability purposes</p>
                 <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
-                    <input type="file" id="registration_file" accept=".png, .jpg, .jpeg" hidden>
+                    <input type="file" id="registration_file" name="registration_file" accept=".png, .jpg, .jpeg" required hidden>
                     <div class="upload-icon-placeholder"></div>
                 </div>
             </div>
@@ -91,14 +116,14 @@
                 <label>Upload Vehicle Insurance <span class="required">*</span></label>
                 <p class="upload-hint">To be submitted for verification and community accountability purposes</p>
                 <div class="upload-dropzone" data-title="Choose a file to upload" data-subtitle="(PNG, JPG only)" onclick="this.querySelector('input').click()">
-                    <input type="file" id="insurance_file" accept=".png, .jpg, .jpeg" hidden>
+                    <input type="file" id="insurance_file" name="insurance_file" accept=".png, .jpg, .jpeg" required hidden>
                     <div class="upload-icon-placeholder"></div>
                 </div>
             </div>
 
             <!-- Agreement Checkbox -->
             <div class="form-checkbox-group">
-                <input type="checkbox" id="agreement_check" required>
+                <input type="checkbox" id="agreement_check" name="agreement_check" value="1" required>
                 <label for="agreement_check">
                     I acknowledge that the submitted documents will be used for verification and safety purposes within the platform. <span class="required">*</span>
                 </label>
@@ -109,6 +134,14 @@
             </div>
 
         </form>
+        <?php endif; ?>
+    </div>
+
+    <div id="application-success-modal" class="application-modal" hidden>
+        <div class="application-modal-content" role="dialog" aria-modal="true" aria-labelledby="application-success-title">
+            <p id="application-success-message"></p>
+            <button type="button" id="application-success-close">Continue to Login</button>
+        </div>
     </div>
     
     <script src="../components/navbarPassenger.js"></script>

@@ -203,6 +203,17 @@
             </div>
         </div>
 
+        <div class="document-modal" id="documentModal" aria-hidden="true" role="dialog" aria-labelledby="documentModalTitle">
+            <div class="document-modal-backdrop" id="documentModalBackdrop"></div>
+            <div class="document-modal-content">
+                <button type="button" class="document-modal-close" id="documentModalClose" aria-label="Close document preview">&times;</button>
+                <h3 id="documentModalTitle">Uploaded Document</h3>
+                <div class="document-modal-image-wrap">
+                    <img id="documentModalImage" class="document-modal-image" alt="">
+                </div>
+            </div>
+        </div>
+
         <script src="../script/driverVerification.js"></script>
     </body>
 </html>
