@@ -8,7 +8,7 @@ document.getElementById('navbar-mount').innerHTML = `
         <nav class="nav-links">
             <a class="nav-link" href="driverDashboard.html">View Bookings</a>
             <a class="nav-link" href="browseRides.html">Browse Rides</a>
-            <a class="nav-link" href="driverCreateTrip.html">Create Ride</a>
+            <a class="nav-link" href="driverCreateTrip.html">Create Trip</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
