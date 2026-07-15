@@ -1,3 +1,23 @@
+<?php
+    session_start();
+
+    require "../../config/db.php";
+    require "../../backEnd/model/userSessionModel.php";
+
+    if (!isset($_SESSION["email"]) || $_SESSION["role"] !== "passenger") {
+        header("Location: ../public/loginPage.php");
+        exit();
+    }
+
+    $userId = $_SESSION["user_id"];
+    $user = getUserById($conn, $userId);
+
+    if (!$user) {
+        session_destroy();
+        header("Location: ../public/loginPage.php");
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,12 +40,12 @@
     </div>
 
     <div class="passenger-dashboard-card-actions">
-        <a href="myBookings.html" class="passenger-dashboard-action-btn">
+        <a href="myBookings.php" class="passenger-dashboard-action-btn">
             <img src="../src/images/calendar-icon.png" class="passenger-dashboard-icon">
             <span class="passenger-dashboard-label">View Bookings</span>
         </a>
 
-        <a href="browseRides.html" class="passenger-dashboard-action-btn">
+        <a href="browseRides.php" class="passenger-dashboard-action-btn">
             <img src="../src/images/map-icon.png" class="passenger-dashboard-icon">
             <span class="passenger-dashboard-label">Browse Rides</span>
         </a>

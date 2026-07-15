@@ -7,8 +7,8 @@ document.getElementById('navbar-mount').innerHTML = `
         </a>
         <nav class="nav-links">
             <a class="nav-link" href="passengerDashboard.php">Home</a>
-            <a class="nav-link" href="myBookings.html">View Bookings</a>
-            <a class="nav-link" href="browseRides.html">Browse Rides</a>
+            <a class="nav-link" href="myBookings.php">View Bookings</a>
+            <a class="nav-link" href="browseRides.php">Browse Rides</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
@@ -16,7 +16,7 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
                 <span class="nav-menu-bar"></span>
             </button>
-            <a class="nav-profile-btn" href="passengerProfile.html" aria-label="Profile">
+            <a class="nav-profile-btn" href="passengerProfile.php" aria-label="Profile">
                 <span class="nav-profile-initials"></span>
             </a>
         </div>
@@ -24,8 +24,8 @@ document.getElementById('navbar-mount').innerHTML = `
 
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
         <a class="nav-dropdown-link" href="passengerDashboard.php">Home</a>
-        <a class="nav-dropdown-link" href="myBookings.html">View Bookings</a>
-        <a class="nav-dropdown-link" href="browseRides.html">Browse Rides</a>
+        <a class="nav-dropdown-link" href="myBookings.php">View Bookings</a>
+        <a class="nav-dropdown-link" href="browseRides.php">Browse Rides</a>
     </div>
 </header>
 `;

@@ -231,7 +231,7 @@ body {
 
 .charts {
     width: 700px;
-    height: 220px;
+    min-height: 220px;
 }
 
 .rides-chart {
@@ -249,7 +249,7 @@ body {
     margin: 0 auto 30px auto;
     max-width: 900px;
     width: 90%;
-    height: 130px;
+    min-height: 110px;
 }
 
 .passenger-dashboard-action-btn {
@@ -447,22 +447,81 @@ body {
 
 /* Mobile */
 @media (max-width: 480px) {
+    .cta-heading {
+        margin-top: 28px;
+        margin-bottom: 14px;
+    }
+
     .passenger-dashboard-card-actions {
         flex-direction: column;
         height: auto;
+        width: calc(100% - 24px);
+        margin-bottom: 16px;
     }
 
     .passenger-dashboard-action-btn {
         border-right: none !important;
         border-bottom: 1px solid #eee;
+        justify-content: flex-start;
+        padding: 14px 16px;
+        gap: 10px;
     }
 
     .passenger-dashboard-action-btn:last-child {
         border-bottom: none;
     }
 
+    .passenger-dashboard-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .passenger-dashboard-label {
+        font-size: 13px;
+    }
+
     .cta-heading h1 {
         font-size: 22px;
+    }
+
+    .charts {
+        width: calc(100% - 24px);
+        min-height: 180px;
+        margin-bottom: 16px;
+        padding: 14px 12px;
+        border-radius: 14px;
+    }
+
+    .charts h4 {
+        font-size: 17px;
+        margin-bottom: 10px;
+    }
+
+    #rides-chart {
+        height: 150px !important;
+        max-width: 100%;
+    }
+
+    .passenger-dashboard-upcoming-rides {
+        margin-top: 0;
+        padding-bottom: 30px;
+    }
+
+    .passenger-dashboard-upcoming-rides h3 {
+        font-size: 20px;
+        padding-top: 16px;
+        margin-bottom: 10px;
+    }
+
+    .passenger-ride-list {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 0 12px;
+    }
+
+    .passenger-ride-card {
+        padding: 14px;
+        gap: 10px;
     }
 
     .ride-card-top {
@@ -470,8 +529,27 @@ body {
         gap: 8px;
     }
 
+    .ride-card-route {
+        font-size: 14px;
+    }
+
+    .ride-card-status {
+        font-size: 10px;
+        padding: 4px 10px;
+    }
+
     .ride-card-meta {
         gap: 14px;
+        padding: 8px 10px;
+    }
+
+    .ride-card-meta-value {
+        font-size: 12px;
+    }
+
+    .passenger-dashboard-details-btn {
+        width: 100%;
+        align-self: stretch;
     }
 }
 
@@ -1407,7 +1485,7 @@ body {
 /* Card */
 .reservation-toast-card {
   display: flex;
-  align-items: center;
+    align-items: flex-start;
   gap: 12px;
   background: var(--bg-card);
   padding: 14px 16px;
@@ -1421,14 +1499,16 @@ body {
 /* Text */
 .reservation-toast-content h4 {
   margin: 0;
-  font-size: 14px;
+    font-size: 15px;
+    line-height: 1.2;
   color: var(--purple-dark);
   font-family: 'Helvetica Now', sans-serif;
 }
 
 .reservation-toast-content p {
-  margin: 2px 0 0;
+    margin: 4px 0 0;
   font-size: 12px;
+    line-height: 1.35;
   color: #666;
   font-family: 'Helvetica Now', sans-serif;
 }
@@ -1456,11 +1536,13 @@ body {
   background: var(--danger);
   color: white;
   border: none;
-  padding: 6px 10px;
+    padding: 7px 10px;
   border-radius: 6px;
-  font-size: 12px;
+    font-size: 11px;
+    line-height: 1;
   font-weight: 600;
   cursor: pointer;
+    white-space: nowrap;
 }
 
 .reservation-cancel:hover {
@@ -1477,6 +1559,40 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+@media (max-width: 480px) {
+    .reservation-toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+    }
+
+    .reservation-toast-card {
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .reservation-loading {
+        width: 22px;
+        height: 22px;
+    }
+
+    .reservation-toast-content h4 {
+        font-size: 13px;
+    }
+
+    .reservation-toast-content p {
+        font-size: 11px;
+    }
+
+    .reservation-cancel {
+        font-size: 10px;
+        padding: 6px 8px;
+    }
 }
 
 /* END OF RESERVATION MODAL */

@@ -207,13 +207,66 @@ function formatRideTime($time) {
 
 // ─── Accept or reject a booking ──────────────────────────────────────────────
 function updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status) {
-    // Verify this booking belongs to this driver's ride
+    $lookup = $conn->prepare("
+        SELECT b.booking_status
+        FROM bookings b
+        JOIN rides r ON r.ride_id = b.ride_id
+        WHERE b.booking_id = ? AND b.ride_id = ? AND r.driver_id = ?
+        LIMIT 1
+    ");
+    if (!$lookup) {
+        return ["success" => false, "error" => "Could not validate booking status."];
+    }
+
+    $lookup->bind_param("iii", $bookingId, $rideId, $driverId);
+    $lookup->execute();
+    $current = $lookup->get_result()->fetch_assoc();
+
+    if (!$current) {
+        return ["success" => false, "error" => "Booking not found for this trip."];
+    }
+
+    $currentStatus = $current['booking_status'];
+    $requiredCurrent = null;
+
+    if ($status === 'accepted') {
+        if ($currentStatus === 'cancelled') {
+            return [
+                "success" => false,
+                "errorCode" => "PASSENGER_CANCELLED",
+                "error" => "Passenger canceled their reservation."
+            ];
+        }
+        $requiredCurrent = 'pending';
+    } elseif ($status === 'rejected') {
+        $requiredCurrent = 'pending';
+    } elseif ($status === 'cancelled') {
+        $requiredCurrent = 'accepted';
+    }
+
     $stmt = $conn->prepare("
         UPDATE bookings b
         JOIN rides r ON r.ride_id = b.ride_id
         SET b.booking_status = ?
-        WHERE b.booking_id = ? AND b.ride_id = ? AND r.driver_id = ?
+        WHERE b.booking_id = ?
+          AND b.ride_id = ?
+          AND r.driver_id = ?
+          AND b.booking_status = ?
     ");
-    $stmt->bind_param("siii", $status, $bookingId, $rideId, $driverId);
-    return $stmt->execute();
+    if (!$stmt) {
+        return ["success" => false, "error" => "Could not update booking status."];
+    }
+
+    $stmt->bind_param("siiis", $status, $bookingId, $rideId, $driverId, $requiredCurrent);
+    $ok = $stmt->execute();
+
+    if (!$ok) {
+        return ["success" => false, "error" => "Could not update this passenger."];
+    }
+
+    if ($stmt->affected_rows === 0) {
+        return ["success" => false, "error" => "Booking status changed. Please refresh and try again."];
+    }
+
+    return ["success" => true];
 }
