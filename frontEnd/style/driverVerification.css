@@ -328,7 +328,7 @@
 }
 
 .decision-buttons {
-    display: flex;
+    display: none;
     gap: 10px;
     margin-top: 20px;
 }

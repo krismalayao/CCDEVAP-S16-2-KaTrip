@@ -115,6 +115,18 @@ function displayApplicant(row){
 
     document.getElementById("approveDriverId").value = row.querySelector(".selectedApplicant").value;
     document.getElementById("denyDriverId").value = row.querySelector(".selectedApplicant").value;
+
+    const decisionButtons = document.getElementById("decisionButtons");
+    if (decisionButtons) {
+        // Read the verification status from the row data attributes
+        const status = row.dataset.verification.toLowerCase();
+        
+        if (status === "pending") {
+            decisionButtons.style.display = "flex";
+        } else {
+            decisionButtons.style.display = "none";
+        }
+    }
 }
 
 function openAddModal() {
