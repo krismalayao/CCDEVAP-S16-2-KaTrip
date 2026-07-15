@@ -87,7 +87,7 @@ try {
 
     // Remove the old file before reusing the readable driver-document name.
     if ($existing) {
-        removePrivateUpload($existing['file']);
+        removeUpload($existing['file']);
     }
 
     $stored = storeValidatedUpload($_FILES['document'] ?? [], 'driver-documents', $driverId, $allowedMimes, 8 * 1024 * 1024, $driverId . '-' . $documentType);
@@ -119,7 +119,7 @@ try {
     ]);
 
 } catch (RuntimeException $error) {
-    if (isset($stored['stored_name'])) removePrivateUpload($stored['stored_name']);
+    if (isset($stored['stored_name'])) removeUpload($stored['stored_name']);
     uploadJsonResponse(422, ['success' => false, 'message' => $error->getMessage()]);
 }
 ?>

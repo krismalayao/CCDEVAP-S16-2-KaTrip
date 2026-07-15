@@ -95,7 +95,23 @@ INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `fi
 (9, 9, 'license', 'driver-documents/9/9-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
 (10, 9, 'vehicle', 'driver-documents/9/9-vehicle.jpg', 'image/jpeg', 18942, '2026-07-14 21:11:58'),
 (11, 9, 'registration', 'driver-documents/9/9-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
-(12, 9, 'insurance', 'driver-documents/9/9-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58');
+(12, 9, 'insurance', 'driver-documents/9/9-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
+(13, 4, 'license', 'driver-documents/4/4-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(14, 4, 'vehicle', 'driver-documents/4/4-vehicle.jpg', 'image/jpeg', 62876, '2026-07-14 21:11:58'),
+(15, 4, 'registration', 'driver-documents/4/4-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(16, 4, 'insurance', 'driver-documents/4/4-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
+(17, 7, 'license', 'driver-documents/7/7-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(18, 7, 'vehicle', 'driver-documents/7/7-vehicle.jpg', 'image/jpeg', 10994, '2026-07-14 21:11:58'),
+(19, 7, 'registration', 'driver-documents/7/7-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(20, 7, 'insurance', 'driver-documents/7/7-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
+(21, 10, 'license', 'driver-documents/10/10-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(22, 10, 'vehicle', 'driver-documents/10/10-vehicle.jpg', 'image/jpeg', 18942, '2026-07-14 21:11:58'),
+(23, 10, 'registration', 'driver-documents/10/10-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(24, 10, 'insurance', 'driver-documents/10/10-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
+(17, 12, 'license', 'driver-documents/12/12-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(18, 12, 'vehicle', 'driver-documents/12/12-vehicle.jpg', 'image/jpeg', 48766, '2026-07-14 21:11:58'),
+(19, 12, 'registration', 'driver-documents/12/12-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(20, 12, 'insurance', 'driver-documents/12/12-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58');
 
 -- --------------------------------------------------------
 
