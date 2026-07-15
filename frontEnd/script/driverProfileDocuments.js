@@ -34,15 +34,20 @@ function getDocLabel(key) {
     return DRIVER_DOC_TYPES.find((doc) => doc.key === key)?.label || "Document";
 }
 
-function openDriverDocsModal() {
+async function openDriverDocsModal() {
     const modal = document.getElementById("driver-docs-modal");
     if (!modal) return;
 
     clearPendingUploads();
-    renderAllDocumentPreviews();
     modal.classList.add("show");
     modal.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
+
+    try {
+        await loadDriverDocuments();
+    } catch (error) {
+        window.alert(error.message);
+    }
 }
 
 function closeDriverDocsModal() {
@@ -139,11 +144,15 @@ function clearPendingUploads() {
 }
 
 async function loadDriverDocuments() {
-    const response = await fetch("../../backEnd/controller/driverDocumentsController.php", { credentials: "same-origin" });
+    const response = await fetch(`../../backEnd/controller/driverDocumentsController.php?v=${Date.now()}`, {
+        credentials: "same-origin",
+        cache: "no-store"
+    });
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.message || "Unable to load documents.");
     DRIVER_DOC_TYPES.forEach(({ key }) => {
-        driverDocuments[key] = data.documents[key]?.url || null;
+        const url = data.documents[key]?.url || null;
+        driverDocuments[key] = url ? `${url}&v=${Date.now()}` : null;
     });
     renderAllDocumentPreviews();
 }
@@ -243,8 +252,6 @@ function initDriverDocumentsModal() {
             closeDriverDocsModal();
         }
     });
-
-    loadDriverDocuments().catch((error) => console.error(error));
 }
 
 document.addEventListener("DOMContentLoaded", initDriverDocumentsModal);

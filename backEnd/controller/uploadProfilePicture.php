@@ -15,12 +15,19 @@ try {
     $userId = (int)$_SESSION['user_id'];
     $allowedMimes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
     
-    $stored = storeValidatedUpload($_FILES['profile_picture'] ?? [], 'profile-pictures', $userId, $allowedMimes, 3 * 1024 * 1024);
-
     $stmt = $conn->prepare('SELECT profile_picture FROM users WHERE user_id = ?');
     $stmt->bind_param('i', $userId);
     $stmt->execute();
     $oldName = $stmt->get_result()->fetch_assoc()['profile_picture'] ?? null;
+
+    $stored = storeValidatedUpload(
+        $_FILES['profile_picture'] ?? [],
+        'profile-pictures',
+        $userId,
+        $allowedMimes,
+        3 * 1024 * 1024,
+        $userId . '-pfp'
+    );
 
     $stmt = $conn->prepare('UPDATE users SET profile_picture = ? WHERE user_id = ?');
     $stmt->bind_param('si', $stored['stored_name'], $userId);
@@ -29,7 +36,9 @@ try {
         throw new RuntimeException('The profile picture could not be updated.');
     }
 
-    removePrivateUpload($oldName);
+    if ($oldName !== $stored['stored_name']) {
+        removePrivateUpload($oldName);
+    }
 
     uploadJsonResponse(200, [
         'success' => true, 

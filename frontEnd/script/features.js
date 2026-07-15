@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initStaticRegistration();
     initRideDetail();
     initApplicationUploadPreview();
+    initDriverApplicationSubmit();
     initBrowseRidesAutocomplete();
 });
 
@@ -151,6 +152,35 @@ function initApplicationUploadPreview() {
             };
             reader.readAsDataURL(file);
         });
+    });
+}
+
+// Script for Driver Account Registration
+function initDriverApplicationSubmit() {
+    const form = document.getElementById('driver-application-form');
+    if (!form) return;
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = form.querySelector('.application-submit-btn');
+        button.disabled = true;
+        button.textContent = 'Submitting...';
+        try {
+            const response = await fetch('../../backEnd/registrationProcess/submitDriverApplication.php', {
+                method: 'POST', body: new FormData(form), credentials: 'same-origin'
+            });
+            const data = await response.json();
+            if (data.status !== 'success') throw new Error(data.message);
+            const modal = document.getElementById('application-success-modal');
+            document.getElementById('application-success-message').textContent = data.message;
+            modal.hidden = false;
+            document.getElementById('application-success-close').addEventListener('click', () => {
+                window.location.href = '../public/loginPage.php';
+            });
+        } catch (error) {
+            alert(error.message || 'Could not submit your application.');
+            button.disabled = false;
+            button.textContent = 'Submit';
+        }
     });
 }
 

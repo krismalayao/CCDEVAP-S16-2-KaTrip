@@ -136,13 +136,14 @@ function initStaticRegistration() {
         .then(response => response.json())
         .then(data => {
             if (data.status === "success") {
+                const isDriverRegistration = driverCheckbox.checked;
                 otpModal.classList.remove('show');
                 showToast(data.message, "success");
                 regForm.reset();
                 
                 setTimeout(() => {
-                    if (driverCheckbox.checked) {
-                        window.location.href = '../../frontEnd/driver/driverApplication.php';
+                    if (isDriverRegistration) {
+                        window.location.href = '../../frontEnd/driver/driverApplication.html';
                     } else {
                         window.location.href = "../../frontEnd/public/loginPage.php";
                     }

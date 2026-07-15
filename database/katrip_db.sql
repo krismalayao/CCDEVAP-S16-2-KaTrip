@@ -73,7 +73,6 @@ CREATE TABLE `driver_documents` (
   `driver_id` int(11) NOT NULL,
   `document_type` enum('license','vehicle','registration','insurance') NOT NULL,
   `file` varchar(255) NOT NULL,
-  `original_name` varchar(255) DEFAULT NULL,
   `mime_type` varchar(100) DEFAULT NULL,
   `file_size` int(10) UNSIGNED DEFAULT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -83,23 +82,19 @@ CREATE TABLE `driver_documents` (
 -- Dumping data for table `driver_documents`
 --
 
-INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `file`, `original_name`, `mime_type`, `file_size`, `uploaded_at`) VALUES
-(1, 2, 'license', 'files/docs/driver2/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(2, 2, 'registration', 'files/docs/driver2/registration.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(3, 2, 'insurance', 'files/docs/driver2/insurance.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(4, 4, 'license', 'files/docs/driver4/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(5, 5, 'license', 'files/docs/driver5/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(6, 5, 'registration', 'files/docs/driver5/registration.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(7, 7, 'license', 'files/docs/driver7/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(8, 9, 'license', 'files/docs/driver9/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(9, 9, 'insurance', 'files/docs/driver9/insurance.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(10, 10, 'license', 'files/docs/driver10/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(11, 12, 'license', 'files/docs/driver12/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(12, 14, 'license', 'files/docs/driver14/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(13, 14, 'registration', 'files/docs/driver14/registration.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(14, 16, 'license', 'files/docs/driver16/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(15, 18, 'license', 'files/docs/driver18/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
-(16, 18, 'insurance', 'files/docs/driver18/insurance.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58');
+INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `file`, `mime_type`, `file_size`, `uploaded_at`) VALUES
+(1, 2, 'license', 'driver-documents/2/2-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(2, 2, 'vehicle', 'driver-documents/2/2-vehicle.jpg', 'image/jpeg', 36644, '2026-07-14 21:11:58'),
+(3, 2, 'registration', 'driver-documents/2/2-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(4, 2, 'insurance', 'driver-documents/2/2-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
+(5, 5, 'license', 'driver-documents/5/5-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(6, 5, 'vehicle', 'driver-documents/5/5-vehicle.jpg', 'image/jpeg', 35829, '2026-07-14 21:11:58'),
+(7, 5, 'registration', 'driver-documents/5/5-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(8, 5, 'insurance', 'driver-documents/5/5-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
+(9, 9, 'license', 'driver-documents/9/9-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(10, 9, 'vehicle', 'driver-documents/9/9-vehicle.jpg', 'image/jpeg', 18942, '2026-07-14 21:11:58'),
+(11, 9, 'registration', 'driver-documents/9/9-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(12, 9, 'insurance', 'driver-documents/9/9-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58');
 
 -- --------------------------------------------------------
 
@@ -319,7 +314,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `gender`, `birthdate`, `phone_number`, `email`, `role`, `status`, `password`, `profile_picture`, `created_at`) VALUES
 (1, 'John', 'Doe', 'male', '1998-01-15', '09170000001', 'john@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
 (2, 'Camille', 'Fernandez', 'female', '1998-07-25', '09170000018', 'camille@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
-(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', 'profile-pictures/3/3-pfp.jpg', '2026-07-13 21:11:58'),
 (4, 'Ryan', 'Aquino', 'male', '1990-12-19', '09170000015', 'ryan@email.com', 'driver', 'denied', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
 (5, 'Mark', 'Santos', 'male', '1993-06-11', '09170000011', 'mark@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
 (6, 'Angela', 'Reyes', 'female', '1998-05-02', '09170000004', 'angela@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),

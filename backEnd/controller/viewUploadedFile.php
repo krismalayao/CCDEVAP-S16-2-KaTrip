@@ -26,8 +26,9 @@ if ($type === 'profile') {
     $storedName = $stmt->get_result()->fetch_assoc()['profile_picture'] ?? null;
 
 } elseif ($type === 'document') {
+    $documentId = (int)($_GET['id'] ?? 0);
     $stmt = $conn->prepare('SELECT driver_id, file, mime_type FROM driver_documents WHERE document_id = ?');
-    $stmt->bind_param('i', $_GET['id'] ?? 0);
+    $stmt->bind_param('i', $documentId);
     $stmt->execute();
     $doc = $stmt->get_result()->fetch_assoc();
 
