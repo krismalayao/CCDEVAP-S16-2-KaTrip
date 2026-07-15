@@ -212,6 +212,8 @@ function formatRideTime(value) {
   });
 }
 
+// Formats ride data into readable text 
+
 function formatRideDate(value) {
   if (!value) return 'TBA';
 
@@ -222,6 +224,8 @@ function formatRideDate(value) {
     year: 'numeric'
   }).toUpperCase();
 }
+
+// Calculates Capacity details
 
 function getCapacityDetails(ride) {
   const available = Number(ride.available_seats || 0);
@@ -237,6 +241,8 @@ function getCapacityDetails(ride) {
 
   return { label: `${available} / ${total}`, color: '#22c55e' };
 }
+
+// Generates / loads rides
 
 function renderRides(list) {
   const rideList = document.getElementById('ride-list');
@@ -284,6 +290,8 @@ function renderRides(list) {
   }).join('');
 }
 
+// function that intakes the filtered arrangement of rides
+
 function getFilteredRides() {
   const destinationInput = document.getElementById('destination-input');
   const pickupInput = document.getElementById('pickup-input');
@@ -307,6 +315,8 @@ function getFilteredRides() {
   });
 }
 
+// Sorts rides in browserides by departure time
+
 function sortByTime() {
   const sorted = [...browseRidesData];
   sorted.sort(function(a, b) {
@@ -319,6 +329,8 @@ function sortByTime() {
   });
   return sorted;
 }
+
+// Displays ride details modal
 
 function openRideDetailsModal(rideId) {
   fetch(`../../backEnd/controller/viewDetailsController.php?ride_id=${rideId}`)
@@ -441,6 +453,8 @@ function openRideDetailsModal(rideId) {
     });
 }
 
+// Displays reservation toast, with live animations and interaction through polling
+
 function openReservationToast(bookingId) {
   const toast = document.createElement('div');
   toast.classList.add('reservation-toast');
@@ -520,6 +534,8 @@ function openReservationToast(bookingId) {
     });
   });
 }
+
+// Search bar autocomplete capability
 function initBrowseRidesAutocomplete() {
   const rideList = document.getElementById('ride-list');
   const destinationInput = document.getElementById('destination-input');
