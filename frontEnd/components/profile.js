@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const securityEndpoint = "../../backEnd/controller/accountSecurityController.php";
     const isDriverProfile = document.body.classList.contains("driver-profile-body");
     const saveButton = document.getElementById("profile-save-btn");
-    const driverDetailsSaveButton = document.getElementById("driver-details-save-btn");
     const themeToggle = document.getElementById("theme-toggle-checkbox");
 
     const applyProfileTheme = (theme) => {
@@ -37,7 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
         createdAt: document.getElementById("profile-created-at"),
         vehicleModel: document.getElementById("profile-vehicle-model"),
         plateNumber: document.getElementById("profile-license-plate"),
-        status: document.getElementById("profile-status"),
         showFullName: document.getElementById("profile-show-full-name")
     };
 
@@ -324,12 +322,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (fields.showFullName) fields.showFullName.checked = Boolean(Number(profile.show_full_name));
             if (fields.vehicleModel) fields.vehicleModel.value = profile.vehicle_model || "";
             if (fields.plateNumber) fields.plateNumber.value = profile.plate_number || "";
-            if (fields.status) {
-                const status = profile.verification_status || "pending";
-                fields.status.textContent = status.charAt(0).toUpperCase() + status.slice(1);
-                const statusIcon = fields.status.nextElementSibling;
-                if (statusIcon) statusIcon.hidden = status !== "verified";
-            }
         }
     };
 
@@ -351,6 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("phone", fields.phone?.value.trim() || "");
         formData.append("gender", fields.gender?.value?.replaceAll("-", "_") || "");
         formData.append("theme_preference", document.documentElement.dataset.theme || "light");
+        if (isDriverProfile) formData.append("show_full_name", fields.showFullName?.checked ? "1" : "0");
 
         saveButton.disabled = true;
         try {
@@ -363,27 +356,6 @@ document.addEventListener("DOMContentLoaded", () => {
             showMessage(error.message, true);
         } finally {
             saveButton.disabled = false;
-        }
-    });
-
-    driverDetailsSaveButton?.addEventListener("click", async () => {
-        const formData = new FormData();
-        formData.append("action", "save_driver_details");
-        formData.append("vehicle_model", fields.vehicleModel?.value.trim() || "");
-        formData.append("plate_number", fields.plateNumber?.value.trim() || "");
-        formData.append("show_full_name", fields.showFullName?.checked ? "1" : "0");
-
-        driverDetailsSaveButton.disabled = true;
-        try {
-            const response = await fetch(endpoint, { method: "POST", body: formData, credentials: "same-origin" });
-            const data = await response.json();
-            if (!response.ok || !data.success) throw new Error(data.message || "Unable to save driver information.");
-            populateProfile(data.profile);
-            showSuccessModal("Driver information saved successfully");
-        } catch (error) {
-            showMessage(error.message, true);
-        } finally {
-            driverDetailsSaveButton.disabled = false;
         }
     });
 

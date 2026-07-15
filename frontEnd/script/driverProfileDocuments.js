@@ -159,12 +159,30 @@ async function loadDriverDocuments() {
 
 async function saveDriverDocuments() {
     const saveButton = document.getElementById("driver-docs-save");
-    if (!Object.keys(pendingUploads).length) {
-        closeDriverDocsModal();
+    const vehicleModel = document.getElementById("profile-vehicle-model")?.value.trim() || "";
+    const plateNumber = document.getElementById("profile-license-plate")?.value.trim() || "";
+
+    if (!vehicleModel || !plateNumber) {
+        window.alert("Vehicle model and license plate are required.");
         return;
     }
+
     if (saveButton) saveButton.disabled = true;
     try {
+        const detailsData = new FormData();
+        detailsData.append("action", "save_driver_details");
+        detailsData.append("vehicle_model", vehicleModel);
+        detailsData.append("plate_number", plateNumber);
+        const detailsResponse = await fetch("../../backEnd/controller/profileController.php", {
+            method: "POST",
+            credentials: "same-origin",
+            body: detailsData
+        });
+        const detailsResult = await detailsResponse.json();
+        if (!detailsResponse.ok || !detailsResult.success) {
+            throw new Error(detailsResult.message || "Unable to save vehicle details.");
+        }
+
         for (const [key, pending] of Object.entries(pendingUploads)) {
             const formData = new FormData();
             formData.append("document_type", key);

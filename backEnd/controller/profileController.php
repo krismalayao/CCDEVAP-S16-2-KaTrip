@@ -21,7 +21,7 @@
         $sql = $isDriver 
             ? "SELECT u.first_name, u.last_name, u.gender, u.phone_number, u.email,
                       u.created_at, u.profile_picture, u.theme_preference,
-                      dp.vehicle_model, dp.plate_number, dp.verification_status, dp.show_full_name
+                      dp.vehicle_model, dp.plate_number, dp.show_full_name
                 FROM users u 
                 LEFT JOIN driver_profiles dp 
                 ON dp.driver_id = u.user_id 
@@ -94,6 +94,14 @@
         if (!$stmt->execute()) {
             profileResponse(500, ["success" => false, "message" => "Personal information could not be updated."]);
         }
+        if ($role === "driver") {
+            $showFullName = ($_POST["show_full_name"] ?? "0") === "1" ? 1 : 0;
+            $stmt = $conn->prepare("UPDATE driver_profiles SET show_full_name = ? WHERE driver_id = ?");
+            $stmt->bind_param("ii", $showFullName, $userId);
+            if (!$stmt->execute()) {
+                profileResponse(500, ["success" => false, "message" => "Name visibility could not be updated."]);
+            }
+        }
     } elseif ($action === "save_driver_details") {
         if ($role !== "driver") {
             profileResponse(403, ["success" => false, "message" => "Driver information is not available for this account."]);
@@ -101,17 +109,14 @@
 
         $vehicleModel = trim($_POST["vehicle_model"] ?? "");
         $plateNumber = trim($_POST["plate_number"] ?? "");
-        $showFullName = ($_POST["show_full_name"] ?? "0") === "1" ? 1 : 0;
         if ($vehicleModel === "" || $plateNumber === "") {
             profileResponse(422, ["success" => false, "message" => "Vehicle model and license plate are required."]);
         }
 
-        $stmt = $conn->prepare("UPDATE driver_profiles
-                                SET vehicle_model = ?, plate_number = ?, show_full_name = ?
-                                WHERE driver_id = ?");
-        $stmt->bind_param("ssii", $vehicleModel, $plateNumber, $showFullName, $userId);
+        $stmt = $conn->prepare("UPDATE driver_profiles SET vehicle_model = ?, plate_number = ? WHERE driver_id = ?");
+        $stmt->bind_param("ssi", $vehicleModel, $plateNumber, $userId);
         if (!$stmt->execute()) {
-            profileResponse(500, ["success" => false, "message" => "Driver information could not be updated."]);
+            profileResponse(500, ["success" => false, "message" => "Vehicle details could not be updated."]);
         }
     } else {
         profileResponse(422, ["success" => false, "message" => "Invalid profile action."]);
@@ -120,6 +125,6 @@
     $profile = getProfile($conn, $userId, $role);
     $profile['profile_picture_url'] = $profile['profile_picture'] ? '../../backEnd/controller/viewUploadedFile.php?type=profile' : null;
     unset($profile['profile_picture']);
-    $message = $action === "save_driver_details" ? "Driver information saved." : "Personal information saved.";
+    $message = $action === "save_driver_details" ? "Vehicle details saved." : "Personal information saved.";
     profileResponse(200, ["success" => true, "message" => $message, "profile" => $profile, "role" => $role]);
 ?>

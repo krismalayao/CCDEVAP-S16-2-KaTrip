@@ -81,6 +81,10 @@
                             </div>
                         </div>
                     </div>
+                    <div class="profile-privacy-setting">
+                        <input type="checkbox" id="profile-show-full-name" checked>
+                        <label for="profile-show-full-name">Show my full name to passengers</label>
+                    </div>
                     <div class="profile-section-actions">
                         <button type="button" class="profile-save-btn" id="profile-save-btn">Save</button>
                     </div>
@@ -105,47 +109,6 @@
                                 <button type="button" class="profile-field-edit-btn profile-password-edit-btn" id="profile-password-edit-btn" aria-label="Change password"></button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="profile-settings-section">
-                    <div class="profile-section-heading">
-                        <h3>Driver Information</h3>
-                    </div>
-                    <div class="profile-driver-details-row">
-                    <!-- Vehicle Model -->
-                    <div class="driver-profile-group">
-                        <label for="profile-vehicle-model">Vehicle Model</label>
-                        <div class="profile-input-wrapper">
-                            <input type="text" id="profile-vehicle-model" name="vehicle-model" value="">
-                            <button class="profile-field-edit-btn" aria-label="Edit vehicle model"></button>
-                        </div>
-                    </div>
-
-                    <!-- License Plate -->
-                    <div class="driver-profile-group">
-                        <label for="profile-license-plate">License Plate</label>
-                        <div class="profile-input-wrapper">
-                            <input type="text" id="profile-license-plate" name="license-plate" value="">
-                            <button class="profile-field-edit-btn" aria-label="Edit license plate"></button>
-                        </div>
-                    </div>
-
-                    <!-- Driver Verification Status -->
-                    <div class="driver-profile-group">
-                        <label for="profile-status">Status</label>
-                        <div class="profile-input-wrapper profile-status-static">
-                            <span class="status-text" id="profile-status">Loading...</span>
-                            <img src="../src/images/black-approved-icon.png" class="status-icon" alt="Approved Status">
-                        </div>
-                    </div>
-                    </div>
-                    <div class="profile-privacy-setting">
-                        <input type="checkbox" id="profile-show-full-name" checked>
-                        <label for="profile-show-full-name">Show my full name to passengers</label>
-                    </div>
-                    <div class="profile-section-actions">
-                        <button type="button" class="profile-save-btn" id="driver-details-save-btn">Save</button>
                     </div>
                 </div>
 
@@ -200,6 +163,16 @@
                                 <p class="driver-doc-hint">Front of the vehicle and license plate must be visible.</p>
                             </div>
                             <span class="driver-doc-updated-badge" id="badge-vehicle" hidden>Updated</span>
+                        </div>
+                        <div class="driver-vehicle-details" aria-label="Vehicle details">
+                            <div>
+                                <label class="driver-vehicle-detail-label" for="profile-vehicle-model">Vehicle Model</label>
+                                <input type="text" id="profile-vehicle-model" autocomplete="off">
+                            </div>
+                            <div>
+                                <label class="driver-vehicle-detail-label" for="profile-license-plate">License Plate</label>
+                                <input type="text" id="profile-license-plate" autocomplete="off">
+                            </div>
                         </div>
                         <div class="driver-doc-preview driver-doc-preview-clickable" id="preview-vehicle" role="button" tabindex="0" aria-label="View vehicle picture in full size">
                             <img class="driver-doc-image" id="img-vehicle" alt="Vehicle picture" hidden>
