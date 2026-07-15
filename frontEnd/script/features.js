@@ -219,9 +219,11 @@ function renderRides(list) {
 
   rideList.innerHTML = list.map((ride) => {
     const capacity = getCapacityDetails(ride);
-    const routeLabel = `${ride.origin || 'Unknown'} → ${ride.destination || 'Unknown'}`.toUpperCase();
+    const originLabel = ride.origin_name || ride.origin || 'Unknown';
+    const destinationLabel = ride.destination_name || ride.destination || 'Unknown';
+    const routeLabel = `${originLabel} → ${destinationLabel}`.toUpperCase();
     const timeLabel = formatRideTime(ride.departure_time || ride.departure);
-    const dateLabel = formatRideDate(ride.start_date);
+    const dateLabel = formatRideDate(ride.start_date || ride.departure_date);
 
     return `
       <div class="browserides-ride-card">
@@ -264,10 +266,12 @@ function getFilteredRides() {
 
   return browseRidesData.filter((ride) => {
     const origin = normalizeText(ride.origin);
+    const pickupPoints = normalizeText(ride.pickup_points);
     const destination = normalizeText(ride.destination);
+    const destinationName = normalizeText(ride.destination_name);
 
-    const matchDestination = !normalizedDestination || destination.includes(normalizedDestination);
-    const matchPickup = !normalizedPickup || origin.includes(normalizedPickup);
+    const matchDestination = !normalizedDestination || destination.includes(normalizedDestination) || destinationName.includes(normalizedDestination);
+    const matchPickup = !normalizedPickup || origin.includes(normalizedPickup) || pickupPoints.includes(normalizedPickup);
 
     return matchDestination && matchPickup;
   });
@@ -296,6 +300,12 @@ function openRideDetailsModal(rideId) {
       }
 
       const ride = data.ride;
+      const originLabel = ride.origin_name || ride.origin || 'Unknown';
+      const destinationLabel = ride.destination_name || ride.destination || 'Unknown';
+      const pickupPoints = ride.pickup_points || 'No pickup points listed';
+      const departureTime = ride.departure_time || ride.departure || 'TBA';
+      const departureDate = ride.start_date || ride.departure_date || 'TBA';
+      const driverPhone = ride.phone_number || 'N/A';
       const modal = document.createElement('div');
       modal.classList.add('view-details-modal-overlay');
 
@@ -304,7 +314,7 @@ function openRideDetailsModal(rideId) {
           <button class="view-details-modal-close">&times;</button>
           <div class="view-details-modal-header">
             <span class="view-details-modal-route">
-              ${(ride.origin || '').toUpperCase()} &rarr; ${(ride.destination || '').toUpperCase()}
+              ${originLabel.toUpperCase()} &rarr; ${destinationLabel.toUpperCase()}
             </span>
             <span class="view-details-modal-status">${ride.ride_status || 'Scheduled'}</span>
           </div>
@@ -312,22 +322,30 @@ function openRideDetailsModal(rideId) {
             <div class="view-details-modal-route-point">
               <span class="view-details-modal-dot pickup"></span>
               <strong>From:</strong>
-              <span>${ride.origin || 'Unknown'}</span>
+              <span>${originLabel}</span>
             </div>
             <div class="view-details-modal-route-point">
               <span class="view-details-modal-dot destination"></span>
               <strong>To:</strong>
-              <span>${ride.destination || 'Unknown'}</span>
+              <span>${destinationLabel}</span>
             </div>
           </div>
           <div class="view-details-modal-meta">
             <div class="view-details-modal-meta-item">
               <span class="view-details-modal-label">Departure Time</span>
-              <span class="view-details-modal-value">${ride.departure_time || ride.departure || 'TBA'}</span>
+              <span class="view-details-modal-value">${departureTime}</span>
             </div>
             <div class="view-details-modal-meta-item">
               <span class="view-details-modal-label">Date</span>
-              <span class="view-details-modal-value">${ride.start_date || 'TBA'}</span>
+              <span class="view-details-modal-value">${departureDate}</span>
+            </div>
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Pickup Points</span>
+              <span class="view-details-modal-value">${pickupPoints}</span>
+            </div>
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Driver Phone</span>
+              <span class="view-details-modal-value">${driverPhone}</span>
             </div>
             <div class="view-details-modal-meta-item">
               <span class="view-details-modal-label">Seats Left</span>
@@ -425,12 +443,14 @@ function openReservationToast(bookingId) {
         toast.querySelector('.reservation-loading').remove();
         toast.querySelector('.reservation-cancel').textContent = 'Close';
         stopPolling();
+        window.location.href = 'passengerDashboard.php';
       } else if (status.booking_status === 'accepted') {
         toast.querySelector('h3').textContent = 'Reservation approved';
         toast.querySelector('p').textContent = 'The driver accepted your reservation.';
         toast.querySelector('.reservation-loading').remove();
         toast.querySelector('.reservation-cancel').textContent = 'Close';
         stopPolling();
+        window.location.href = 'passengerDashboard.php';
       } else if (status.booking_status === 'rejected' || status.booking_status === 'cancelled') {
         toast.querySelector('h3').textContent = status.booking_status === 'rejected' ? 'Reservation rejected' : 'Reservation cancelled';
         toast.querySelector('p').textContent = 'This reservation is no longer active.';
@@ -554,8 +574,29 @@ function initBrowseRidesAutocomplete() {
     .then((response) => response.json())
     .then((data) => {
       browseRidesData = Array.isArray(data) ? data : [];
-      browseRideDestinations = [...new Set(browseRidesData.map((ride) => ride.destination).filter(Boolean))];
-      browseRidePickups = [...new Set(browseRidesData.map((ride) => ride.origin).filter(Boolean))];
+      browseRideDestinations = [
+        ...new Set(
+          browseRidesData
+            .map((ride) => ride.destination_name || ride.destination)
+            .filter(Boolean)
+        )
+      ];
+      browseRidePickups = [
+        ...new Set(
+          browseRidesData.flatMap((ride) => {
+            const items = [];
+            if (ride.origin) items.push(ride.origin);
+            if (ride.pickup_points) {
+              String(ride.pickup_points)
+                .split('|')
+                .map((item) => item.trim())
+                .filter(Boolean)
+                .forEach((item) => items.push(item));
+            }
+            return items;
+          })
+        )
+      ];
 
       renderRides(getFilteredRides());
 
