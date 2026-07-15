@@ -106,17 +106,17 @@
         $allowedMimeTypes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'application/pdf' => 'pdf'];
         foreach ($documents as $input => $type) {
             if (!isset($files[$input]) || $files[$input]['error'] === UPLOAD_ERR_NO_FILE) continue;
-            $stored = storeValidatedUpload($files[$input], 'driver-documents', (int)$driver_id, $allowedMimeTypes, 8 * 1024 * 1024);
+            $stored = storeValidatedUpload($files[$input], 'driver-documents', (int)$driver_id, $allowedMimeTypes, 8 * 1024 * 1024, $driver_id . '-' . $type);
             $check = $conn->prepare('SELECT document_id, file FROM driver_documents WHERE driver_id = ? AND document_type = ? LIMIT 1');
             $check->bind_param('is', $driver_id, $type);
             $check->execute();
             $existing = $check->get_result()->fetch_assoc();
             if ($existing) {
-                $stmt = $conn->prepare('UPDATE driver_documents SET file = ?, original_name = ?, mime_type = ?, file_size = ?, uploaded_at = CURRENT_TIMESTAMP WHERE document_id = ?');
-                $stmt->bind_param('sssii', $stored['stored_name'], $stored['original_name'], $stored['mime_type'], $stored['file_size'], $existing['document_id']);
+                $stmt = $conn->prepare('UPDATE driver_documents SET file = ?, mime_type = ?, file_size = ?, uploaded_at = CURRENT_TIMESTAMP WHERE document_id = ?');
+                $stmt->bind_param('ssii', $stored['stored_name'], $stored['mime_type'], $stored['file_size'], $existing['document_id']);
             } else {
-                $stmt = $conn->prepare('INSERT INTO driver_documents (driver_id, document_type, file, original_name, mime_type, file_size) VALUES (?, ?, ?, ?, ?, ?)');
-                $stmt->bind_param('issssi', $driver_id, $type, $stored['stored_name'], $stored['original_name'], $stored['mime_type'], $stored['file_size']);
+                $stmt = $conn->prepare('INSERT INTO driver_documents (driver_id, document_type, file, mime_type, file_size) VALUES (?, ?, ?, ?, ?)');
+                $stmt->bind_param('isssi', $driver_id, $type, $stored['stored_name'], $stored['mime_type'], $stored['file_size']);
             }
             if (!$stmt->execute()) {
                 removePrivateUpload($stored['stored_name']);

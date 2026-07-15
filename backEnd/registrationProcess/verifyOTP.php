@@ -21,6 +21,13 @@
         }
 
         if ($enteredCode === $sessionData['otp']) {
+            // Driver Application is done after entering the OTP
+            if (($sessionData['role'] ?? 'passenger') === 'driver') {
+                $_SESSION['driver_registration_verified'] = $sessionData;
+                unset($_SESSION['temp_user']);
+                echo json_encode(["status" => "success", "message" => "Email verified. Please complete your driver application."]);
+                exit;
+            }
             require "../../config/db.php";
 
             $stmt = $conn->prepare("INSERT INTO users(first_name, last_name, gender, birthdate,

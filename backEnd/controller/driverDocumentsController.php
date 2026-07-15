@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $documents = [];
     foreach ($stmt->get_result()->fetch_all(MYSQLI_ASSOC) as $row) {
         $documents[$row['document_type']] = [
-            'url'         => '../../backEnd/controller/viewUploadedFile.php?type=document&id=' . (int)$row['document_id'],
+            'url'         => '/CCDEVAP-S16-2-KaTrip/backEnd/controller/viewUploadedFile.php?type=document&id=' . (int)$row['document_id'],
             'mime_type'   => $row['mime_type'],
             'uploaded_at' => $row['uploaded_at']
         ];
@@ -40,28 +40,32 @@ if (!in_array($documentType, $allowedTypes, true)) {
 
 try {
     $allowedMimes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'application/pdf' => 'pdf'];
-    $stored = storeValidatedUpload($_FILES['document'] ?? [], 'driver-documents', $driverId, $allowedMimes, 8 * 1024 * 1024);
-
     // Check if document already exists
     $stmt = $conn->prepare('SELECT document_id, file FROM driver_documents WHERE driver_id = ? AND document_type = ? LIMIT 1');
     $stmt->bind_param('is', $driverId, $documentType);
     $stmt->execute();
     $existing = $stmt->get_result()->fetch_assoc();
 
+    // Remove the old file before reusing the readable driver-document name.
+    if ($existing) {
+        removePrivateUpload($existing['file']);
+    }
+
+    $stored = storeValidatedUpload($_FILES['document'] ?? [], 'driver-documents', $driverId, $allowedMimes, 8 * 1024 * 1024, $driverId . '-' . $documentType);
+
     if ($existing) {
         // Update existing record
         $stmt = $conn->prepare('UPDATE driver_documents 
-                                SET file = ?, original_name = ?, mime_type = ?, file_size = ?, uploaded_at = CURRENT_TIMESTAMP 
+                                SET file = ?, mime_type = ?, file_size = ?, uploaded_at = CURRENT_TIMESTAMP 
                                 WHERE document_id = ?');
-        $stmt->bind_param('sssii', $stored['stored_name'], $stored['original_name'], $stored['mime_type'], $stored['file_size'], $existing['document_id']);
+        $stmt->bind_param('ssii', $stored['stored_name'], $stored['mime_type'], $stored['file_size'], $existing['document_id']);
         $stmt->execute();
         $documentId = (int)$existing['document_id'];
-        removePrivateUpload($existing['file']);
     } else {
         // Insert new record
-        $stmt = $conn->prepare('INSERT INTO driver_documents (driver_id, document_type, file, original_name, mime_type, file_size) 
-                                VALUES (?, ?, ?, ?, ?, ?)');
-        $stmt->bind_param('issssi', $driverId, $documentType, $stored['stored_name'], $stored['original_name'], $stored['mime_type'], $stored['file_size']);
+        $stmt = $conn->prepare('INSERT INTO driver_documents (driver_id, document_type, file, mime_type, file_size) 
+                                VALUES (?, ?, ?, ?, ?)');
+        $stmt->bind_param('isssi', $driverId, $documentType, $stored['stored_name'], $stored['mime_type'], $stored['file_size']);
         $stmt->execute();
         $documentId = (int)$conn->insert_id;
     }
@@ -70,7 +74,7 @@ try {
         'success' => true, 
         'message' => 'Document updated.', 
         'document' => [
-            'url' => '../../backEnd/controller/viewUploadedFile.php?type=document&id=' . $documentId,
+            'url' => '/CCDEVAP-S16-2-KaTrip/backEnd/controller/viewUploadedFile.php?type=document&id=' . $documentId,
             'mime_type' => $stored['mime_type']
         ]
     ]);

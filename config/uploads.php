@@ -8,7 +8,7 @@ function uploadJsonResponse(int $status, array $payload): void {
     exit();
 }
 
-function storeValidatedUpload(array $file, string $category, int $ownerId, array $allowedMimes, int $maxBytes): array {
+function storeValidatedUpload(array $file, string $category, int $ownerId, array $allowedMimes, int $maxBytes, ?string $fileBaseName = null): array {
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
         throw new RuntimeException('The file could not be uploaded.');
     }
@@ -31,7 +31,8 @@ function storeValidatedUpload(array $file, string $category, int $ownerId, array
         throw new RuntimeException('Private upload storage is unavailable.');
     }
 
-    $storedName = bin2hex(random_bytes(24)) . '.' . $allowedMimes[$mimeType];
+    $fileName = $fileBaseName ?: bin2hex(random_bytes(24));
+    $storedName = $fileName . '.' . $allowedMimes[$mimeType];
     $absolutePath = $fullDir . DIRECTORY_SEPARATOR . $storedName;
 
     if (!move_uploaded_file($file['tmp_name'], $absolutePath)) {
@@ -41,7 +42,6 @@ function storeValidatedUpload(array $file, string $category, int $ownerId, array
     return [
         'stored_name'   => str_replace(DIRECTORY_SEPARATOR, '/', $subDir . DIRECTORY_SEPARATOR . $storedName),
         'absolute_path' => $absolutePath,
-        'original_name' => basename((string)($file['name'] ?? 'upload')),
         'mime_type'     => $mimeType,
         'file_size'     => (int)$file['size']
     ];
