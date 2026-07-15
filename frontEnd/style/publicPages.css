@@ -113,9 +113,8 @@
 }
 
 /* LOGIN */
-
 .login-body {
-  background: var(--bg);
+  background: linear-gradient(130deg, var(--bg), #ac9db6);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,6 +145,14 @@
   align-items: flex-start;
   padding: 52px 44px;
   gap: 0;
+}
+
+.login-illustration {
+  width: 100%;
+  max-width: auto;
+  margin-bottom: 28px;
+  border-radius: 12px;
+  opacity: 0.9;
 }
 
 .login-left-logo {
@@ -386,7 +393,7 @@
 
 /* REGISTRATION */
 .reg-body {
-    background-color: var(--purple-dark);
+    background:linear-gradient(135deg,#7c3aed,#9854cb);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -414,13 +421,14 @@
     gap: 12px;
     margin-bottom: 0px;
     font-family: 'Bloc';
-    font-size: 30px;
+    font-size: 20px;
     align-items: center;
+    letter-spacing: 1px;
 }
 
 .reg-header img {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 8px;
 }
 
@@ -447,7 +455,7 @@
 .reg-col h2 {
     margin-top: 0;
     margin-bottom: 25px;
-    font-size: 28px;
+    font-size: 20px;
 }
 
 .reg-container label {

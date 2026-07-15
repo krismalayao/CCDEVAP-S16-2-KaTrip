@@ -43,6 +43,7 @@
                 </div>
                 <span class="login-left-brand">KaTrip</span>
             </div>
+            <img src="../src/images/katrip_login1.svg" class="login-illustration" alt="">
             <div class="login-left-headline">Your ride,<br>your schedule.</div>
             <div class="login-left-sub">Connect with drivers and passengers going your way — every day.</div>
             </div>
