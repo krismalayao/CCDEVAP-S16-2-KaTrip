@@ -38,7 +38,7 @@
 
         <div class="page-header">
             <h1 class="page-title">My Trips</h1>
-            <a href="../driver/driverCreateTrip.html" class="new-trip-btn">
+            <a href="../driver/driverCreateTrip.php" class="new-trip-btn">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
             New Trip
             </a>

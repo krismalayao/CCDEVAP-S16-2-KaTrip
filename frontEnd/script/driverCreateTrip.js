@@ -255,7 +255,7 @@ function renderPickups() {
           onfocus="onPickupFocus(${p.id})"
           onblur="onPickupBlur(${p.id})"
         />
-        <button class="clear-btn" onmousedown="clearPickup(${p.id})"><i class='bx bx-xn '></i></button>
+        <button class="clear-btn" onmousedown="clearPickup(${p.id})"><i class='bx bx-x'></i></button>
         <div class="autocomplete-list" id="ac-pickup-${p.id}" style="display:none;"></div>
       </div>
     </div>`).join('');
