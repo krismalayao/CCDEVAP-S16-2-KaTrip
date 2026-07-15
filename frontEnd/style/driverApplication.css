@@ -25,6 +25,33 @@
     margin-bottom: 30px;
 }
 
+.application-pending-message {
+    padding: 28px 24px;
+    border: 1px solid var(--purple-light);
+    border-radius: 10px;
+    background: var(--purple-faint);
+    color: var(--grey-text);
+    text-align: center;
+}
+
+.application-pending-message h2 {
+    margin: 0 0 10px;
+    color: var(--purple-dark);
+    font-size: 20px;
+}
+
+.application-pending-message p {
+    margin: 0 0 18px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.application-back-link {
+    color: var(--purple-dark);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
 .application-form {
     display: flex;
     flex-direction: column;
@@ -249,7 +276,7 @@
 .application-submit-btn {
     width: 100%;
     height: 45px;
-    background-color: #000000;
+    background-color: var(--purple);
     color: #ffffff;
     border: none;
     border-radius: 6px;
@@ -262,6 +289,80 @@
 
 .application-submit-btn:hover {
     background-color: var(--purple-dark);
+}
+
+html[data-theme="dark"] .application-form input[type="text"],
+html[data-theme="dark"] .select-wrapper select {
+    background-color: #1c1724;
+    border: 1px solid #493b58;
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .application-heading,
+html[data-theme="dark"] .application-pending-message h2 {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] body.driver-application-body {
+    background-color: #2D2033;
+    color: #f5efff;
+}
+
+html[data-theme="dark"] .application-layout {
+    background-color: #4f3458;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .application-pending-message {
+    background-color: #775280;
+    border-color: #775280;
+    color: #f5efff;
+}
+
+html[data-theme="dark"] .application-pending-message p {
+    color: #eee9f3;
+}
+
+html[data-theme="dark"] .application-back-link {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .application-form input[type="text"]:focus,
+html[data-theme="dark"] .select-wrapper select:focus {
+    border-color: var(--purple);
+}
+
+html[data-theme="dark"] .upload-dropzone,
+html[data-theme="dark"] .upload-dropzone.upload-preview,
+html[data-theme="dark"] .preview-image {
+    background-color: #1c1724;
+}
+
+html[data-theme="dark"] .upload-dropzone {
+    border-color: #493b58;
+}
+
+html[data-theme="dark"] .upload-dropzone:hover,
+html[data-theme="dark"] .upload-dropzone.upload-preview {
+    border-color: var(--purple);
+}
+
+html[data-theme="dark"] .upload-dropzone:hover {
+    background-color: var(--purple-faint);
+}
+
+html[data-theme="dark"] .upload-dropzone::after {
+    color: var(--icon-muted);
+}
+
+html[data-theme="dark"] .upload-icon-placeholder {
+    background-color: #4f3458;
+}
+
+html[data-theme="dark"] .select-wrapper select option,
+html[data-theme="dark"] .application-modal-content {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
 }
 
 @media (max-width: 680px) {

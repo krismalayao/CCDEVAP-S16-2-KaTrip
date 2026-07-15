@@ -111,7 +111,7 @@
         
         <!-- CTA -->
         <div class="profile-cta-container">
-            <a href="driverApplication.html" class="profile-cta-text">Become a KaTrip Driver</a>
+            <a href="driverApplication.php" class="profile-cta-text">Become a KaTrip Driver</a>
         </div>
 
         <script src="../components/navbarPassenger.js"></script>

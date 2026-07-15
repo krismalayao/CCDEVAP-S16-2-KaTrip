@@ -5,11 +5,14 @@ require "../../config/uploads.php";
 header("Content-Type: application/json");
 
 $registration = $_SESSION['driver_registration_verified'] ?? null;
+$passengerId = isset($_SESSION['user_id']) && ($_SESSION['role'] ?? '') === 'passenger'
+    ? (int)$_SESSION['user_id']
+    : null;
 
-if (!$registration) {
+if (!$registration && !$passengerId) {
     echo json_encode([
         "status" => "error",
-        "message" => "Your registration session has expired. Please register again."
+        "message" => "Your application session has expired. Please log in or register again."
     ]);
     exit;
 }
@@ -23,7 +26,7 @@ $license = trim($_POST['license_number'] ?? '');
 $vehicle = trim($_POST['vehicle_model'] ?? '');
 $plate = trim($_POST['plate_number'] ?? '');
 $color = trim($_POST['vehicle_color'] ?? '');
-if ($license === '' || $vehicle === '' || $plate === '') {
+if ($license === '' || $vehicle === '' || $plate === '' || !isset($_POST['agreement_check'])) {
     echo json_encode([
         "status" => "error",
         "message" => "Please complete all required application fields."
@@ -50,27 +53,46 @@ foreach ($documentFiles as $type => $file) {
 
 $conn->begin_transaction();
 try {
-    $stmt = $conn->prepare(
-        "INSERT INTO users
-        (first_name, last_name, gender, birthdate, phone_number, email, role, status, password)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-    );
+    if ($registration) {
+        $stmt = $conn->prepare(
+            "INSERT INTO users
+            (first_name, last_name, gender, birthdate, phone_number, email, role, status, password)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        );
 
-    $stmt->bind_param(
-        "sssssssss",
-        $registration['first_name'],
-        $registration['last_name'],
-        $registration['gender'],
-        $registration['birthdate'],
-        $registration['phone_number'],
-        $registration['email'],
-        $registration['role'],
-        $registration['status'],
-        $registration['password']
-    );
-    $stmt->execute();
+        $stmt->bind_param(
+            "sssssssss",
+            $registration['first_name'],
+            $registration['last_name'],
+            $registration['gender'],
+            $registration['birthdate'],
+            $registration['phone_number'],
+            $registration['email'],
+            $registration['role'],
+            $registration['status'],
+            $registration['password']
+        );
+        $stmt->execute();
+        $driverId = $conn->insert_id;
+    } else {
+        $user = $conn->prepare("SELECT role FROM users WHERE user_id = ? FOR UPDATE");
+        $user->bind_param("i", $passengerId);
+        $user->execute();
+        $currentUser = $user->get_result()->fetch_assoc();
 
-    $driverId = $conn->insert_id;
+        if (!$currentUser || $currentUser['role'] !== 'passenger') {
+            throw new RuntimeException('Only passenger accounts can submit this application.');
+        }
+
+        $existingProfile = $conn->prepare("SELECT driver_id FROM driver_profiles WHERE driver_id = ? LIMIT 1");
+        $existingProfile->bind_param("i", $passengerId);
+        $existingProfile->execute();
+        if ($existingProfile->get_result()->fetch_assoc()) {
+            throw new RuntimeException('A driver application already exists for this account.');
+        }
+
+        $driverId = $passengerId;
+    }
 
     $profile = $conn->prepare(
         "INSERT INTO driver_profiles
@@ -93,7 +115,10 @@ try {
 
     echo json_encode([
         "status" => "success",
-        "message" => "Application submitted. Your account is pending driver verification."
+        "message" => $passengerId
+            ? "Your driver application has been submitted and is pending verification."
+            : "Application submitted. Your account is pending driver verification.",
+        "existing_application" => $passengerId !== null
     ]);
 } catch (Throwable $error) {
     $conn->rollback();

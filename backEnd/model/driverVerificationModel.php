@@ -14,7 +14,6 @@
                               FROM users AS u
                               JOIN driver_profiles AS dp ON u.user_id = dp.driver_id
                               LEFT JOIN driver_documents AS dd ON dp.driver_id = dd.driver_id
-                              WHERE u.role = 'driver'
                               GROUP BY u.user_id, u.first_name, u.last_name, u.gender, u.birthdate, u.phone_number,
                                        u.email, u.created_at, dp.license_number, dp.vehicle_model, dp.plate_number,
                                        dp.vehicle_color, dp.verification_status
@@ -194,7 +193,7 @@
         }
 
         $user = $conn->prepare("UPDATE users
-                                SET status = 'active'
+                                SET role = 'driver', status = 'active'
                                 WHERE user_id = ?;");
         $user->bind_param("i", $driver_id);
 
@@ -209,6 +208,16 @@
 
         if(!$profile->execute()){
             return false;
+        }
+
+        $user = $conn->prepare("SELECT role FROM users WHERE user_id = ? LIMIT 1");
+        $user->bind_param("i", $driver_id);
+        $user->execute();
+        $userRole = $user->get_result()->fetch_assoc()['role'] ?? null;
+
+        // A passenger who is denied driver verification keeps their passenger account.
+        if ($userRole === 'passenger') {
+            return true;
         }
 
         $user = $conn->prepare("UPDATE users
