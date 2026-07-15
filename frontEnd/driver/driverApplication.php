@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['driver_registration_verified'])) {
+    header('Location: ../public/registerPage.html');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

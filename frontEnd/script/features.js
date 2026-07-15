@@ -57,7 +57,7 @@ function initStaticRegistration() {
     regForm.addEventListener("submit", (event) => {
         event.preventDefault();
         if (driverCheckbox.checked) {
-            window.location.href = '../driver/driverApplication.html';
+            window.location.href = '../driver/driverApplication.php';
         } else {
             window.location.href = "loginPage.html";
         }

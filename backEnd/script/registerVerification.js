@@ -143,7 +143,7 @@ function initStaticRegistration() {
                 
                 setTimeout(() => {
                     if (isDriverRegistration) {
-                        window.location.href = '../../frontEnd/driver/driverApplication.html';
+                        window.location.href = '../../frontEnd/driver/driverApplication.php';
                     } else {
                         window.location.href = "../../frontEnd/public/loginPage.php";
                     }
