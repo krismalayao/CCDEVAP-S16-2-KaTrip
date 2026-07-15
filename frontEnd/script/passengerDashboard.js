@@ -125,7 +125,7 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
     if (hasMore) {
       container.innerHTML += `
         <div class="passenger-ride-card">
-          <a href="myBookings.html" class="passenger-dashboard-details-btn">View All Bookings</a>
+          <a href="myBookings.php" class="passenger-dashboard-details-btn">View All Bookings</a>
         </div>
       `;
     }
