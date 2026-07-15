@@ -5,7 +5,7 @@ let map;
 
 if (!rideId) {
   alert('No ongoing trip selected.');
-  window.location.href = '../driver/driverDashboard.html';
+  window.location.href = '../driver/driverDashboard.php';
 }
 
 function makeIcon(color, big = false) {
@@ -37,7 +37,7 @@ async function loadTrip() {
   } catch (error) {
     console.error(error);
     alert(error.message);
-    window.location.href = '../driver/driverDashboard.html';
+    window.location.href = '../driver/driverDashboard.php';
   }
 }
 
@@ -85,7 +85,7 @@ const BackControl = L.Control.extend({
   onAdd: function () {
     const container = L.DomUtil.create('div', 'leaflet-bar back-control');
     container.innerHTML = `
-      <a href="driverDashboard.html" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
+      <a href="driverDashboard.php" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
@@ -160,7 +160,7 @@ function confirmEnd() {
     .then(result => {
       if (result.success) {
         showToast('Trip ended! Redirecting...');
-        setTimeout(() => { window.location.href = '../driver/driverDashboard.html'; }, 1800);
+        setTimeout(() => { window.location.href = '../driver/driverDashboard.php'; }, 1800);
       } else {
         alert(result.error || 'Could not end this trip.');
       }

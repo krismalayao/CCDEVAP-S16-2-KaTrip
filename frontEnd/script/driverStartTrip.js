@@ -9,7 +9,7 @@ let map = null;
 
 if (!rideId) {
     alert('No trip selected.');
-    window.location.href = '../driver/driverDashboard.html';
+    window.location.href = '../driver/driverDashboard.php';
 }
 
 // ── Load trip details from the backend ──────────────────────────────────────
@@ -19,7 +19,7 @@ function loadTripDetails() {
         .then(data => {
             if (data.error) {
                 alert(data.error);
-                window.location.href = '../driver/driverDashboard.html';
+                window.location.href = '../driver/driverDashboard.php';
                 return;
             }
             tripData = data;
@@ -157,7 +157,7 @@ function renderMap() {
     onAdd: function () {
         const container = L.DomUtil.create('div', 'leaflet-bar back-control');
         container.innerHTML = `
-        <a href="driverDashboard.html" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
+        <a href="driverDashboard.php" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
             </svg>
@@ -187,7 +187,7 @@ document.getElementById('btn-proceed').addEventListener('click', () => {
         .then(result => {
             document.getElementById('modal').classList.remove('visible');
             if (result.success) {
-                window.location.href = `../driver/driverOngoing.html?ride_id=${rideId}`;
+                window.location.href = `../driver/driverOngoing.php?ride_id=${rideId}`;
             } else {
                 alert(result.error || 'Could not start this trip.');
             }
@@ -217,7 +217,7 @@ document.getElementById('btn-confirm-cancel').addEventListener('click', () => {
         .then(result => {
             document.getElementById('cancel-modal').classList.remove('visible');
             if (result.success) {
-                window.location.href = '../driver/driverDashboard.html';
+                window.location.href = '../driver/driverDashboard.php';
             } else {
                 alert(result.error || 'Could not cancel this trip.');
             }

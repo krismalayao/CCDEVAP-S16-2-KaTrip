@@ -119,13 +119,13 @@ function renderTrips() {
   container.innerHTML = list.map(t => {
     const actions = [];
     if (t.status === 'ongoing') {
-      actions.push(`<a href="../driver/driverOngoing.html?ride_id=${t.id}" class="btn-sm btn-primary">▶ View Live Trip</a>`);
+      actions.push(`<a href="../driver/driverOngoing.php?ride_id=${t.id}" class="btn-sm btn-primary">▶ View Live Trip</a>`);
     }
     if (t.status === 'upcoming') {
       actions.push(`<button class="btn-sm btn-primary" onclick="startTrip(${t.id})">▶ Start Trip</button>`);
 
       if (canCancel(t)) {
-          actions.push(`<a href="../driver/driverCreateTrip.html?ride_id=${t.id}" class="btn-sm btn-outline">Edit</a>`);
+          actions.push(`<a href="../driver/driverCreateTrip.php?ride_id=${t.id}" class="btn-sm btn-outline">Edit</a>`);
           actions.push(`<button class="btn-sm btn-danger" onclick="showCancelModal(${t.id})">Cancel</button>`);
       } else {
           actions.push(`<button class="btn-sm btn-outline" disabled title="Trip starts too soon to edit">Edit</button>`);
@@ -134,10 +134,10 @@ function renderTrips() {
     }
     if (t.status === 'completed') {
       actions.push(`<button class="btn-sm btn-ghost" onclick="showSummaryModal(${t.id})">View Summary</button>`);
-      actions.push(`<a href="../driver/driverCreateTrip.html?clone_id=${t.id}" class="btn-sm btn-outline">Repeat Trip</a>`);
+      actions.push(`<a href="../driver/driverCreateTrip.php?clone_id=${t.id}" class="btn-sm btn-outline">Repeat Trip</a>`);
     }
     if (t.status === 'cancelled') {
-      actions.push(`<a href="../driver/driverCreateTrip.html?clone_id=${t.id}" class="btn-sm btn-outline">Recreate</a>`);
+      actions.push(`<a href="../driver/driverCreateTrip.php?clone_id=${t.id}" class="btn-sm btn-outline">Recreate</a>`);
     }
 
     const pickupText = t.pickups.length ? `${t.pickups.join(', ')}` : '—';
@@ -183,9 +183,7 @@ function renderTrips() {
 }
 
 function startTrip(id) {
-  // Note: The  ride_status change to 'ongoing' in driverStartTrip.html
-  // once the driver confirms via the "Proceed" modal there, not here.
-  window.location.href = '../driver/driverStartTrip.html?ride_id=' + id;
+  window.location.href = '../driver/driverStartTrip.php?ride_id=' + id;
 }
 
 let editTargetId = null;

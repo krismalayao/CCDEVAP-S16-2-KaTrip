@@ -34,7 +34,7 @@ const BackControl = L.Control.extend({
   onAdd: function () {
     const container = L.DomUtil.create('div', 'leaflet-bar back-control');
     container.innerHTML = `
-      <a href="driverDashboard.html" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
+      <a href="driverDashboard.php" title="Back to Dashboard" role="button" aria-label="Back to Dashboard">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
@@ -383,7 +383,7 @@ async function createRide() {
         const ok = editRideId ? data.success : data.status === 'success';
         if (ok) {
             showToast(editRideId ? 'Trip updated!' : 'Ride created!', 'success');
-            setTimeout(() => { window.location.href = 'driverDashboard.html'; }, 1500);
+            setTimeout(() => { window.location.href = 'driverDashboard.php'; }, 1500);
         } else {
             showToast(data.error || data.message || 'Something went wrong.','error');
         }
@@ -400,7 +400,7 @@ async function loadExistingTrip() {
         const data = await resp.json();
         if (data.status !== 'success') {
             showToast(data.message || 'Could not load this trip.', 'error');
-            setTimeout(() => { window.location.href = 'driverDashboard.html'; }, 1500);
+            setTimeout(() => { window.location.href = 'driverDashboard.php'; }, 1500);
             return;
         }
         const r = data.ride;

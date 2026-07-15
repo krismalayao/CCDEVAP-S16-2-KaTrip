@@ -1,14 +1,14 @@
 document.getElementById('navbar-mount').innerHTML = `
 <header class="nav">
     <div class="nav-inner">
-        <a class="nav-brand" href="driverDashboard.html">
+        <a class="nav-brand" href="driverDashboard.php">
             <img class="nav-logo-img" src="../src/images/katrip_logo.svg" alt="KaTrip logo" />
             <span class="nav-logo-text">KaTrip</span>
         </a>
         <nav class="nav-links">
-            <a class="nav-link" href="driverDashboard.html">View Bookings</a>
-            <a class="nav-link" href="browseRides.html">Browse Rides</a>
-            <a class="nav-link" href="driverCreateTrip.html">Create Trip</a>
+            <a class="nav-link" href="driverDashboard.php">View Bookings</a>
+            <a class="nav-link" href="browseRides.php">Browse Rides</a>
+            <a class="nav-link" href="driverCreateTrip.php">Create Trip</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
@@ -16,16 +16,16 @@ document.getElementById('navbar-mount').innerHTML = `
                 <span class="nav-menu-bar"></span>
                 <span class="nav-menu-bar"></span>
             </button>
-            <a class="nav-profile-btn" href="driverProfile.html" aria-label="Profile">
+            <a class="nav-profile-btn" href="driverProfile.php" aria-label="Profile">
                 <span class="nav-profile-initials"></span>
             </a>
         </div>
     </div>
 
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
-        <a class="nav-dropdown-link" href="driverDashboard.html">View Bookings</a>
-        <a class="nav-dropdown-link" href="browseRides.html">Browse Rides</a>
-        <a class="nav-dropdown-link" href="driverCreateTrip.html">Create Ride</a>
+        <a class="nav-dropdown-link" href="driverDashboard.php">View Bookings</a>
+        <a class="nav-dropdown-link" href="browseRides.php">Browse Rides</a>
+        <a class="nav-dropdown-link" href="driverCreateTrip.php">Create Trip</a>
     </div>
 </header>
 `;
