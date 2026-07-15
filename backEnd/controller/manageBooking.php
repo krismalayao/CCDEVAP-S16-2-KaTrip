@@ -26,7 +26,13 @@
 
     $driverId = $_SESSION["user_id"];
 
-    // updateBookingStatus already scopes the update to rides owned by this driver
-    $ok = updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status);
-    echo json_encode(["success" => (bool) $ok]);
+    // updateBookingStatus scopes updates to rides owned by this driver and validates status transitions
+    $result = updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status);
+
+    if (is_array($result)) {
+        echo json_encode($result);
+        exit();
+    }
+
+    echo json_encode(["success" => (bool) $result]);
 ?>
