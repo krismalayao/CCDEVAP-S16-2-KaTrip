@@ -1,5 +1,13 @@
 # Welcome to KaTrip
-KaTrip is a community-centric web application designed to centralize and automate trip coordination for groups like students and office workers. Unlike standard real-time ride-hailing services such as Grab or InDrive, which focus on on-demand bookings and variable pricing, KaTrip operates as a planned carpool scheduling and reservation system. It empowers users to schedule their commutes in advance, creating a culture of shared mobility and mutual benefit within a trusted community. 
+KaTrip is a community-centric web application designed to centralize and automate trip coordination for groups like students and office workers. Unlike standard real-time ride-hailing services such as Grab or InDrive, which focus on on-demand bookings and variable pricing, KaTrip operates as a planned carpool scheduling and reservation system. It empowers users to schedule their commutes in advance, creating a culture of shared mobility and mutual benefit within a trusted community.
+
+## 📌 Table of Contents
+* [Tech Stack used in the Development](#-tech-stack-used-in-the-development)
+* [How to locally Set-up the Project](#-how-to-locally-set-up-the-project)
+  * [Pre-requisites](#️-pre-requisites-️)
+  * [Installation Process](#-installation-process)
+  * [Database Configurations / Troubleshooting](#️-database-configurations--troubleshooting)
+* [KaTrip Application Developers](#%EF%B8%8F-katrip-application-developers-)
 
 ## 🛠 Tech Stack used in the Development
 **Frontend:** HTML, CSS, JavaScript  
