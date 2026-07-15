@@ -1,3 +1,5 @@
+// Serves as the data layer to execute ride reservation
+
 <?php
 require_once "../../config/db.php";
 
