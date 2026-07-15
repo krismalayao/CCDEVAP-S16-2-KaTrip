@@ -157,6 +157,7 @@ function initApplicationUploadPreview() {
 // Script for Browse Rides Filtering
 let browseRidesData = [];
 let browseRideDestinations = [];
+let browseRidePickups = [];
 
 function normalizeText(value) {
   return String(value || '')
@@ -253,23 +254,22 @@ function renderRides(list) {
 
 function getFilteredRides() {
   const destinationInput = document.getElementById('destination-input');
-  const query = destinationInput ? destinationInput.value.trim() : '';
-  const normalizedQuery = normalizeText(query);
+  const pickupInput = document.getElementById('pickup-input');
 
-  if (!normalizedQuery) {
-    return browseRidesData;
-  }
+  const destinationQuery = destinationInput ? destinationInput.value.trim() : '';
+  const pickupQuery = pickupInput ? pickupInput.value.trim() : '';
+
+  const normalizedDestination = normalizeText(destinationQuery);
+  const normalizedPickup = normalizeText(pickupQuery);
 
   return browseRidesData.filter((ride) => {
-    const haystacks = [
-      ride.origin,
-      ride.destination,
-      `${ride.origin || ''} ${ride.destination || ''}`,
-      ride.departure,
-      ride.departure_time
-    ];
+    const origin = normalizeText(ride.origin);
+    const destination = normalizeText(ride.destination);
 
-    return haystacks.some((value) => normalizeText(value).includes(normalizedQuery));
+    const matchDestination = !normalizedDestination || destination.includes(normalizedDestination);
+    const matchPickup = !normalizedPickup || origin.includes(normalizedPickup);
+
+    return matchDestination && matchPickup;
   });
 }
 
@@ -476,6 +476,10 @@ function initBrowseRidesAutocomplete() {
   const suggestionsBox = document.getElementById('destination-suggestions');
   const destinationForm = document.getElementById('destination-form');
 
+  const pickupInput = document.getElementById('pickup-input');
+  const pickupSuggestionsBox = document.getElementById('pickup-suggestions');
+  const pickupForm = document.getElementById('pickup-form');
+
   if (!rideList || !destinationInput || !suggestionsBox || !destinationForm) return;
 
   function showSuggestions(query = '') {
@@ -506,6 +510,38 @@ function initBrowseRidesAutocomplete() {
     renderRides(getFilteredRides());
   }
 
+  // Same idea as the destination suggestions, but for pickup points
+  function showPickupSuggestions(query = '') {
+    if (!pickupSuggestionsBox) return;
+
+    const normalizedQuery = normalizeText(query);
+    const suggestions = browseRidePickups.filter((pickup) => {
+      if (!normalizedQuery) return true;
+      return normalizeText(pickup).includes(normalizedQuery);
+    }).slice(0, 5);
+
+    if (!suggestions.length) {
+      pickupSuggestionsBox.classList.remove('show');
+      pickupSuggestionsBox.innerHTML = '';
+      return;
+    }
+
+    pickupSuggestionsBox.innerHTML = suggestions
+      .map((pickup) => `<button type="button" class="browserides-suggestion">${pickup}</button>`)
+      .join('');
+    pickupSuggestionsBox.classList.add('show');
+  }
+
+  function hidePickupSuggestions() {
+    if (!pickupSuggestionsBox) return;
+    pickupSuggestionsBox.classList.remove('show');
+  }
+
+  function applyPickupFilter(value = pickupInput.value) {
+    pickupInput.value = value;
+    renderRides(getFilteredRides());
+  }
+
   rideList.addEventListener('click', (event) => {
     const viewButton = event.target.closest('.browserides-view-btn');
     if (!viewButton) return;
@@ -519,8 +555,36 @@ function initBrowseRidesAutocomplete() {
     .then((data) => {
       browseRidesData = Array.isArray(data) ? data : [];
       browseRideDestinations = [...new Set(browseRidesData.map((ride) => ride.destination).filter(Boolean))];
+      browseRidePickups = [...new Set(browseRidesData.map((ride) => ride.origin).filter(Boolean))];
 
       renderRides(getFilteredRides());
+
+      if (pickupInput) {
+        pickupInput.addEventListener('input', () => {
+          showPickupSuggestions(pickupInput.value);
+          applyPickupFilter(pickupInput.value);
+        });
+        pickupInput.addEventListener('focus', () => showPickupSuggestions(pickupInput.value));
+      }
+
+      if (pickupForm) {
+        pickupForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          applyPickupFilter(pickupInput.value);
+          hidePickupSuggestions();
+        });
+      }
+
+      if (pickupSuggestionsBox) {
+        pickupSuggestionsBox.addEventListener('click', (event) => {
+          const suggestion = event.target.closest('.browserides-suggestion');
+          if (!suggestion) return;
+
+          pickupInput.value = suggestion.textContent.trim();
+          applyPickupFilter(pickupInput.value);
+          hidePickupSuggestions();
+        });
+      }
 
       destinationInput.addEventListener('focus', () => showSuggestions(destinationInput.value));
       destinationInput.addEventListener('input', () => {
@@ -546,6 +610,10 @@ function initBrowseRidesAutocomplete() {
       document.addEventListener('click', (event) => {
         if (!destinationInput.contains(event.target) && !suggestionsBox.contains(event.target)) {
           hideSuggestions();
+        }
+        if (pickupInput && pickupSuggestionsBox &&
+            !pickupInput.contains(event.target) && !pickupSuggestionsBox.contains(event.target)) {
+          hidePickupSuggestions();
         }
       });
 
