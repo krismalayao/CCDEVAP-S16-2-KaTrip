@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const value = scheduled || (booked ? String(booked).slice(0, 10) : '');
     return value ? new Date(`${value}T00:00:00`).toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'}) : '';
   };
+  const time = value => String(value || '').slice(0, 5);
   const statusLabel = booking => {
     if (booking.booking_status === 'cancelled' || booking.ride_status === 'cancelled') return 'Cancelled';
     if (booking.booking_status === 'rejected') return 'Rejected';
@@ -127,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const driver = booking.driver_first_name ? `<div class="driver-info-snippet"><div class="driver-avatar-mini"></div><div><p class="driver-name">${esc(booking.driver_first_name)} ${esc(booking.driver_last_name)}</p><small class="vehicle-plate">${esc(booking.vehicle_model || '')} • ${esc(booking.plate_number || '')}</small></div></div>` : '';
     const badgeClass = (booking.booking_status === 'cancelled' || booking.ride_status === 'cancelled') ? 'cancelled' : booking.booking_status === 'accepted' ? 'approved' : booking.booking_status;
     return `<div class="booking-card-item ${group === 'history' ? 'history-booking-card' : ''}">
-      <div class="booking-card-heading"><span class="status-badge ${esc(badgeClass)}">${esc(statusLabel(booking))}</span><span class="booking-date">${date(booking.departure_date, booking.booking_created_at)} ${esc(booking.departure || '')}</span></div>
+      <div class="booking-card-heading"><span class="status-badge ${esc(badgeClass)}">${esc(statusLabel(booking))}</span><span class="booking-date">${date(booking.departure_date, booking.booking_created_at)} ${esc(time(booking.departure))}</span></div>
       <div class="booking-route"><div class="route-point"><span class="dot pickup"></span><strong>From:</strong> ${esc(booking.origin)}</div><div class="route-point"><span class="dot destination"></span><strong>To:</strong> ${esc(booking.destination)}</div></div>
       ${driver}<div class="booking-card-footer"><span class="booking-price">PHP ${Number(booking.cost).toFixed(2)}</span>${showViewDetails ? `<button class="passenger-dashboard-details-btn booking-view-details-btn" data-ride-id="${booking.ride_id}">View Details</button>` : ''}${canCancel ? `<button class="cancel-booking-btn" data-booking-id="${booking.booking_id}">Cancel Request</button>` : ''}</div></div>`;
   };

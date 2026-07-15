@@ -20,14 +20,15 @@
         $isDriver = ($role === "driver");
         $sql = $isDriver 
             ? "SELECT u.first_name, u.last_name, u.gender, u.phone_number, u.email,
-                      u.created_at, u.profile_picture, dp.vehicle_model, dp.plate_number, dp.verification_status
+                      u.created_at, u.profile_picture, u.theme_preference,
+                      dp.vehicle_model, dp.plate_number, dp.verification_status, dp.show_full_name
                 FROM users u 
                 LEFT JOIN driver_profiles dp 
                 ON dp.driver_id = u.user_id 
                 WHERE u.user_id = ? 
                 AND u.role = 'driver'"
 
-            : "SELECT first_name, last_name, gender, phone_number, email, created_at, profile_picture
+            : "SELECT first_name, last_name, gender, phone_number, email, created_at, profile_picture, theme_preference
                FROM users 
                WHERE user_id = ? 
                AND role = 'passenger'";
@@ -53,13 +54,25 @@
         profileResponse(405, ["success" => false, "message" => "Method not allowed."]);
     }
 
+    if (isset($_POST["theme_only"])) {
+        $theme = $_POST["theme_preference"] ?? "light";
+        if (!in_array($theme, ["light", "dark"], true)) {
+            profileResponse(422, ["success" => false, "message" => "Invalid theme."]);
+        }
+        $stmt = $conn->prepare("UPDATE users SET theme_preference = ? WHERE user_id = ?");
+        $stmt->bind_param("si", $theme, $userId);
+        $stmt->execute();
+        profileResponse(200, ["success" => true, "theme_preference" => $theme]);
+    }
+
     $phone = trim($_POST["phone"] ?? "");
     $email = filter_var(trim($_POST["email"] ?? ""), FILTER_VALIDATE_EMAIL);
     $gender = str_replace(["-"], "_", trim($_POST["gender"] ?? ""));
     $password = $_POST["password"] ?? "";
+    $theme = $_POST["theme_preference"] ?? "light";
 
     $allowedGenders = ["male", "female", "other", "rather_not_say"];
-    if (!$phone || !$email || !in_array($gender, $allowedGenders, true)) {
+    if (!$phone || !$email || !in_array($gender, $allowedGenders, true) || !in_array($theme, ["light", "dark"], true)) {
         profileResponse(422, ["success" => false, "message" => "Invalid input data."]);
     }
     if ($password && strlen($password) < 8) {
@@ -82,15 +95,15 @@
 
     if ($password) {
         $stmt = $conn->prepare("UPDATE users 
-                                SET phone_number = ?, email = ?, gender = ?, password = ?
+                                SET phone_number = ?, email = ?, gender = ?, password = ?, theme_preference = ?
                                 WHERE user_id = ?");
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("ssssi", $phone, $email, $gender, $hash, $userId);
+        $stmt->bind_param("sssssi", $phone, $email, $gender, $hash, $theme, $userId);
     } else {
         $stmt = $conn->prepare("UPDATE users 
-                                SET phone_number = ?, email = ?, gender = ? 
+                                SET phone_number = ?, email = ?, gender = ?, theme_preference = ?
                                 WHERE user_id = ?");
-        $stmt->bind_param("sssi", $phone, $email, $gender, $userId);
+        $stmt->bind_param("ssssi", $phone, $email, $gender, $theme, $userId);
     }
 
     if (!$stmt->execute()) {
@@ -98,10 +111,11 @@
     }
 
     if ($role === "driver") {
+        $showFullName = ($_POST["show_full_name"] ?? "0") === "1" ? 1 : 0;
         $stmt = $conn->prepare("UPDATE driver_profiles 
-                                SET vehicle_model = ?, plate_number = ?
+                                SET vehicle_model = ?, plate_number = ?, show_full_name = ?
                                 WHERE driver_id = ?");
-        $stmt->bind_param("ssi", $_POST["vehicle_model"], $_POST["plate_number"], $userId);
+        $stmt->bind_param("ssii", $_POST["vehicle_model"], $_POST["plate_number"], $showFullName, $userId);
         $stmt->execute();
     }
 

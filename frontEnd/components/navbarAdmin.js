@@ -1,4 +1,6 @@
 function initNavbar() {
+    document.documentElement.dataset.theme = localStorage.getItem('katrip-theme') || 'light';
+
     const mountPoint = document.getElementById('navbar-mount');
 
     if (!mountPoint) return;
@@ -67,6 +69,7 @@ function initNavbar() {
     });
 
     const handleLogout = () => {
+        localStorage.removeItem('katrip-theme');
         window.location.href = '../../backEnd/controller/logoutController.php'; 
     };
 

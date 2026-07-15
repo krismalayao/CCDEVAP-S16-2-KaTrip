@@ -20,6 +20,89 @@
     --danger:           #ed1c24;
 }
 
+/* Dark Mode */
+html[data-theme="dark"] {
+  --bg: #2D2033;
+  --bg-card: #37253D;
+  --purple-faint: #331F36;
+  --grey-text: #eee9f3;
+  --text-primary: #f5efff;
+  --icon-muted: #aaa0b2;
+}
+
+html[data-theme="dark"] body,
+html[data-theme="dark"] .page-title,
+html[data-theme="dark"] .stat-value,
+html[data-theme="dark"] .trip-route-text,
+html[data-theme="dark"] .trip-meta-value,
+html[data-theme="dark"] .empty-state {
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .trip-card,
+html[data-theme="dark"] .filter-tab,
+html[data-theme="dark"] .search-input {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: #775280;
+}
+
+html[data-theme="dark"] .trip-card-ongoing,
+html[data-theme="dark"] .trip-card-upcoming,
+html[data-theme="dark"] .trip-card-completed,
+html[data-theme="dark"] .trip-card-cancelled {
+  background: linear-gradient(160deg, var(--bg-card), var(--bg-card), #4f3458);
+}
+
+html[data-theme="dark"] #cancel-modal > div,
+html[data-theme="dark"] #summary-modal > div,
+html[data-theme="dark"] #summary-modal > div > div:last-child {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] #cancel-modal h2,
+html[data-theme="dark"] #cancel-modal p,
+html[data-theme="dark"] #summary-modal [style*="color:#2d1a4e"],
+html[data-theme="dark"] #summary-modal [style*="color:#374151"] {
+  color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] #summary-modal [style*="background:#f9fafb"] {
+  background: #4f3458 !important;
+  color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] #summary-modal [style*="color:#9ca3af"] {
+  color: var(--grey-text) !important;
+}
+
+html[data-theme="dark"] .btn-outline {
+  background: #775280;
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .btn-outline:hover {
+  background: #906b99;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .btn-danger {
+  background: #70252d;
+  color: #ffc1c7;
+}
+
+html[data-theme="dark"] .btn-danger:hover {
+  background: #8e303b;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .btn-ghost {
+  background: #4f3458;
+  color: var(--text-primary);
+}
+
 body {
     margin: 0;
     font-family: 'Helvetica Now', system-ui, sans-serif;

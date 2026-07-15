@@ -127,6 +127,11 @@
                     </div>
                 </div>
 
+                <div class="profile-privacy-setting">
+                    <input type="checkbox" id="profile-show-full-name" checked>
+                    <label for="profile-show-full-name">Show my full name to passengers</label>
+                </div>
+
                 <!-- Account Creation Date -->
                 <div class="profile-metadata">
                     <p id="profile-created-at">Loading...</p>

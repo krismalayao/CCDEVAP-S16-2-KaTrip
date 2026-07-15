@@ -109,7 +109,8 @@ CREATE TABLE `driver_profiles` (
   `vehicle_model` varchar(50) NOT NULL,
   `plate_number` varchar(20) NOT NULL,
   `vehicle_color` enum('black','white','red','blue','gray','brown','green') NOT NULL,
-  `verification_status` enum('verified','pending','denied') NOT NULL DEFAULT 'pending'
+  `verification_status` enum('verified','pending','denied') NOT NULL DEFAULT 'pending',
+  `show_full_name` boolean NOT NULL DEFAULT true
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -140,7 +141,7 @@ CREATE TABLE `rides` (
   `schedule_id` int(11) DEFAULT NULL,
   `destination` varchar(100) NOT NULL,
   `departure` varchar(100) NOT NULL,
-  `origin` varchar(100) NOT NULL,
+  `origin` varchar(500) NOT NULL,
   `total_seats` int(11) NOT NULL,
   `available_seats` int(11) NOT NULL,
   `cost` decimal(10,2) NOT NULL,
@@ -305,6 +306,7 @@ CREATE TABLE `users` (
   `status` enum('active','pending','suspended','denied') NOT NULL DEFAULT 'pending',
   `password` varchar(250) NOT NULL,
   `profile_picture` varchar(255) DEFAULT NULL,
+  `theme_preference` enum('light','dark') NOT NULL DEFAULT 'light',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

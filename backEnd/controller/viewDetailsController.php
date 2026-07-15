@@ -22,6 +22,14 @@ $ride_id = $_GET['ride_id'];
 
 $data = getRideDetails($conn, $ride_id);
 
+if ($data) {
+    if (!(bool)$data['show_full_name']) {
+        $data['first_name'] = strtoupper(substr($data['first_name'], 0, 1)) . '.';
+        $data['last_name'] = strtoupper(substr($data['last_name'], 0, 1)) . '.';
+    }
+    unset($data['show_full_name']);
+}
+
 echo json_encode([
     "success" => true,
     "ride" => $data

@@ -22,6 +22,7 @@ function getRideDetails($conn, $ride_id)
         u.first_name,
         u.last_name,
         u.phone_number,
+        dp.show_full_name,
 
         (
             SELECT GROUP_CONCAT(rl.landmark_name ORDER BY rl.landmark_number SEPARATOR ', ')

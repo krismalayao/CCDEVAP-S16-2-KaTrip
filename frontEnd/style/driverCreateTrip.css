@@ -20,6 +20,74 @@
     --danger:           #ed1c24;
 }
 
+/* Dark Mode */
+html[data-theme="dark"] {
+  --bg: #2D2033;
+  --bg-card: #37253D;
+  --purple-faint: #331F36;
+  --grey-text: #eee9f3;
+  --text-primary: #f5efff;
+  --icon-muted: #aaa0b2;
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .autocomplete-list {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .card-title,
+html[data-theme="dark"] .travel-time-bar span,
+html[data-theme="dark"] .fare-label,
+html[data-theme="dark"] .fare-amount,
+html[data-theme="dark"] .autocomplete-item,
+html[data-theme="dark"] .autocomplete-item .ac-addr {
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .loc-input,
+html[data-theme="dark"] .pickup-input,
+html[data-theme="dark"] .form-field select,
+html[data-theme="dark"] .form-field input[type="date"],
+html[data-theme="dark"] .form-field input[type="time"],
+html[data-theme="dark"] .form-field input[type="number"] {
+  background-color: #4f3458;
+  color: var(--text-primary);
+  border-color: #775280;
+}
+
+html[data-theme="dark"] .loc-input.active-field,
+html[data-theme="dark"] .travel-time-bar,
+html[data-theme="dark"] .autocomplete-item:hover {
+  background: #4f3458;
+}
+
+html[data-theme="dark"] .loc-input::placeholder,
+html[data-theme="dark"] .pickup-input::placeholder,
+html[data-theme="dark"] input::placeholder {
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+html[data-theme="dark"] .form-field label {
+  color: var(--text-primary);
+}
+
+html[data-theme="dark"] .autocomplete-item {
+  border-color: #775280;
+}
+
+html[data-theme="dark"] .back-control a {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+@media (max-width: 640px) {
+  html[data-theme="dark"] .panel {
+    background: var(--bg);
+  }
+}
+
 body {
     margin: 0;
     font-family: 'Helvetica Now', system-ui, sans-serif;
