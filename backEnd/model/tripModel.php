@@ -270,3 +270,21 @@ function updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status) {
 
     return ["success" => true];
 }
+
+// ─── Get all pending booking requests across a driver's rides ────────────────
+function getPendingBookingsByDriver($conn, $driverId) {
+    $stmt = $conn->prepare("
+        SELECT b.booking_id, b.seat_reserved, b.ride_id,
+               u.first_name, u.last_name,
+               r.origin, r.origin_name, r.destination, r.destination_name,
+               r.departure_date, r.departure, r.ride_status
+        FROM bookings b
+        JOIN rides r ON r.ride_id = b.ride_id
+        JOIN users u ON u.user_id = b.passenger_id
+        WHERE r.driver_id = ? AND b.booking_status = 'pending'
+        ORDER BY r.departure_date ASC, r.departure ASC
+    ");
+    $stmt->bind_param("i", $driverId);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}

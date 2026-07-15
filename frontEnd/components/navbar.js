@@ -9,8 +9,11 @@ document.getElementById('navbar-mount').innerHTML = `
         </a>
         <nav class="nav-links">
             <a class="nav-link" href="driverDashboard.php">View Bookings</a>
-            <a class="nav-link" href="browseRides.php">Browse Rides</a>
-            <a class="nav-link" href="driverCreateTrip.php">Create Trip</a>
+            <a class="nav-link" href="driverRequests.php">
+                Requests
+                <span class="nav-badge" id="nav-badge" style="display:none;">0</span>
+            </a>
+            <a class="nav-link" href="driverCreateTrip.php">Create Ride</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
@@ -26,8 +29,10 @@ document.getElementById('navbar-mount').innerHTML = `
 
     <div class="nav-dropdown" id="nav-dropdown" aria-hidden="true">
         <a class="nav-dropdown-link" href="driverDashboard.php">View Bookings</a>
-        <a class="nav-dropdown-link" href="browseRides.php">Browse Rides</a>
-        <a class="nav-dropdown-link" href="driverCreateTrip.php">Create Trip</a>
+        <a class="nav-dropdown-link" href="driverRequests.php">
+            Requests <span class="nav-badge" id="nav-badge-mobile" style="display:none;">0</span>
+        </a>
+        <a class="nav-dropdown-link" href="driverCreateTrip.php">Create Ride</a>
     </div>
 </header>
 `;
@@ -77,3 +82,26 @@ const navEl = document.querySelector('.nav');
 window.addEventListener('scroll', () => {
     navEl.classList.toggle('nav-scrolled', window.scrollY > 4);
 });
+
+// ── Pending requests badge ────────────────────────────────────────────────
+function refreshRequestBadge() {
+    fetch('../../backEnd/controller/getPendingRequests.php')
+        .then(res => res.json())
+        .then(data => {
+            if (data.status !== 'success') return;
+            const count = data.requests.length;
+            document.querySelectorAll('#nav-badge, #nav-badge-mobile').forEach(el => {
+                if (count > 0) {
+                    el.textContent = count > 9 ? '9+' : count;
+                    el.style.display = 'inline-flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        })
+        .catch(() => {});
+}
+window.refreshRequestBadge = refreshRequestBadge; // exposed so driverRequests.js can trigger an instant refresh after accept/reject
+
+refreshRequestBadge();
+setInterval(refreshRequestBadge, 30000); // poll every 30s so it updates even if the driver just leaves the tab open

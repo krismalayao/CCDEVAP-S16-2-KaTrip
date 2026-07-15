@@ -275,6 +275,30 @@ body {
   .empty-state { text-align: center; padding: 56px 20px; color: #9ca3af; }
   .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
   .empty-state p { font-size: 0.92rem; }
+  
+
+#toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #2d1a4e;
+    color: #fff;
+    padding: 10px 22px;
+    border-radius: 20px;
+    font-size: 0.87rem;
+    z-index: 9999;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+#toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+#toast.toast-success { background: #16a34a; }
+#toast.toast-error   { background: #ef4444; }
+#toast.toast-default { background: #2d1a4e; }
 
   /* MOBILE */
   @media (max-width: 640px) {
