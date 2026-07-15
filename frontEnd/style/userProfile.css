@@ -49,6 +49,54 @@ html[data-theme="dark"] .driver-doc-item {
     border-color: #493b58;
 }
 
+html[data-theme="dark"] .driver-doc-item {
+    background: #4f3458;
+}
+
+html[data-theme="dark"] .driver-doc-header h4,
+html[data-theme="dark"] .driver-docs-modal-content h3,
+html[data-theme="dark"] .driver-doc-lightbox-title {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .driver-doc-updated-badge,
+html[data-theme="dark"] .driver-docs-modal-close,
+html[data-theme="dark"] .driver-doc-lightbox-close {
+    background: #775280;
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .driver-docs-modal-close:hover,
+html[data-theme="dark"] .driver-doc-lightbox-close:hover {
+    background: #906b99;
+}
+
+html[data-theme="dark"] .driver-doc-view-btn {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .driver-doc-view-btn:hover {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .driver-doc-reupload-btn,
+html[data-theme="dark"] .driver-docs-save-btn {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .driver-docs-cancel-btn {
+    background: #4f3458;
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .driver-docs-cancel-btn:hover {
+    background: #775280;
+}
+
+html[data-theme="dark"] .driver-docs-modal-actions {
+    border-color: #493b58;
+}
+
 html[data-theme="dark"] .profile-avatar {
     border-color: #000000;
 }

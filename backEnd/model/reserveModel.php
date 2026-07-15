@@ -1,6 +1,5 @@
-// Serves as the data layer to execute ride reservation
-
 <?php
+// Serves as the data layer to execute ride reservation
 require_once "../../config/db.php";
 
 function createBooking($ride_id, $passenger_id) {

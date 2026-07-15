@@ -1,5 +1,5 @@
-// Serves as the data layer for booking cancellation
 <?php
+// Serves as the data layer for booking cancellation
 require_once "../../config/db.php";
 
 function cancelBooking($booking_id) {

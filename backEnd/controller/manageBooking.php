@@ -1,6 +1,5 @@
-// Validates driver session and request data, then updates the booking status for a specific ride
-
 <?php
+    // Validates driver session and request data, then updates the booking status for a specific ride
     session_start();
 
     require "../../config/db.php";

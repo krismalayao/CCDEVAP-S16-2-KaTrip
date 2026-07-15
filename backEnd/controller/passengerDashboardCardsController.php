@@ -1,5 +1,5 @@
-// Handles the upcoming rides display
 <?php
+// Handles the upcoming rides display
 session_start();
 
 include "../../config/db.php";

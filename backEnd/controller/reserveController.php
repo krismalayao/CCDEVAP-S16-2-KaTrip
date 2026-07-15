@@ -1,6 +1,5 @@
-// Handles a part of the cancellation and reserve feature
-
 <?php
+// Handles a part of the cancellation and reserve feature
 session_start();
 require_once "../model/reserveModel.php";
 

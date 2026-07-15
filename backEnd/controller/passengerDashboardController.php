@@ -1,5 +1,5 @@
-// Handles the chart in passenger dashboard
 <?php
+// Handles the chart in passenger dashboard
 session_start();
 include "../../config/db.php";
 include "../model/passengerDashboardModel.php";

@@ -1,7 +1,5 @@
-// Handles the view details button displays
-
 <?php
-
+// Handles the view details button display
 session_start();
 
 include "../model/viewDetailsModel.php";

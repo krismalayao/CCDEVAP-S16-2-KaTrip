@@ -139,6 +139,10 @@ html[data-theme="dark"] .charts h4 {
     color: #ffffff;
 }
 
+html[data-theme="dark"] .cta-heading h1 {
+    color: #ffffff;
+}
+
 html[data-theme="dark"] .ride-card-arrow {
     color: var(--text-primary);
 }
@@ -356,6 +360,7 @@ body {
     font-weight: 500;
     font-family: 'Bloc';
     letter-spacing: 1px;
+    color: var(--purple-dark);
 }
 
 .charts {
@@ -372,7 +377,7 @@ body {
 .charts h4 {
     margin: 0 0 18px;
     font-size: 22px;
-    color: var(--text-primary);
+    color: var(--purple-dark);
     font-family: 'Bloc';
     letter-spacing: 1px;
 }

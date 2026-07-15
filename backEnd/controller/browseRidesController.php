@@ -1,6 +1,5 @@
-// The controller that handles which rides to display in browse rides 
-
 <?php
+// The controller that handles which rides to display in browse rides
 session_start();
 
 include "../../config/db.php";

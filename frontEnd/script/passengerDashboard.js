@@ -4,8 +4,14 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
   .then(totals => {
 
     const ridesCtx = document.getElementById('rides-chart');
-    const chartTextColor = getComputedStyle(document.documentElement)
-      .getPropertyValue('--text-primary').trim();
+    const rootStyles = getComputedStyle(document.documentElement);
+    const chartTextColor = rootStyles.getPropertyValue('--text-primary').trim();
+    const chartPurple = rootStyles.getPropertyValue('--purple').trim();
+    const chartPurpleDark = rootStyles.getPropertyValue('--purple-dark').trim();
+    const isDarkMode = document.documentElement.dataset.theme === 'dark';
+    const chartGridColor = isDarkMode
+      ? 'rgba(255, 255, 255, 0.12)'
+      : 'rgba(100, 55, 160, 0.12)';
 
     new Chart(ridesCtx, {
       type: 'bar',
@@ -13,7 +19,11 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
         labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
         datasets: [{
           label: 'Rides Completed',
-          data: totals
+          data: totals,
+          backgroundColor: chartPurple,
+          borderColor: chartPurpleDark,
+          borderWidth: 1,
+          borderRadius: 5
         }]
       },
       options: {
@@ -23,15 +33,19 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
         scales: {
           x: {
             ticks: { color: chartTextColor },
-            grid: { color: 'rgba(255, 255, 255, 0.12)' }
+            grid: { color: chartGridColor }
           },
           y: {
             ticks: { color: chartTextColor },
-            grid: { color: 'rgba(255, 255, 255, 0.12)' }
+            beginAtZero: true,
+            grid: { color: chartGridColor }
           }
         }
       }
     });
+  })
+  .catch(error => {
+    console.error('Unable to load passenger ride chart:', error);
   });
 
   // Helper: build a human readable departure label from date + time

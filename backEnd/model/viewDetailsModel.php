@@ -1,6 +1,5 @@
-// Serves as the data access to properly display ride details
-
 <?php
+// Serves as the data access to properly display ride details
 
 function getRideDetails($conn, $ride_id)
 {
