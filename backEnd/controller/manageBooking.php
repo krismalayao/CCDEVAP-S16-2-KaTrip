@@ -1,3 +1,5 @@
+// Validates driver session and request data, then updates the booking status for a specific ride
+
 <?php
     session_start();
 
@@ -26,7 +28,7 @@
 
     $driverId = $_SESSION["user_id"];
 
-    // updateBookingStatus scopes updates to rides owned by this driver and validates status transitions
+    // updateBookingStatus scopes updates to rides owned by this driver and validates status transitions for the smooth booking flow
     $result = updateBookingStatus($conn, $bookingId, $rideId, $driverId, $status);
 
     if (is_array($result)) {

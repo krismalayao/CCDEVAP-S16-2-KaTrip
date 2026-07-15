@@ -108,7 +108,7 @@
                         <input type="hidden" name="action" value="denyDriver">
                         <input type="hidden" name="driver_id" id="denyDriverId">
 
-                        <button type="submit"class="reject">Deny</button>
+                        <button type="submit" class="reject">Deny</button>
                     </form>
                 </div>
             </section>

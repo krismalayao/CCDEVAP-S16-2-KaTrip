@@ -1,3 +1,4 @@
+// Serves as the data layer for booking cancellation
 <?php
 require_once "../../config/db.php";
 

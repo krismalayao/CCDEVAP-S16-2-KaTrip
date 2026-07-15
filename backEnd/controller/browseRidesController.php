@@ -1,3 +1,5 @@
+// The controller that handles which rides to display in browse rides 
+
 <?php
 session_start();
 

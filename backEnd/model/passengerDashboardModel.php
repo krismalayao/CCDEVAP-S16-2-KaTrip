@@ -1,3 +1,5 @@
+// Serves as the data access to populate the passenger dashboard chart
+
 <?php
 
 function getBookingsPerMonth($conn, $user_id) 
