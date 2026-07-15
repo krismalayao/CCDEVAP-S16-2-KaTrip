@@ -20,7 +20,7 @@
 .nav-inner {
     display: flex;
     align-items: center;
-    padding: 0 24px;
+    padding: 0px 24px;
     height: 64px;
     max-width: 100%;
     margin: 0 auto;
@@ -106,12 +106,6 @@
     margin-left: auto;
 }
 
-.nav-link,
-.nav-actions {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-
 /* NAVBAR - MOBILE */
 .nav-menu-btn {
     display: none;
@@ -165,12 +159,6 @@
 
 .nav-profile-btn:hover {
     transform: scale(1.05);
-}
-
-.nav-profile-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
 }
 
 .nav-profile-initials {
