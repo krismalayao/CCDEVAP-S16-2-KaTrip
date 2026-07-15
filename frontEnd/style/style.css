@@ -1485,7 +1485,7 @@ body {
 /* Card */
 .reservation-toast-card {
   display: flex;
-    align-items: flex-start;
+  align-items: center;
   gap: 12px;
   background: var(--bg-card);
   padding: 14px 16px;
