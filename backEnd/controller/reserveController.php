@@ -1,3 +1,5 @@
+// Handles a part of the cancellation and reserve feature
+
 <?php
 session_start();
 require_once "../model/reserveModel.php";
@@ -18,7 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $result = createBooking($ride_id, $passenger_id);
-
     echo json_encode($result);
 }
 ?>
