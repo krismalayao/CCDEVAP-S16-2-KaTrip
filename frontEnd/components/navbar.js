@@ -65,3 +65,9 @@ fetch('../../backEnd/controller/profileController.php', { credentials: 'same-ori
         });
     })
     .catch(() => {});
+
+// Add shadow once page is scrolled
+const navEl = document.querySelector('.nav');
+window.addEventListener('scroll', () => {
+    navEl.classList.toggle('nav-scrolled', window.scrollY > 4);
+});

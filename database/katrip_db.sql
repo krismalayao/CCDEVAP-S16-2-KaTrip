@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 15, 2026 at 01:27 AM
+-- Generation Time: Jul 15, 2026 at 01:45 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -50,7 +50,16 @@ INSERT INTO `bookings` (`booking_id`, `ride_id`, `passenger_id`, `seat_reserved`
 (7, 6, 15, 1, 'accepted', '2026-07-13 21:11:58'),
 (8, 8, 17, 2, 'pending', '2026-07-13 21:11:58'),
 (9, 9, 19, 1, 'accepted', '2026-07-13 21:11:58'),
-(10, 10, 20, 1, 'accepted', '2026-07-13 21:11:58');
+(10, 10, 20, 1, 'accepted', '2026-07-13 21:11:58'),
+(14, 14, 1, 1, 'accepted', '2026-07-14 23:43:54'),
+(15, 15, 3, 1, 'accepted', '2026-07-14 23:43:54'),
+(16, 15, 6, 1, 'accepted', '2026-07-14 23:43:54'),
+(17, 15, 8, 1, 'accepted', '2026-07-14 23:43:54'),
+(18, 15, 11, 1, 'pending', '2026-07-14 23:43:54'),
+(19, 17, 13, 2, 'accepted', '2026-07-14 23:43:54'),
+(20, 17, 15, 2, 'accepted', '2026-07-14 23:43:54'),
+(21, 18, 17, 3, 'accepted', '2026-07-14 23:43:54'),
+(22, 19, 19, 4, 'accepted', '2026-07-14 23:43:54');
 
 -- --------------------------------------------------------
 
@@ -61,8 +70,11 @@ INSERT INTO `bookings` (`booking_id`, `ride_id`, `passenger_id`, `seat_reserved`
 CREATE TABLE `driver_documents` (
   `document_id` int(11) NOT NULL,
   `driver_id` int(11) NOT NULL,
-  `document_type` enum('license','registration','insurance') NOT NULL,
+  `document_type` enum('license','vehicle','registration','insurance') NOT NULL,
   `file` varchar(255) NOT NULL,
+  `original_name` varchar(255) DEFAULT NULL,
+  `mime_type` varchar(100) DEFAULT NULL,
+  `file_size` int(10) UNSIGNED DEFAULT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -70,23 +82,23 @@ CREATE TABLE `driver_documents` (
 -- Dumping data for table `driver_documents`
 --
 
-INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `file`, `uploaded_at`) VALUES
-(1, 2, 'license', 'files/docs/driver2/license.pdf', '2026-07-13 21:11:58'),
-(2, 2, 'registration', 'files/docs/driver2/registration.pdf', '2026-07-13 21:11:58'),
-(3, 2, 'insurance', 'files/docs/driver2/insurance.pdf', '2026-07-13 21:11:58'),
-(4, 4, 'license', 'files/docs/driver4/license.pdf', '2026-07-13 21:11:58'),
-(5, 5, 'license', 'files/docs/driver5/license.pdf', '2026-07-13 21:11:58'),
-(6, 5, 'registration', 'files/docs/driver5/registration.pdf', '2026-07-13 21:11:58'),
-(7, 7, 'license', 'files/docs/driver7/license.pdf', '2026-07-13 21:11:58'),
-(8, 9, 'license', 'files/docs/driver9/license.pdf', '2026-07-13 21:11:58'),
-(9, 9, 'insurance', 'files/docs/driver9/insurance.pdf', '2026-07-13 21:11:58'),
-(10, 10, 'license', 'files/docs/driver10/license.pdf', '2026-07-13 21:11:58'),
-(11, 12, 'license', 'files/docs/driver12/license.pdf', '2026-07-13 21:11:58'),
-(12, 14, 'license', 'files/docs/driver14/license.pdf', '2026-07-13 21:11:58'),
-(13, 14, 'registration', 'files/docs/driver14/registration.pdf', '2026-07-13 21:11:58'),
-(14, 16, 'license', 'files/docs/driver16/license.pdf', '2026-07-13 21:11:58'),
-(15, 18, 'license', 'files/docs/driver18/license.pdf', '2026-07-13 21:11:58'),
-(16, 18, 'insurance', 'files/docs/driver18/insurance.pdf', '2026-07-13 21:11:58');
+INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `file`, `original_name`, `mime_type`, `file_size`, `uploaded_at`) VALUES
+(1, 2, 'license', 'files/docs/driver2/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(2, 2, 'registration', 'files/docs/driver2/registration.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(3, 2, 'insurance', 'files/docs/driver2/insurance.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(4, 4, 'license', 'files/docs/driver4/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(5, 5, 'license', 'files/docs/driver5/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(6, 5, 'registration', 'files/docs/driver5/registration.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(7, 7, 'license', 'files/docs/driver7/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(8, 9, 'license', 'files/docs/driver9/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(9, 9, 'insurance', 'files/docs/driver9/insurance.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(10, 10, 'license', 'files/docs/driver10/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(11, 12, 'license', 'files/docs/driver12/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(12, 14, 'license', 'files/docs/driver14/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(13, 14, 'registration', 'files/docs/driver14/registration.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(14, 16, 'license', 'files/docs/driver16/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(15, 18, 'license', 'files/docs/driver18/license.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58'),
+(16, 18, 'insurance', 'files/docs/driver18/insurance.pdf', NULL, NULL, NULL, '2026-07-13 21:11:58');
 
 -- --------------------------------------------------------
 
@@ -150,27 +162,25 @@ CREATE TABLE `rides` (
 --
 
 INSERT INTO `rides` (`ride_id`, `driver_id`, `schedule_id`, `destination`, `departure`, `origin`, `total_seats`, `available_seats`, `cost`, `ride_status`, `origin_lat`, `origin_lng`, `dest_lat`, `dest_lng`, `departure_date`, `origin_name`, `destination_name`) VALUES
-(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'completed', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(23, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '08:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 366.00, 'cancelled', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-15', NULL, NULL),
-(24, 5, NULL, 'University of Santo Tomas, España Boulevard, Barangay 470, Sampaloc, Fourth District, Manila, Capita', '07:00', 'Jana\'s Place and Halo-Halo, Josephine Bracken Street, Potol, Sinonoc, Dapitan, Zamboanga del Norte, ', 4, 4, 36397.00, 'completed', 8.6566039, 123.4245964, 14.6098426, 120.9894646, '2026-07-14', 'Jana\'s Place and Halo-Halo', 'University of Santo Tomas'),
-(25, 5, NULL, 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', '07:00', 'De La Salle University - Dasmariñas, Francisco Barzaga Road, San Antonio de Padua 1, Bagong Bayan, D', 4, 4, 692.00, 'completed', 14.3241795, 120.9585550, 14.5351818, 120.9815994, '2026-07-17', 'De La Salle University - Dasmariñas', 'SM Mall of Asia'),
-(26, 5, NULL, 'SM Araneta City, General Aguinaldo Avenue, Araneta City, Socorro, Cubao, 3rd District, Quezon City, ', '07:00', 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', 4, 4, 414.00, 'cancelled', 14.5351818, 120.9815994, 14.6191370, 121.0556642, '2026-07-18', 'SM Mall of Asia', 'SM Araneta City'),
-(27, 5, NULL, 'Glorietta, Palm Drive, Ayala Center Makati, San Lorenzo, District I, Makati, Southern Manila Distric', '07:00', 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', 4, 4, 210.00, 'completed', 14.5351818, 120.9815994, 14.5512330, 121.0253209, '2026-07-16', 'SM Mall of Asia', 'Glorietta'),
-(28, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '07:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 290.00, 'cancelled', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-15', 'DLSU Amphitheater', 'ZERØ Studio'),
-(29, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '07:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 290.00, 'completed', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-15', 'DLSU Amphitheater', 'ZERØ Studio'),
-(30, 5, NULL, 'SM Mall of Asia, Seaside Boulevard, Barangay 76, Zone 10, District 1, Pasay, Southern Manila Distric', '07:00', 'Alabang Town Center, Alabang-Zapote Road, Cupang, Muntinlupa District 2, Muntinlupa, Southern Manila', 4, 4, 489.00, 'completed', 14.4236675, 121.0297176, 14.5351818, 120.9815994, '2026-07-16', 'Alabang Town Center', 'SM Mall of Asia'),
-(31, 5, NULL, 'Alabang Town Center, Alabang-Zapote Road, Cupang, Muntinlupa District 2, Muntinlupa, Southern Manila', '07:00', 'University of Santo Tomas, España Boulevard, Barangay 470, Sampaloc, Fourth District, Manila, Capita', 4, 4, 657.00, 'ongoing', 14.6098426, 120.9894646, 14.4236675, 121.0297176, '2026-07-15', 'University of Santo Tomas', 'Alabang Town Center'),
-(32, 5, NULL, 'ZERØ Studio, 37 AA Building, Scout Borromeo Street, Scout Area, Diliman, 4th District, Quezon City, ', '07:00', 'DLSU Amphitheater, Barangay 708, Malate, Fifth District, Manila, Capital District, Metro Manila, 100', 2, 2, 290.00, 'scheduled', 14.5644408, 120.9934590, 14.6369321, 121.0370684, '2026-07-18', 'DLSU Amphitheater', 'ZERØ Studio'),
-(33, 5, NULL, 'Ortigas, EDSA, Wack-Wack Greenhills, Mandaluyong, Eastern Manila District, Metro Manila, 1555, Phili', '07:00', 'Makati, Southern Manila District, Metro Manila, Philippines', 4, 4, 214.00, 'scheduled', 14.5567949, 121.0211226, 14.5878938, 121.0567297, '2026-07-15', 'Makati', 'Ortigas');
+(1, 2, 1, 'Makati CBD', '07:00:00', 'Quezon City', 4, 2, 150.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-17', NULL, NULL),
+(2, 4, 2, 'BGC', '08:30:00', 'Manila', 3, 1, 180.00, 'ongoing', NULL, NULL, NULL, NULL, '2026-07-14', NULL, NULL),
+(3, 5, 3, 'Ortigas', '17:30:00', 'Makati', 4, 4, 120.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-10', NULL, NULL),
+(4, 7, 4, 'Alabang', '06:00:00', 'Caloocan', 4, 0, 250.00, 'completed', NULL, NULL, NULL, NULL, '2026-07-13', NULL, NULL),
+(5, 9, 5, 'Tagaytay', '09:00:00', 'Pasay', 4, 4, 350.00, 'cancelled', NULL, NULL, NULL, NULL, '2026-07-12', NULL, NULL),
+(6, 10, 6, 'MOA', '13:00:00', 'Quezon City', 4, 3, 160.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-12', NULL, NULL),
+(7, 12, 7, 'Antipolo', '19:00:00', 'BGC', 3, 3, 200.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-15', NULL, NULL),
+(8, 14, 8, 'Clark', '16:00:00', 'Trinoma', 6, 4, 400.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-17', NULL, NULL),
+(9, 16, 9, 'Manila Airport', '05:30:00', 'Fairview', 4, 2, 300.00, 'completed', NULL, NULL, NULL, NULL, '2026-07-13', NULL, NULL),
+(10, 18, 10, 'Batangas Port', '20:00:00', 'Alabang', 4, 4, 450.00, 'scheduled', NULL, NULL, NULL, NULL, '2026-07-19', NULL, NULL),
+(11, 5, NULL, 'Quezon City, Metro Manila, Philippines', '07:00:00', 'Pandi, Bulacan, Philippines', 4, 3, 180.00, 'scheduled', 14.9333000, 120.8833000, 14.6760000, 121.0437000, '2026-07-16', 'Pandi', 'Quezon City'),
+(13, 5, NULL, 'Quezon City, Metro Manila, Philippines', '07:00:00', 'Pandi, Bulacan, Philippines', 4, 3, 180.00, 'scheduled', 14.9333000, 120.8833000, 14.6760000, 121.0437000, '2026-07-16', 'Pandi', 'Quezon City'),
+(14, 5, NULL, 'Quezon City, Metro Manila, Philippines', '07:00:00', 'Pandi, Bulacan, Philippines', 4, 3, 180.00, 'scheduled', 14.9333000, 120.8833000, 14.6760000, 121.0437000, '2026-07-16', 'Pandi', 'Quezon City'),
+(15, 5, NULL, 'Manila, Metro Manila, Philippines', '08:30:00', 'Malolos, Bulacan, Philippines', 4, 1, 220.00, 'scheduled', 14.8433000, 120.8114000, 14.5995000, 120.9842000, '2026-07-18', 'Malolos', 'Manila'),
+(16, 5, NULL, 'Baliuag, Bulacan, Philippines', '07:58:54', 'Pandi, Bulacan, Philippines', 4, 2, 90.00, 'scheduled', 14.9333000, 120.8833000, 14.9563000, 120.8985000, '2026-07-15', 'Pandi', 'Baliuag'),
+(17, 5, NULL, 'Cubao, Quezon City, Philippines', '07:43:54', 'San Jose del Monte, Bulacan, Philippines', 4, 0, 150.00, 'ongoing', 14.8139000, 121.0453000, 14.6197000, 121.0529000, '2026-07-15', 'San Jose del Monte', 'Cubao'),
+(18, 5, NULL, 'Trinoma, Quezon City, Philippines', '06:45:00', 'Pandi, Bulacan, Philippines', 4, 1, 175.50, 'completed', 14.9333000, 120.8833000, 14.6547000, 121.0322000, '2026-07-14', 'Pandi', 'Trinoma'),
+(19, 5, NULL, 'Makati, Metro Manila, Philippines', '05:30:00', 'Bocaue, Bulacan, Philippines', 4, 0, 250.00, 'completed', 14.7947000, 120.9358000, 14.5547000, 121.0244000, '2026-07-08', 'Bocaue', 'Makati'),
+(20, 5, NULL, 'Fairview, Quezon City, Philippines', '09:00:00', 'Pandi, Bulacan, Philippines', 4, 4, 160.00, 'cancelled', 14.9333000, 120.8833000, 14.7333000, 121.0500000, '2026-07-17', 'Pandi', 'Fairview');
 
 -- --------------------------------------------------------
 
@@ -209,11 +219,12 @@ INSERT INTO `ride_landmarks` (`landmark_id`, `ride_id`, `landmark_name`, `landma
 (14, 9, 'Commonwealth Avenue', 1, NULL, NULL, NULL),
 (15, 9, 'España Boulevard', 2, NULL, NULL, NULL),
 (16, 10, 'South Luzon Expressway', 1, NULL, NULL, NULL),
-(19, 25, 'SM Southmall', 1, 14.4324991, 121.0100751, NULL),
-(20, 26, 'BGC', 1, 14.5453984, 121.0459970, NULL),
-(23, 27, 'DLSU Amphitheater', 1, 14.5644408, 120.9934590, NULL),
-(24, 30, 'SM Southmall', 1, 14.4324991, 121.0100751, NULL),
-(25, 33, 'Ayala', 1, 14.5491978, 121.0279020, NULL);
+(17, 11, 'SM City Marilao', 1, 14.7575000, 120.9502000, NULL),
+(19, 13, 'SM City Marilao', 1, 14.7575000, 120.9502000, NULL),
+(20, 14, 'SM City Marilao', 1, 14.7575000, 120.9502000, NULL),
+(21, 15, 'Robinsons Malolos', 1, 14.8430000, 120.8100000, NULL),
+(22, 15, 'Marilao Terminal', 2, 14.7573000, 120.9490000, NULL),
+(23, 17, 'SM City San Jose Del Monte', 1, 14.8143000, 121.0445000, NULL);
 
 -- --------------------------------------------------------
 
@@ -296,6 +307,7 @@ CREATE TABLE `users` (
   `role` enum('passenger','driver','admin') NOT NULL,
   `status` enum('active','pending','suspended','denied') NOT NULL DEFAULT 'pending',
   `password` varchar(250) NOT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -303,29 +315,29 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `gender`, `birthdate`, `phone_number`, `email`, `role`, `status`, `password`, `created_at`) VALUES
-(1, 'John', 'Doe', 'male', '1998-01-15', '09170000001', 'john@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(2, 'Camille', 'Fernandez', 'female', '1998-07-25', '09170000018', 'camille@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(4, 'Ryan', 'Aquino', 'male', '1990-12-19', '09170000015', 'ryan@email.com', 'driver', 'denied', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(5, 'Mark', 'Santos', 'male', '1993-06-11', '09170000011', 'mark@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(6, 'Angela', 'Reyes', 'female', '1998-05-02', '09170000004', 'angela@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(7, 'David', 'Lim', 'male', '1992-08-23', '09170000013', 'david@email.com', 'driver', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(8, 'Joshua', 'Lopez', 'male', '1999-09-12', '09170000007', 'joshua@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(9, 'Ella', 'Villanueva', 'female', '1996-01-21', '09170000020', 'ella@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(10, 'Maria', 'Dela Cruz', 'female', '1994-02-05', '09170000012', 'maria@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(11, 'Patricia', 'Ramos', 'female', '1997-04-28', '09170000008', 'patricia@email.com', 'passenger', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(12, 'Brian', 'Castro', 'male', '1995-03-07', '09170000017', 'brian@email.com', 'driver', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(13, 'Michael', 'Garcia', 'male', '1997-07-18', '09170000003', 'michael@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(14, 'Ashley', 'Navarro', 'female', '1997-11-30', '09170000016', 'ashley@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(15, 'Kevin', 'Torres', 'male', '1996-11-09', '09170000005', 'kevin@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(16, 'Christine', 'Tan', 'female', '1996-09-15', '09170000014', 'christine@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(17, 'Samantha', 'Cruz', 'female', '2000-08-17', '09170000006', 'samantha@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(18, 'Joshua', 'Rivera', 'male', '1991-05-13', '09170000019', 'jrivera@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(19, 'Jane', 'Smith', 'female', '1999-03-22', '09170000002', 'jane@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(20, 'Daniel', 'Mendoza', 'male', '1995-12-14', '09170000009', 'daniel@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', '2026-07-13 21:11:58'),
-(21, 'Super', 'Admin', 'rather_not_say', '1985-04-01', '09179999999', 'admin@katrip.com', 'admin', 'active', '$2a$12$MYcMrT3u6VnoA69TxT2Jk.ka8xawexJvj9EebbDTOAtaK7rTP6kU2', '2026-07-13 21:11:58'),
-(22, 'Francis', 'Reyes', 'male', '2006-05-17', '947-767-0996', 'hans_reyes@dlsu.edu.ph', 'driver', 'pending', '$2y$10$M4ZTO7euDwh/y9uiUcLCK.NWJ3o2qF4HlMCaIlBIzPKGYmbT8BU5O', '2026-07-13 21:13:06');
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `gender`, `birthdate`, `phone_number`, `email`, `role`, `status`, `password`, `profile_picture`, `created_at`) VALUES
+(1, 'John', 'Doe', 'male', '1998-01-15', '09170000001', 'john@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(2, 'Camille', 'Fernandez', 'female', '1998-07-25', '09170000018', 'camille@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(3, 'Nicole', 'Flores', 'female', '1998-10-06', '09170000010', 'nicole@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(4, 'Ryan', 'Aquino', 'male', '1990-12-19', '09170000015', 'ryan@email.com', 'driver', 'denied', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(5, 'Mark', 'Santos', 'male', '1993-06-11', '09170000011', 'mark@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(6, 'Angela', 'Reyes', 'female', '1998-05-02', '09170000004', 'angela@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(7, 'David', 'Lim', 'male', '1992-08-23', '09170000013', 'david@email.com', 'driver', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(8, 'Joshua', 'Lopez', 'male', '1999-09-12', '09170000007', 'joshua@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(9, 'Ella', 'Villanueva', 'female', '1996-01-21', '09170000020', 'ella@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(10, 'Maria', 'Dela Cruz', 'female', '1994-02-05', '09170000012', 'maria@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(11, 'Patricia', 'Ramos', 'female', '1997-04-28', '09170000008', 'patricia@email.com', 'passenger', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(12, 'Brian', 'Castro', 'male', '1995-03-07', '09170000017', 'brian@email.com', 'driver', 'pending', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(13, 'Michael', 'Garcia', 'male', '1997-07-18', '09170000003', 'michael@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(14, 'Ashley', 'Navarro', 'female', '1997-11-30', '09170000016', 'ashley@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(15, 'Kevin', 'Torres', 'male', '1996-11-09', '09170000005', 'kevin@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(16, 'Christine', 'Tan', 'female', '1996-09-15', '09170000014', 'christine@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(17, 'Samantha', 'Cruz', 'female', '2000-08-17', '09170000006', 'samantha@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(18, 'Joshua', 'Rivera', 'male', '1991-05-13', '09170000019', 'jrivera@email.com', 'driver', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(19, 'Jane', 'Smith', 'female', '1999-03-22', '09170000002', 'jane@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(20, 'Daniel', 'Mendoza', 'male', '1995-12-14', '09170000009', 'daniel@email.com', 'passenger', 'active', '$2a$12$B2yU9.J9EiTIOk8Fx44o8eNyqOejr8FQgV21oukxZwfPb4fHoUyIG', NULL, '2026-07-13 21:11:58'),
+(21, 'Super', 'Admin', 'rather_not_say', '1985-04-01', '09179999999', 'admin@katrip.com', 'admin', 'active', '$2a$12$MYcMrT3u6VnoA69TxT2Jk.ka8xawexJvj9EebbDTOAtaK7rTP6kU2', NULL, '2026-07-13 21:11:58'),
+(22, 'Francis', 'Reyes', 'male', '2006-05-17', '947-767-0996', 'hans_reyes@dlsu.edu.ph', 'driver', 'pending', '$2y$10$M4ZTO7euDwh/y9uiUcLCK.NWJ3o2qF4HlMCaIlBIzPKGYmbT8BU5O', NULL, '2026-07-13 21:13:06');
 
 --
 -- Indexes for dumped tables
@@ -344,6 +356,7 @@ ALTER TABLE `bookings`
 --
 ALTER TABLE `driver_documents`
   ADD PRIMARY KEY (`document_id`),
+  ADD UNIQUE KEY `unique_driver_document` (`driver_id`,`document_type`),
   ADD KEY `driver_id` (`driver_id`);
 
 --
@@ -396,7 +409,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `driver_documents`
@@ -408,13 +421,13 @@ ALTER TABLE `driver_documents`
 -- AUTO_INCREMENT for table `rides`
 --
 ALTER TABLE `rides`
-  MODIFY `ride_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `ride_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `ride_landmarks`
 --
 ALTER TABLE `ride_landmarks`
-  MODIFY `landmark_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `landmark_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `ride_schedules`
