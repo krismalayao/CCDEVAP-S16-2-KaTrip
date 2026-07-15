@@ -335,6 +335,12 @@
     display: none;
     gap: 10px;
     margin-top: 20px;
+    width: 100%;
+}
+
+.decision-buttons form {
+    flex: 1;
+    display: flex; 
 }
 
 .approve, .reject {
