@@ -1,3 +1,4 @@
 config/db.php
 storage/private/*
 !storage/private/.htaccess
+config/db.php
