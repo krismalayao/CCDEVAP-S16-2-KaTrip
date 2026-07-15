@@ -218,7 +218,7 @@
     background-color: var(--purple);
     color: var(--bg-card);
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 14px;
     font-weight: bold;
     cursor: pointer;
@@ -291,10 +291,10 @@
 .profile-logout-btn {
     width: 150px;
     height: 40px;
-    background-color: var(--purple-dark);
+    background-color: #888888;
     color: var(--bg-card);
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -303,7 +303,7 @@
 }
 
 .profile-logout-btn:hover {
-    background-color: var(--purple);
+    background-color: var(--danger);
 }
 
 .profile-cta-container {
