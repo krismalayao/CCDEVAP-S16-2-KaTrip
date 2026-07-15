@@ -97,9 +97,9 @@
                 <div class="quick-actions-container">
                     <h2 class="quick-actions-heading">Quick Actions</h2>
                     <div class="quick-actions-button-group">
-                        <a href="userManagement.html" class="action-btn btn-purple">User Management</a>
-                        <a href="driverVerification.html" class="action-btn btn-yellow">Driver Verification</a>
-                        <a href="../public/loginPage.html" class="action-btn btn-red">Secure Logout</a>
+                        <a href="userManagement.php" class="action-btn btn-purple">User Management</a>
+                        <a href="driverVerification.php" class="action-btn btn-yellow">Driver Verification</a>
+                        <a href="../../backEnd/controller/logoutController.php" class="action-btn btn-red">Logout</a>
                     </div>
                 </div>
             </main>
