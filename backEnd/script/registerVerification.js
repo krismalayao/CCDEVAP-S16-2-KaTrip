@@ -51,6 +51,10 @@ function initPhoneFormatter() {
 
     phoneInput.addEventListener('input', function (e) {
         let value = e.target.value.replace(/\D/g, '');
+
+        if (value.startsWith('63')) value = value.slice(2);
+        if (value.startsWith('0')) value = value.slice(1);
+        value = value.slice(0, 10);
         
         if (value.length > 3 && value.length <= 6) {
             value = value.slice(0, 3) + '-' + value.slice(3);

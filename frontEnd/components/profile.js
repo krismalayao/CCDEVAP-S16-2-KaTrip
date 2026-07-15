@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     const endpoint = "../../backEnd/controller/profileController.php";
+    const securityEndpoint = "../../backEnd/controller/accountSecurityController.php";
     const isDriverProfile = document.body.classList.contains("driver-profile-body");
     const saveButton = document.getElementById("profile-save-btn");
+    const driverDetailsSaveButton = document.getElementById("driver-details-save-btn");
     const themeToggle = document.getElementById("theme-toggle-checkbox");
 
     const applyProfileTheme = (theme) => {
@@ -76,6 +78,220 @@ document.addEventListener("DOMContentLoaded", () => {
         modal.querySelector(".profile-save-modal-ok").focus();
     };
 
+    let emailModal = null;
+    const setEmailModalMessage = (message = "", isError = false) => {
+        const messageElement = emailModal?.querySelector(".profile-email-modal-message");
+        if (!messageElement) return;
+        messageElement.textContent = message;
+        messageElement.classList.toggle("error", isError);
+    };
+
+    const closeEmailModal = () => {
+        if (!emailModal) return;
+        emailModal.classList.remove("show");
+        emailModal.setAttribute("aria-hidden", "true");
+    };
+
+    const showEmailRequestStep = () => {
+        emailModal?.querySelector(".profile-email-step-request")?.removeAttribute("hidden");
+        emailModal?.querySelector(".profile-email-step-verify")?.setAttribute("hidden", "");
+        setEmailModalMessage();
+    };
+
+    const ensureEmailModal = () => {
+        if (emailModal) return emailModal;
+
+        emailModal = document.createElement("div");
+        emailModal.id = "profile-email-modal";
+        emailModal.className = "profile-email-modal";
+        emailModal.setAttribute("aria-hidden", "true");
+        emailModal.setAttribute("role", "dialog");
+        emailModal.setAttribute("aria-modal", "true");
+        emailModal.setAttribute("aria-labelledby", "profile-email-modal-title");
+        emailModal.innerHTML = `
+            <div class="profile-email-modal-card">
+                <button type="button" class="profile-email-modal-close" aria-label="Close email change">&times;</button>
+                <h3 id="profile-email-modal-title">Change Email</h3>
+                <p class="profile-email-current">Current email: <strong></strong></p>
+
+                <form class="profile-email-step-request">
+                    <label for="profile-new-email">New email</label>
+                    <input type="email" id="profile-new-email" autocomplete="email" required>
+                    <label for="profile-confirm-email">Confirm new email</label>
+                    <input type="email" id="profile-confirm-email" autocomplete="email" required>
+                    <button type="submit" class="profile-email-primary-btn">Send One-Time Passcode</button>
+                </form>
+
+                <form class="profile-email-step-verify" hidden>
+                    <p>A six-digit code was sent to <strong class="profile-email-destination"></strong>.</p>
+                    <label for="profile-email-otp">Verification code</label>
+                    <input type="text" id="profile-email-otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required>
+                    <div class="profile-email-modal-actions">
+                        <button type="button" class="profile-email-secondary-btn">Back</button>
+                        <button type="submit" class="profile-email-primary-btn">Verify and Update</button>
+                    </div>
+                </form>
+
+                <p class="profile-email-modal-message" role="status" aria-live="polite"></p>
+            </div>`;
+        document.body.appendChild(emailModal);
+
+        emailModal.querySelector(".profile-email-modal-close").addEventListener("click", closeEmailModal);
+        emailModal.addEventListener("click", (event) => {
+            if (event.target === emailModal) closeEmailModal();
+        });
+        emailModal.querySelector(".profile-email-secondary-btn").addEventListener("click", showEmailRequestStep);
+
+        emailModal.querySelector(".profile-email-step-request").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const submitButton = event.currentTarget.querySelector('[type="submit"]');
+            const newEmail = emailModal.querySelector("#profile-new-email").value.trim();
+            const confirmEmail = emailModal.querySelector("#profile-confirm-email").value.trim();
+            setEmailModalMessage();
+            submitButton.disabled = true;
+            submitButton.textContent = "Sending...";
+
+            const formData = new FormData();
+            formData.append("action", "request_email_otp");
+            formData.append("email", newEmail);
+            formData.append("confirm_email", confirmEmail);
+            try {
+                const response = await fetch(securityEndpoint, { method: "POST", body: formData, credentials: "same-origin" });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.message || "Unable to send the verification code.");
+                emailModal.querySelector(".profile-email-destination").textContent = data.email;
+                emailModal.querySelector(".profile-email-step-request").setAttribute("hidden", "");
+                emailModal.querySelector(".profile-email-step-verify").removeAttribute("hidden");
+                emailModal.querySelector("#profile-email-otp").focus();
+                setEmailModalMessage(data.message);
+            } catch (error) {
+                setEmailModalMessage(error.message, true);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Send One-Time Passcode";
+            }
+        });
+
+        emailModal.querySelector(".profile-email-step-verify").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const submitButton = event.currentTarget.querySelector('[type="submit"]');
+            const formData = new FormData();
+            formData.append("action", "verify_email_otp");
+            formData.append("otp", emailModal.querySelector("#profile-email-otp").value.trim());
+            setEmailModalMessage();
+            submitButton.disabled = true;
+            submitButton.textContent = "Verifying...";
+            try {
+                const response = await fetch(securityEndpoint, { method: "POST", body: formData, credentials: "same-origin" });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.message || "Unable to verify the code.");
+                if (fields.email) fields.email.value = data.email;
+                closeEmailModal();
+                showSuccessModal("Email updated successfully");
+            } catch (error) {
+                setEmailModalMessage(error.message, true);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Verify and Update";
+            }
+        });
+
+        return emailModal;
+    };
+
+    const openEmailModal = () => {
+        const modal = ensureEmailModal();
+        modal.querySelector(".profile-email-current strong").textContent = fields.email?.value || "Unavailable";
+        modal.querySelector(".profile-email-step-request").reset();
+        modal.querySelector(".profile-email-step-verify").reset();
+        showEmailRequestStep();
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+        modal.querySelector("#profile-new-email").focus();
+    };
+
+    let passwordModal = null;
+    const setPasswordModalMessage = (message = "", isError = false) => {
+        const messageElement = passwordModal?.querySelector(".profile-password-modal-message");
+        if (!messageElement) return;
+        messageElement.textContent = message;
+        messageElement.classList.toggle("error", isError);
+    };
+
+    const closePasswordModal = () => {
+        if (!passwordModal) return;
+        passwordModal.classList.remove("show");
+        passwordModal.setAttribute("aria-hidden", "true");
+    };
+
+    const ensurePasswordModal = () => {
+        if (passwordModal) return passwordModal;
+
+        passwordModal = document.createElement("div");
+        passwordModal.id = "profile-password-modal";
+        passwordModal.className = "profile-email-modal profile-password-modal";
+        passwordModal.setAttribute("aria-hidden", "true");
+        passwordModal.setAttribute("role", "dialog");
+        passwordModal.setAttribute("aria-modal", "true");
+        passwordModal.setAttribute("aria-labelledby", "profile-password-modal-title");
+        passwordModal.innerHTML = `
+            <div class="profile-email-modal-card">
+                <button type="button" class="profile-email-modal-close" aria-label="Close password change">&times;</button>
+                <h3 id="profile-password-modal-title">Change Password</h3>
+                <form class="profile-password-change-form">
+                    <label for="profile-current-password">Current password</label>
+                    <input type="password" id="profile-current-password" autocomplete="current-password" required>
+                    <label for="profile-new-password">New password</label>
+                    <input type="password" id="profile-new-password" autocomplete="new-password" minlength="8" required>
+                    <label for="profile-confirm-password">Confirm new password</label>
+                    <input type="password" id="profile-confirm-password" autocomplete="new-password" minlength="8" required>
+                    <button type="submit" class="profile-email-primary-btn">Update Password</button>
+                </form>
+                <p class="profile-email-modal-message profile-password-modal-message" role="status" aria-live="polite"></p>
+            </div>`;
+        document.body.appendChild(passwordModal);
+
+        passwordModal.querySelector(".profile-email-modal-close").addEventListener("click", closePasswordModal);
+        passwordModal.addEventListener("click", (event) => {
+            if (event.target === passwordModal) closePasswordModal();
+        });
+        passwordModal.querySelector(".profile-password-change-form").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const submitButton = event.currentTarget.querySelector('[type="submit"]');
+            const formData = new FormData();
+            formData.append("action", "change_password");
+            formData.append("current_password", passwordModal.querySelector("#profile-current-password").value);
+            formData.append("new_password", passwordModal.querySelector("#profile-new-password").value);
+            formData.append("confirm_password", passwordModal.querySelector("#profile-confirm-password").value);
+            setPasswordModalMessage();
+            submitButton.disabled = true;
+            submitButton.textContent = "Updating...";
+            try {
+                const response = await fetch(securityEndpoint, { method: "POST", body: formData, credentials: "same-origin" });
+                const data = await response.json();
+                if (!response.ok || !data.success) throw new Error(data.message || "Unable to update the password.");
+                closePasswordModal();
+                showSuccessModal("Password updated successfully");
+            } catch (error) {
+                setPasswordModalMessage(error.message, true);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Update Password";
+            }
+        });
+
+        return passwordModal;
+    };
+
+    const openPasswordModal = () => {
+        const modal = ensurePasswordModal();
+        modal.querySelector(".profile-password-change-form").reset();
+        setPasswordModalMessage();
+        modal.classList.add("show");
+        modal.setAttribute("aria-hidden", "false");
+        modal.querySelector("#profile-current-password").focus();
+    };
+
     const populateProfile = (profile) => {
         if (profile.theme_preference) {
             localStorage.setItem("katrip-theme", profile.theme_preference);
@@ -94,7 +310,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if (fields.phone) fields.phone.value = profile.phone_number || "";
         if (fields.email) fields.email.value = profile.email || "";
-        if (fields.gender) fields.gender.value = (profile.gender || "").replaceAll("-", "_");
+        if (fields.gender) {
+            const normalizedGender = (profile.gender || "").replaceAll("-", "_");
+            fields.gender.value = ["male", "female", "other", "rather_not_say"].includes(normalizedGender)
+                ? normalizedGender
+                : "";
+        }
         if (fields.createdAt) {
             const created = new Date(profile.created_at);
             fields.createdAt.textContent = Number.isNaN(created.getTime()) ? "Created date unavailable" : `Created at ${created.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`;
@@ -126,16 +347,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     saveButton?.addEventListener("click", async () => {
         const formData = new FormData();
+        formData.append("action", "save_personal");
         formData.append("phone", fields.phone?.value.trim() || "");
-        formData.append("email", fields.email?.value.trim() || "");
-        formData.append("gender", fields.gender?.value || "");
-        formData.append("password", fields.password?.value || "");
+        formData.append("gender", fields.gender?.value?.replaceAll("-", "_") || "");
         formData.append("theme_preference", document.documentElement.dataset.theme || "light");
-        if (isDriverProfile) {
-            formData.append("vehicle_model", fields.vehicleModel?.value.trim() || "");
-            formData.append("plate_number", fields.plateNumber?.value.trim() || "");
-            formData.append("show_full_name", fields.showFullName?.checked ? "1" : "0");
-        }
 
         saveButton.disabled = true;
         try {
@@ -143,8 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
             if (!response.ok || !data.success) throw new Error(data.message || "Unable to save profile.");
             populateProfile(data.profile);
-            if (fields.password) fields.password.value = "";
-            showSuccessModal();
+            showSuccessModal("Personal information saved successfully");
         } catch (error) {
             showMessage(error.message, true);
         } finally {
@@ -152,8 +366,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    driverDetailsSaveButton?.addEventListener("click", async () => {
+        const formData = new FormData();
+        formData.append("action", "save_driver_details");
+        formData.append("vehicle_model", fields.vehicleModel?.value.trim() || "");
+        formData.append("plate_number", fields.plateNumber?.value.trim() || "");
+        formData.append("show_full_name", fields.showFullName?.checked ? "1" : "0");
+
+        driverDetailsSaveButton.disabled = true;
+        try {
+            const response = await fetch(endpoint, { method: "POST", body: formData, credentials: "same-origin" });
+            const data = await response.json();
+            if (!response.ok || !data.success) throw new Error(data.message || "Unable to save driver information.");
+            populateProfile(data.profile);
+            showSuccessModal("Driver information saved successfully");
+        } catch (error) {
+            showMessage(error.message, true);
+        } finally {
+            driverDetailsSaveButton.disabled = false;
+        }
+    });
+
     document.querySelectorAll(".profile-field-edit-btn").forEach((button) => {
-        button.addEventListener("click", () => button.previousElementSibling?.focus());
+        button.addEventListener("click", () => {
+            if (button.classList.contains("profile-email-edit-btn")) {
+                openEmailModal();
+                return;
+            }
+            if (button.classList.contains("profile-password-edit-btn")) {
+                openPasswordModal();
+                return;
+            }
+            button.previousElementSibling?.focus();
+        });
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && emailModal?.classList.contains("show")) closeEmailModal();
+        if (event.key === "Escape" && passwordModal?.classList.contains("show")) closePasswordModal();
     });
 
     const avatarUpload = document.getElementById("avatar-upload");

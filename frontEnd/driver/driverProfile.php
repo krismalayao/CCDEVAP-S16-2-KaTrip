@@ -55,50 +55,64 @@
                 </div>
             </section>
             <section class="profile-details">
-                <!-- Phone Number Input -->
-                <div class="profile-field-group">
-                    <label for="profile-phone">Number</label>
-                    <div class="profile-input-wrapper">
-                        <input type="text" id="profile-phone" value="" autocomplete="tel">
-                        <button class="profile-field-edit-btn" aria-label="Edit number"></button>
+                <div class="profile-settings-section">
+                    <div class="profile-section-heading">
+                        <h3>Personal Information</h3>
+                    </div>
+                    <div class="profile-section-grid">
+                        <div class="profile-field-group">
+                            <label for="profile-phone">Number</label>
+                            <div class="profile-input-wrapper">
+                                <input type="text" id="profile-phone" value="" autocomplete="tel">
+                                <button class="profile-field-edit-btn" aria-label="Edit number"></button>
+                            </div>
+                        </div>
+                        <div class="profile-field-group">
+                            <label for="profile-gender">Gender</label>
+                            <div class="profile-input-wrapper profile-dropdown-wrapper">
+                                <select id="profile-gender">
+                                    <option value="" selected disabled>Select gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                    <option value="rather_not_say">Rather not say</option>
+                                </select>
+                                <button type="button" class="profile-field-edit-btn" aria-label="Edit gender"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-section-actions">
+                        <button type="button" class="profile-save-btn" id="profile-save-btn">Save</button>
                     </div>
                 </div>
 
-                <!-- Email Address Input -->
-                <div class="profile-field-group">
-                    <label for="profile-email">E-mail</label>
-                    <div class="profile-input-wrapper">
-                        <input type="email" id="profile-email" value="" autocomplete="email">
-                        <button class="profile-field-edit-btn" aria-label="Edit email"></button>
+                <div class="profile-settings-section profile-security-section">
+                    <div class="profile-section-heading">
+                        <h3>Account &amp; Security</h3>
+                    </div>
+                    <div class="profile-section-grid">
+                        <div class="profile-field-group">
+                            <label for="profile-email">E-mail</label>
+                            <div class="profile-input-wrapper">
+                                <input type="email" id="profile-email" value="" readonly aria-readonly="true" tabindex="-1">
+                                <button type="button" class="profile-field-edit-btn profile-email-edit-btn" id="profile-email-edit-btn" aria-label="Change email"></button>
+                            </div>
+                        </div>
+                        <div class="profile-field-group">
+                            <label for="profile-password">Password</label>
+                            <div class="profile-input-wrapper">
+                                <input type="password" id="profile-password" value="password" readonly aria-readonly="true" tabindex="-1" autocomplete="off">
+                                <button type="button" class="profile-field-edit-btn profile-password-edit-btn" id="profile-password-edit-btn" aria-label="Change password"></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Password Input -->
-                <div class="profile-field-group">
-                    <label for="profile-password">Password</label>
-                    <div class="profile-input-wrapper">
-                        <input type="password" id="profile-password" value="" placeholder="Enter a new password to change it" autocomplete="new-password">
-                        <button class="profile-field-edit-btn" aria-label="Edit password"></button>
+                <div class="profile-settings-section">
+                    <div class="profile-section-heading">
+                        <h3>Driver Information</h3>
                     </div>
-                </div>
-
-                <!-- Gender Input -->
-                <div class="profile-field-group">
-                    <label for="profile-gender">Gender</label>
-                    <div class="profile-input-wrapper profile-dropdown-wrapper">
-                        <select id="profile-gender">
-                            <option value="" selected disabled>Select gender</option>
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                            <option value="rather_not_say">Rather not say</option>
-                        </select>
-                        <button class="profile-field-edit-btn" aria-label="Edit gender"></button>
-                    </div>
-                </div>
-
-                <!-- Bottom Row: New 3-Column Layout Block -->
-                <div class="profile-driver-details-row">
+                    <div class="profile-driver-details-row">
                     <!-- Vehicle Model -->
                     <div class="driver-profile-group">
                         <label for="profile-vehicle-model">Vehicle Model</label>
@@ -125,17 +139,18 @@
                             <img src="../src/images/black-approved-icon.png" class="status-icon" alt="Approved Status">
                         </div>
                     </div>
+                    </div>
+                    <div class="profile-privacy-setting">
+                        <input type="checkbox" id="profile-show-full-name" checked>
+                        <label for="profile-show-full-name">Show my full name to passengers</label>
+                    </div>
+                    <div class="profile-section-actions">
+                        <button type="button" class="profile-save-btn" id="driver-details-save-btn">Save</button>
+                    </div>
                 </div>
 
-                <div class="profile-privacy-setting">
-                    <input type="checkbox" id="profile-show-full-name" checked>
-                    <label for="profile-show-full-name">Show my full name to passengers</label>
-                </div>
-
-                <!-- Account Creation Date -->
                 <div class="profile-metadata">
                     <p id="profile-created-at">Loading...</p>
-                    <button type="button" class="profile-save-btn" id="profile-save-btn">Save</button>
                 </div>
             </section>
         </div>

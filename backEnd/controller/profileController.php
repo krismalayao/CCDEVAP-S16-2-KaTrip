@@ -65,63 +65,61 @@
         profileResponse(200, ["success" => true, "theme_preference" => $theme]);
     }
 
-    $phone = trim($_POST["phone"] ?? "");
-    $email = filter_var(trim($_POST["email"] ?? ""), FILTER_VALIDATE_EMAIL);
-    $gender = str_replace(["-"], "_", trim($_POST["gender"] ?? ""));
-    $password = $_POST["password"] ?? "";
-    $theme = $_POST["theme_preference"] ?? "light";
+    $action = $_POST["action"] ?? "save_personal";
 
-    $allowedGenders = ["male", "female", "other", "rather_not_say"];
-    if (!$phone || !$email || !in_array($gender, $allowedGenders, true) || !in_array($theme, ["light", "dark"], true)) {
-        profileResponse(422, ["success" => false, "message" => "Invalid input data."]);
-    }
-    if ($password && strlen($password) < 8) {
-        profileResponse(422, ["success" => false, "message" => "Password must be at least 8 characters."]);
-    }
+    if ($action === "save_personal") {
+        $phone = trim($_POST["phone"] ?? "");
+        $gender = str_replace(["-"], "_", trim($_POST["gender"] ?? ""));
+        $theme = $_POST["theme_preference"] ?? "light";
+        $allowedGenders = ["male", "female", "other", "rather_not_say"];
 
-    if ($role === "driver" && (empty($_POST["vehicle_model"]) || empty($_POST["plate_number"]))) {
-        profileResponse(422, ["success" => false, "message" => "Vehicle details required."]);
-    }
+        if (!$phone || !in_array($gender, $allowedGenders, true) || !in_array($theme, ["light", "dark"], true)) {
+            profileResponse(422, ["success" => false, "message" => "Invalid personal information."]);
+        }
 
-    $check = $conn->prepare("SELECT user_id
-                             FROM users 
-                             WHERE (email = ? OR phone_number = ?) 
-                             AND user_id != ?");
-    $check->bind_param("ssi", $email, $phone, $userId);
-    $check->execute();
-    if ($check->get_result()->num_rows > 0) {
-        profileResponse(409, ["success" => false, "message" => "Email or phone in use."]);
-    }
+        $check = $conn->prepare("SELECT user_id
+                                 FROM users
+                                 WHERE phone_number = ?
+                                 AND user_id != ?");
+        $check->bind_param("si", $phone, $userId);
+        $check->execute();
+        if ($check->get_result()->num_rows > 0) {
+            profileResponse(409, ["success" => false, "message" => "Phone number already in use."]);
+        }
 
-    if ($password) {
-        $stmt = $conn->prepare("UPDATE users 
-                                SET phone_number = ?, email = ?, gender = ?, password = ?, theme_preference = ?
+        $stmt = $conn->prepare("UPDATE users
+                                SET phone_number = ?, gender = ?, theme_preference = ?
                                 WHERE user_id = ?");
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $stmt->bind_param("sssssi", $phone, $email, $gender, $hash, $theme, $userId);
-    } else {
-        $stmt = $conn->prepare("UPDATE users 
-                                SET phone_number = ?, email = ?, gender = ?, theme_preference = ?
-                                WHERE user_id = ?");
-        $stmt->bind_param("ssssi", $phone, $email, $gender, $theme, $userId);
-    }
+        $stmt->bind_param("sssi", $phone, $gender, $theme, $userId);
+        if (!$stmt->execute()) {
+            profileResponse(500, ["success" => false, "message" => "Personal information could not be updated."]);
+        }
+    } elseif ($action === "save_driver_details") {
+        if ($role !== "driver") {
+            profileResponse(403, ["success" => false, "message" => "Driver information is not available for this account."]);
+        }
 
-    if (!$stmt->execute()) {
-        profileResponse(500, ["success" => false, "message" => "Update failed."]);
-    }
-
-    if ($role === "driver") {
+        $vehicleModel = trim($_POST["vehicle_model"] ?? "");
+        $plateNumber = trim($_POST["plate_number"] ?? "");
         $showFullName = ($_POST["show_full_name"] ?? "0") === "1" ? 1 : 0;
-        $stmt = $conn->prepare("UPDATE driver_profiles 
+        if ($vehicleModel === "" || $plateNumber === "") {
+            profileResponse(422, ["success" => false, "message" => "Vehicle model and license plate are required."]);
+        }
+
+        $stmt = $conn->prepare("UPDATE driver_profiles
                                 SET vehicle_model = ?, plate_number = ?, show_full_name = ?
                                 WHERE driver_id = ?");
-        $stmt->bind_param("ssii", $_POST["vehicle_model"], $_POST["plate_number"], $showFullName, $userId);
-        $stmt->execute();
+        $stmt->bind_param("ssii", $vehicleModel, $plateNumber, $showFullName, $userId);
+        if (!$stmt->execute()) {
+            profileResponse(500, ["success" => false, "message" => "Driver information could not be updated."]);
+        }
+    } else {
+        profileResponse(422, ["success" => false, "message" => "Invalid profile action."]);
     }
 
-    $_SESSION["email"] = $email;
     $profile = getProfile($conn, $userId, $role);
     $profile['profile_picture_url'] = $profile['profile_picture'] ? '../../backEnd/controller/viewUploadedFile.php?type=profile' : null;
     unset($profile['profile_picture']);
-    profileResponse(200, ["success" => true, "message" => "Profile saved.", "profile" => $profile, "role" => $role]);
+    $message = $action === "save_driver_details" ? "Driver information saved." : "Personal information saved.";
+    profileResponse(200, ["success" => true, "message" => $message, "profile" => $profile, "role" => $role]);
 ?>

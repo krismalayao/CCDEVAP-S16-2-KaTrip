@@ -18,7 +18,21 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $email = filter_var(trim($_POST['email'] ?? ''), FILTER_SANITIZE_EMAIL);
-        $phone = filter_var(trim($_POST['phone_number'] ?? ''), FILTER_DEFAULT);
+        $phoneDigits = preg_replace('/\D/', '', trim($_POST['phone_number'] ?? ''));
+        if (str_starts_with($phoneDigits, '63')) {
+            $phoneDigits = substr($phoneDigits, 2);
+        }
+        if (str_starts_with($phoneDigits, '0')) {
+            $phoneDigits = substr($phoneDigits, 1);
+        }
+
+        if (!preg_match('/^9\d{9}$/', $phoneDigits)) {
+            echo json_encode(["status" => "error", "message" => "Enter a complete Philippine mobile number starting with 9."]);
+            exit;
+        }
+
+        // Store Philippine mobile numbers consistently in local 09XXXXXXXXX form.
+        $phone = '0' . $phoneDigits;
         $firstName = filter_var(trim($_POST['first_name'] ?? ''), FILTER_DEFAULT);
         $lastName = filter_var(trim($_POST['last_name'] ?? ''), FILTER_DEFAULT);
         $gender = filter_var(trim($_POST['gender'] ?? ''), FILTER_DEFAULT);
