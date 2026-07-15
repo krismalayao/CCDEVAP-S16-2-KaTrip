@@ -93,7 +93,7 @@ function renderPassengers() {
               </button>`;
 
         return `
-            <div class="pax-row ${isPending ? 'pending' : ''}">
+            <div class="pax-row ${isPending ? 'pending' : ''}" data-booking-id="${p.bookingId}">
                 <div class="pax-avatar">${initial}</div>
                 <div class="pax-info">
                     <div class="pax-name">${p.name}</div>
@@ -124,11 +124,89 @@ function updateBooking(bookingId, status) {
         .then(result => {
           if (result.success) {
                 loadTripDetails(); // refresh counts from server
+            } else if (result.errorCode === 'PASSENGER_CANCELLED') {
+                showActionToast('Passenger canceled their reservation.', () => {
+                    removePassengerRow(bookingId);
+                    loadTripDetails();
+                });
             } else {
                 alert(result.error || 'Could not update this passenger.');
             }
         })
         .catch(err => console.error('Booking update failed:', err));
+}
+
+// Removes passenger from passenger list
+
+function removePassengerRow(bookingId) {
+    const row = document.querySelector(`.pax-row[data-booking-id="${bookingId}"]`);
+    if (row) {
+        row.remove();
+    }
+
+    const list = document.getElementById('pax-list');
+    if (list && list.children.length === 0) {
+        list.innerHTML = '<p style="text-align:center;color:#888;padding:12px;">No passengers yet.</p>';
+    }
+}
+
+// UI FOR PASSENGER CANCEL
+
+function showActionToast(message, onOk) {
+    let toast = document.getElementById('action-toast');
+
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'action-toast';
+        toast.style.position = 'fixed';
+        toast.style.top = '78px';
+        toast.style.right = '16px';
+        toast.style.zIndex = '5000';
+        toast.style.maxWidth = '320px';
+        toast.style.background = '#ffffff';
+        toast.style.border = '1px solid #f2d7d7';
+        toast.style.borderLeft = '4px solid #ed1c24';
+        toast.style.borderRadius = '12px';
+        toast.style.boxShadow = '0 10px 24px rgba(0, 0, 0, 0.16)';
+        toast.style.padding = '12px';
+        toast.style.display = 'none';
+
+        const msg = document.createElement('div');
+        msg.id = 'action-toast-message';
+        msg.style.fontSize = '14px';
+        msg.style.color = '#2d1a4e';
+        msg.style.marginBottom = '10px';
+
+        const okBtn = document.createElement('button');
+        okBtn.id = 'action-toast-ok';
+        okBtn.type = 'button';
+        okBtn.textContent = 'OK';
+        okBtn.style.padding = '8px 16px';
+        okBtn.style.border = 'none';
+        okBtn.style.borderRadius = '999px';
+        okBtn.style.background = '#9854cb';
+        okBtn.style.color = '#fff';
+        okBtn.style.fontWeight = '700';
+        okBtn.style.cursor = 'pointer';
+        okBtn.style.float = 'right';
+
+        toast.appendChild(msg);
+        toast.appendChild(okBtn);
+        document.body.appendChild(toast);
+    }
+
+    const msgEl = document.getElementById('action-toast-message');
+    const okEl = document.getElementById('action-toast-ok');
+
+    msgEl.textContent = message;
+    toast.style.display = 'block';
+
+    okEl.onclick = () => {
+        toast.style.display = 'none';
+        if (typeof onOk === 'function') {
+            onOk();
+        }
+    };
 }
 
 // ── Map ──────────────────────────────────────────────────────────────────────

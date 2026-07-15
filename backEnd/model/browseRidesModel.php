@@ -1,6 +1,6 @@
 <?php
 
-function getAvailableRides($conn)
+function getAvailableRides($conn, $passengerId = null)
 {
     $sql = "
         SELECT
@@ -26,17 +26,45 @@ function getAvailableRides($conn)
         LEFT JOIN ride_schedules rs
             ON r.schedule_id = rs.schedule_id
         WHERE r.ride_status = 'scheduled'
-        AND r.available_seats != 0
+        AND r.available_seats > 0
+    ";
+
+    $params = [];
+    $types = "";
+
+    if ($passengerId !== null) {
+        $sql .= "
+            AND NOT EXISTS (
+                SELECT 1
+                FROM bookings b
+                WHERE b.ride_id = r.ride_id
+                AND b.passenger_id = ?
+                AND b.booking_status IN ('pending', 'accepted')
+            )
+        ";
+        $params[] = (int) $passengerId;
+        $types .= "i";
+    }
+
+    $sql .= "
         ORDER BY rs.start_date ASC, rs.departure_time ASC, r.departure ASC
     ";
 
-    $result = mysqli_query($conn, $sql);
-    $rides = [];
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return [];
+    }
 
-    if ($result) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $rides[] = $row;
-        }
+    if (!empty($params)) {
+        $stmt->bind_param($types, ...$params);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $rides = [];
+    while ($row = $result->fetch_assoc()) {
+        $rides[] = $row;
     }
 
     return $rides;

@@ -450,7 +450,7 @@ function openReservationToast(bookingId) {
       <div class="reservation-loading"></div>
       <h3>Waiting for driver approval</h3>
       <p>Your reservation request has been sent.</p>
-      <button class="reservation-cancel">Cancel Reservation</button>
+      <button class="reservation-cancel">Cancel</button>
     </div>
   `;
 
