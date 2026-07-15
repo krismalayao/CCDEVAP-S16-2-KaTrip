@@ -122,6 +122,7 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
       container.innerHTML += card;
     });
 
+    // if more than 3 upcoming rides, lead to mybookings page with creation of button
     if (hasMore) {
       container.innerHTML += `
         <div class="passenger-ride-card">
