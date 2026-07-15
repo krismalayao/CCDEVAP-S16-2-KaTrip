@@ -79,7 +79,8 @@ html[data-theme="dark"] .driver-doc-item {
 html[data-theme="dark"] .driver-doc-header h4,
 html[data-theme="dark"] .driver-docs-modal-content h3,
 html[data-theme="dark"] .driver-doc-lightbox-title,
-html[data-theme="dark"] .driver-vehicle-details input {
+html[data-theme="dark"] .driver-vehicle-details input,
+html[data-theme="dark"] .driver-vehicle-details select {
     color: var(--text-primary);
 }
 
@@ -310,7 +311,7 @@ html[data-theme="dark"] .profile-field-edit-btn {
 
 .profile-section-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 15px;
 }
 
@@ -1108,7 +1109,8 @@ html[data-theme="dark"] .profile-email-secondary-btn {
     font-size: 11px;
 }
 
-.driver-vehicle-details input {
+.driver-vehicle-details input,
+.driver-vehicle-details select {
     width: 100%;
     box-sizing: border-box;
     padding: 9px 10px;
@@ -1124,4 +1126,22 @@ html[data-theme="dark"] .profile-email-secondary-btn {
     .driver-vehicle-details {
         grid-template-columns: 1fr;
     }
+}
+
+.driver-docs-reapproval-warning {
+    margin: -8px 0 20px;
+    padding: 10px 12px;
+    border: 1px solid #e2b94f;
+    border-radius: 8px;
+    background: #fff8df;
+    color: #6f5100;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+html[data-theme="dark"] .driver-docs-reapproval-warning {
+    border-color: #9d7b2f;
+    background: #493b20;
+    color: #ffe39a;
 }

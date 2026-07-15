@@ -33,6 +33,45 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     uploadJsonResponse(405, ['success' => false, 'message' => 'Method not allowed.']);
 }
 
+if (($_POST['action'] ?? '') === 'submit_for_reapproval') {
+    $conn->begin_transaction();
+
+    $profileQuery = $conn->prepare(
+        "UPDATE driver_profiles
+         SET verification_status = 'pending'
+         WHERE driver_id = ?"
+    );
+    $profileQuery->bind_param('i', $driverId);
+
+    $userQuery = $conn->prepare(
+        "UPDATE users
+         SET status = 'pending'
+         WHERE user_id = ? AND role = 'driver'"
+    );
+    $userQuery->bind_param('i', $driverId);
+
+    $profileUpdated = $profileQuery->execute();
+    $userUpdated = $userQuery->execute();
+
+    if (!$profileUpdated || !$userUpdated) {
+        $conn->rollback();
+        uploadJsonResponse(500, ['success' => false, 'message' => 'Unable to submit the account for reapproval.']);
+    }
+
+    $conn->commit();
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    }
+    session_destroy();
+    uploadJsonResponse(200, [
+        'success' => true,
+        'message' => 'Documents submitted for admin reapproval.',
+        'logout_required' => true
+    ]);
+}
+
 $documentType = $_POST['document_type'] ?? '';
 if (!in_array($documentType, $allowedTypes, true)) {
     uploadJsonResponse(422, ['success' => false, 'message' => 'Invalid document type.']);

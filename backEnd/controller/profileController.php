@@ -21,7 +21,7 @@
         $sql = $isDriver 
             ? "SELECT u.first_name, u.last_name, u.gender, u.phone_number, u.email,
                       u.created_at, u.profile_picture, u.theme_preference,
-                      dp.vehicle_model, dp.plate_number, dp.show_full_name
+                      dp.vehicle_model, dp.plate_number, dp.vehicle_color, dp.show_full_name
                 FROM users u 
                 LEFT JOIN driver_profiles dp 
                 ON dp.driver_id = u.user_id 
@@ -109,12 +109,17 @@
 
         $vehicleModel = trim($_POST["vehicle_model"] ?? "");
         $plateNumber = trim($_POST["plate_number"] ?? "");
+        $vehicleColor = trim($_POST["vehicle_color"] ?? "");
         if ($vehicleModel === "" || $plateNumber === "") {
             profileResponse(422, ["success" => false, "message" => "Vehicle model and license plate are required."]);
         }
 
-        $stmt = $conn->prepare("UPDATE driver_profiles SET vehicle_model = ?, plate_number = ? WHERE driver_id = ?");
-        $stmt->bind_param("ssi", $vehicleModel, $plateNumber, $userId);
+        $allowedColors = ["", "black", "white", "red", "blue", "gray", "brown", "green"];
+        if (!in_array($vehicleColor, $allowedColors, true)) {
+            profileResponse(422, ["success" => false, "message" => "Invalid vehicle color."]);
+        }
+        $stmt = $conn->prepare("UPDATE driver_profiles SET vehicle_model = ?, plate_number = ?, vehicle_color = ? WHERE driver_id = ?");
+        $stmt->bind_param("sssi", $vehicleModel, $plateNumber, $vehicleColor, $userId);
         if (!$stmt->execute()) {
             profileResponse(500, ["success" => false, "message" => "Vehicle details could not be updated."]);
         }

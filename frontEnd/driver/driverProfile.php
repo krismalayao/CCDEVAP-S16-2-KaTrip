@@ -135,6 +135,9 @@
 
                 <h3 id="driver-docs-title">Application Documents</h3>
                 <p class="driver-docs-modal-desc">View your submitted documents or upload new files to replace them. Accepted formats: PNG, JPG.</p>
+                <p class="driver-docs-reapproval-warning" role="note">
+                    Re-uploading any document will submit your account for admin verification again. After saving, you will be logged out until an admin approves your account.
+                </p>
 
                 <div class="driver-docs-list">
                     <article class="driver-doc-item" data-doc="license">
@@ -172,6 +175,16 @@
                             <div>
                                 <label class="driver-vehicle-detail-label" for="profile-license-plate">License Plate</label>
                                 <input type="text" id="profile-license-plate" autocomplete="off">
+                            </div>
+                            <div>
+                                <label class="driver-vehicle-detail-label" for="profile-vehicle-color">Vehicle Color</label>
+                                <select id="profile-vehicle-color">
+                                    <option value="">Select color</option>
+                                    <option value="black">Black</option><option value="white">White</option>
+                                    <option value="red">Red</option><option value="blue">Blue</option>
+                                    <option value="gray">Gray</option><option value="brown">Brown</option>
+                                    <option value="green">Green</option>
+                                </select>
                             </div>
                         </div>
                         <div class="driver-doc-preview driver-doc-preview-clickable" id="preview-vehicle" role="button" tabindex="0" aria-label="View vehicle picture in full size">

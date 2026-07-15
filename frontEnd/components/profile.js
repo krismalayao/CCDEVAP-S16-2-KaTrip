@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         createdAt: document.getElementById("profile-created-at"),
         vehicleModel: document.getElementById("profile-vehicle-model"),
         plateNumber: document.getElementById("profile-license-plate"),
+        vehicleColor: document.getElementById("profile-vehicle-color"),
         showFullName: document.getElementById("profile-show-full-name")
     };
 
@@ -322,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (fields.showFullName) fields.showFullName.checked = Boolean(Number(profile.show_full_name));
             if (fields.vehicleModel) fields.vehicleModel.value = profile.vehicle_model || "";
             if (fields.plateNumber) fields.plateNumber.value = profile.plate_number || "";
+            if (fields.vehicleColor) fields.vehicleColor.value = profile.vehicle_color || "";
         }
     };
 

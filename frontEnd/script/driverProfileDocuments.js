@@ -161,6 +161,8 @@ async function saveDriverDocuments() {
     const saveButton = document.getElementById("driver-docs-save");
     const vehicleModel = document.getElementById("profile-vehicle-model")?.value.trim() || "";
     const plateNumber = document.getElementById("profile-license-plate")?.value.trim() || "";
+    const vehicleColor = document.getElementById("profile-vehicle-color")?.value || "";
+    const hasDocumentChanges = Object.keys(pendingUploads).length > 0;
 
     if (!vehicleModel || !plateNumber) {
         window.alert("Vehicle model and license plate are required.");
@@ -173,6 +175,7 @@ async function saveDriverDocuments() {
         detailsData.append("action", "save_driver_details");
         detailsData.append("vehicle_model", vehicleModel);
         detailsData.append("plate_number", plateNumber);
+        detailsData.append("vehicle_color", vehicleColor);
         const detailsResponse = await fetch("../../backEnd/controller/profileController.php", {
             method: "POST",
             credentials: "same-origin",
@@ -196,6 +199,25 @@ async function saveDriverDocuments() {
             if (!response.ok || !data.success) throw new Error(data.message || `Unable to upload ${getDocLabel(key)}.`);
             driverDocuments[key] = `${data.document.url}&v=${Date.now()}`;
         }
+
+        if (hasDocumentChanges) {
+            const reapprovalData = new FormData();
+            reapprovalData.append("action", "submit_for_reapproval");
+            const reapprovalResponse = await fetch("../../backEnd/controller/driverDocumentsController.php", {
+                method: "POST",
+                credentials: "same-origin",
+                body: reapprovalData
+            });
+            const reapprovalResult = await reapprovalResponse.json();
+            if (!reapprovalResponse.ok || !reapprovalResult.success) {
+                throw new Error(reapprovalResult.message || "Unable to submit your account for reapproval.");
+            }
+
+            clearPendingUploads();
+            window.location.href = "../public/loginPage.php";
+            return;
+        }
+
         clearPendingUploads();
         renderAllDocumentPreviews();
         closeDriverDocsModal();
