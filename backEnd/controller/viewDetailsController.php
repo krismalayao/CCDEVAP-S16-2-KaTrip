@@ -1,3 +1,5 @@
+// Handles the view details button displays
+
 <?php
 
 session_start();
