@@ -95,6 +95,14 @@ function displayApplicant(row){
                 }
             </p>
             <p>
+                <strong>Vehicle Picture:</strong>
+                ${
+                    row.dataset.vehicleFile
+                    ? `<a href="${row.dataset.vehicleFile}" target="_blank">View File</a>`
+                    : "No File"
+                }
+            </p>
+            <p>
                 <strong>Vehicle Registration:</strong>
                 ${
                     row.dataset.registrationFile 

@@ -70,7 +70,7 @@
                                     <tr class="applicant-card" data-driver-id="<?= $applicant["user_id"] ?>" data-gender="<?= $applicant["gender"] ?>" data-birthdate="<?= $applicant["birthdate"] ?>" data-phone="<?= $applicant["phone_number"] ?>" 
                                                 data-license="<?= $applicant["license_number"] ?>" data-vehicle="<?= $applicant["vehicle_model"] ?>" data-status="<?= $applicant["status"] ?>"
                                                 data-plate="<?= $applicant["plate_number"] ?>" data-color="<?= $applicant["vehicle_color"] ?>" data-verification="<?= $applicant["verification_status"] ?>" 
-                                                data-email="<?= $applicant["email"] ?>" data-license-file="<?= $applicant["license_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["license_file"] : '' ?>" data-registration-file="<?= $applicant["registration_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["registration_file"] : '' ?>"
+                                                data-email="<?= $applicant["email"] ?>" data-license-file="<?= $applicant["license_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["license_file"] : '' ?>" data-vehicle-file="<?= $applicant["vehicle_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["vehicle_file"] : '' ?>" data-registration-file="<?= $applicant["registration_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["registration_file"] : '' ?>"
                                                 data-insurance-file="<?= $applicant["insurance_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["insurance_file"] : '' ?>">
                                         <td><input type="radio" class="selectedApplicant" name="selectedApplicant" value="<?= $applicant["user_id"]; ?>" onchange="updateActionButtons()"></td>
                                         <td><?= $applicant["first_name"] . " " . $applicant["last_name"]; ?></td>
@@ -166,6 +166,9 @@
 
                 <label for="licenseFile">Driver's License</label>
                 <input type="file" name="license_file" id="licenseFile">
+
+                <label for="vehicleFile">Vehicle Picture</label>
+                <input type="file" name="vehicle_file" id="vehicleFile">
 
 
                 <label for="registrationFile">Vehicle Registration</label>

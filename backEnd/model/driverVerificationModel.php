@@ -8,6 +8,7 @@
                               dp.license_number, dp.vehicle_model, dp.plate_number,
                               dp.vehicle_color, dp.verification_status,
                               MAX(CASE WHEN dd.document_type = 'license' THEN dd.document_id END) AS license_file,
+                              MAX(CASE WHEN dd.document_type = 'vehicle' THEN dd.document_id END) AS vehicle_file,
                               MAX(CASE WHEN dd.document_type = 'registration' THEN dd.document_id END) AS registration_file,
                               MAX(CASE WHEN dd.document_type = 'insurance' THEN dd.document_id END) AS insurance_file
                               FROM users AS u
@@ -102,7 +103,7 @@
     }
 
     function saveDriverDocumentFiles($conn, $driver_id, $files) {
-        $documents = ["license_file" => "license", "registration_file" => "registration", "insurance_file" => "insurance"];
+        $documents = ["license_file" => "license", "vehicle_file" => "vehicle", "registration_file" => "registration", "insurance_file" => "insurance"];
         $allowedMimeTypes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'application/pdf' => 'pdf'];
         foreach ($documents as $input => $type) {
             if (!isset($files[$input]) || $files[$input]['error'] === UPLOAD_ERR_NO_FILE) continue;
