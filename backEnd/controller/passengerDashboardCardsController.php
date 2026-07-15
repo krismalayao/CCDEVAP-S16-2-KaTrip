@@ -15,7 +15,12 @@ if (!isset($_SESSION['user_id']))
 $user_id = $_SESSION['user_id'];
 
 $rides = getUpcomingRides($conn, $user_id);
+$total = countUpcomingRides($conn, $user_id);
 
-echo json_encode($rides);
+echo json_encode([
+    "rides" => $rides,
+    "total" => $total,
+    "has_more" => $total > count($rides)
+]);
 
 ?>
