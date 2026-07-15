@@ -108,10 +108,10 @@ INSERT INTO `driver_documents` (`document_id`, `driver_id`, `document_type`, `fi
 (22, 10, 'vehicle', 'driver-documents/10/10-vehicle.jpg', 'image/jpeg', 18942, '2026-07-14 21:11:58'),
 (23, 10, 'registration', 'driver-documents/10/10-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
 (24, 10, 'insurance', 'driver-documents/10/10-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58'),
-(17, 12, 'license', 'driver-documents/12/12-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
-(18, 12, 'vehicle', 'driver-documents/12/12-vehicle.jpg', 'image/jpeg', 48766, '2026-07-14 21:11:58'),
-(19, 12, 'registration', 'driver-documents/12/12-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
-(20, 12, 'insurance', 'driver-documents/12/12-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58');
+(25, 12, 'license', 'driver-documents/12/12-license.jpg', 'image/jpeg', 118397, '2026-07-14 21:11:58'),
+(26, 12, 'vehicle', 'driver-documents/12/12-vehicle.jpg', 'image/jpeg', 48766, '2026-07-14 21:11:58'),
+(27, 12, 'registration', 'driver-documents/12/12-registration.jpg', 'image/jpeg', 485622, '2026-07-14 21:11:58'),
+(28, 12, 'insurance', 'driver-documents/12/12-insurance.png', 'image/jpeg', 31213, '2026-07-14 21:11:58');
 
 -- --------------------------------------------------------
 
@@ -430,7 +430,7 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `driver_documents`
 --
 ALTER TABLE `driver_documents`
-  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `rides`
