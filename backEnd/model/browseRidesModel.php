@@ -6,12 +6,20 @@ function getAvailableRides($conn)
         SELECT
             r.ride_id,
             r.origin,
+            r.origin_name,
             r.destination,
+            r.destination_name,
             r.cost,
             r.available_seats,
             r.total_seats,
             r.ride_status,
             r.departure,
+            r.departure_date,
+            (
+                SELECT GROUP_CONCAT(rl.landmark_name ORDER BY rl.landmark_number SEPARATOR ' | ')
+                FROM ride_landmarks rl
+                WHERE rl.ride_id = r.ride_id
+            ) AS pickup_points,
             rs.start_date,
             rs.departure_time
         FROM rides r
