@@ -17,14 +17,17 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
     });
   });
 
-  // Helper: This wil turn a raw departure value into smth like "May 26, 2026 • 7:00 AM" string
-  function formatDeparture(value) {
-    if (!value) return 'TBA';
+  // Helper: build a human readable departure label from date + time
+  function formatDeparture(dateValue, timeValue) {
+    if (!dateValue && !timeValue) return 'TBA';
 
-    const normalized = String(value).replace(' ', 'T');
-    const date = new Date(normalized);
+    const normalizedDate = dateValue ? String(dateValue).trim() : '';
+    const normalizedTime = timeValue ? String(timeValue).trim() : '00:00:00';
+    const date = new Date(`${normalizedDate}T${normalizedTime}`);
 
-    if (isNaN(date.getTime())) return String(value);
+    if (isNaN(date.getTime())) {
+      return [normalizedDate, normalizedTime].filter(Boolean).join(' ').trim() || 'TBA';
+    }
 
     const datePart = date.toLocaleDateString('en-US', {
       month: 'short',
@@ -60,13 +63,18 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
   // Upcoming Rides Card Generator
   fetch('../../backEnd/controller/passengerDashboardCardsController.php')
   .then(response => response.json())
-  .then(data => {
+  .then(payload => {
+
+    const rides = Array.isArray(payload)
+      ? payload
+      : (Array.isArray(payload?.rides) ? payload.rides : []);
+    const hasMore = Array.isArray(payload) ? false : Boolean(payload?.has_more);
 
     const container = document.querySelector('.passenger-ride-list');
     container.innerHTML = '';
 
     // Empty dataset
-    if (!data || data.length === 0) {
+    if (!rides || rides.length === 0) {
       const emptyCard = `
         <div class="passenger-ride-card empty">
           <div class="ride-title">No Upcoming Rides</div>
@@ -79,17 +87,19 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
       return;
     }
 
-    data.forEach(ride => {
+    rides.forEach(ride => {
 
       const status = getStatusBadge(ride.booking_status);
-      const departureLabel = formatDeparture(ride.departure);
+      const departureLabel = formatDeparture(ride.departure_date, ride.departure);
       const seatLabel = Number(ride.seat_reserved) === 1 ? 'Seat Reserved' : 'Seats Reserved';
+      const originLabel = ride.origin_name || ride.origin || 'Unknown';
+      const destinationLabel = ride.destination_name || ride.destination || 'Unknown';
 
       const card = `
         <div class="passenger-ride-card">
           <div class="ride-card-top">
             <span class="ride-card-route">
-              ${ride.origin} <span class="ride-card-arrow">&rarr;</span> ${ride.destination}
+              ${originLabel} <span class="ride-card-arrow">&rarr;</span> ${destinationLabel}
             </span>
             <span class="ride-card-status ${status.className}">${status.label}</span>
           </div>
@@ -112,6 +122,14 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
       container.innerHTML += card;
     });
 
+    if (hasMore) {
+      container.innerHTML += `
+        <div class="passenger-ride-card">
+          <a href="myBookings.html" class="passenger-dashboard-details-btn">View All Bookings</a>
+        </div>
+      `;
+    }
+
   })
   .catch(err => console.log(err));
 
@@ -133,6 +151,12 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
       }
 
       const ride = data.ride;
+      const originLabel = ride.origin_name || ride.origin || 'Unknown';
+      const destinationLabel = ride.destination_name || ride.destination || 'Unknown';
+      const pickupPoints = ride.pickup_points || 'No pickup points listed';
+      const departureTime = ride.departure_time || ride.departure || 'TBA';
+      const departureDate = ride.start_date || ride.departure_date || 'TBA';
+      const driverPhone = ride.phone_number || 'N/A';
 
       const modal = document.createElement("div");
       modal.classList.add("view-details-modal-overlay");
@@ -144,7 +168,7 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
 
           <div class="view-details-modal-header">
             <span class="view-details-modal-route">
-              ${ride.origin.toUpperCase()} &rarr; ${ride.destination.toUpperCase()}
+              ${originLabel.toUpperCase()} &rarr; ${destinationLabel.toUpperCase()}
             </span>
 
             <span class="view-details-modal-status">
@@ -158,13 +182,13 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
             <div class="view-details-modal-route-point">
               <span class="view-details-modal-dot pickup"></span>
               <strong>From:</strong>
-              <span>${ride.origin}</span>
+              <span>${originLabel}</span>
             </div>
 
             <div class="view-details-modal-route-point">
               <span class="view-details-modal-dot destination"></span>
               <strong>To:</strong>
-              <span>${ride.destination}</span>
+              <span>${destinationLabel}</span>
             </div>
 
           </div>
@@ -175,7 +199,7 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
             <div class="view-details-modal-meta-item">
               <span class="view-details-modal-label">Departure Time</span>
               <span class="view-details-modal-value">
-                ${ride.departure_time}
+                ${departureTime}
               </span>
             </div>
 
@@ -183,7 +207,23 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
             <div class="view-details-modal-meta-item">
               <span class="view-details-modal-label">Date</span>
               <span class="view-details-modal-value">
-                ${ride.start_date}
+                ${departureDate}
+              </span>
+            </div>
+
+
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Pickup Points</span>
+              <span class="view-details-modal-value">
+                ${pickupPoints}
+              </span>
+            </div>
+
+
+            <div class="view-details-modal-meta-item">
+              <span class="view-details-modal-label">Driver Phone</span>
+              <span class="view-details-modal-value">
+                ${driverPhone}
               </span>
             </div>
 
