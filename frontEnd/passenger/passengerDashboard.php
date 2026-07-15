@@ -40,12 +40,12 @@
     </div>
 
     <div class="passenger-dashboard-card-actions">
-        <a href="myBookings.html" class="passenger-dashboard-action-btn">
+        <a href="myBookings.php" class="passenger-dashboard-action-btn">
             <img src="../src/images/calendar-icon.png" class="passenger-dashboard-icon">
             <span class="passenger-dashboard-label">View Bookings</span>
         </a>
 
-        <a href="browseRides.html" class="passenger-dashboard-action-btn">
+        <a href="browseRides.php" class="passenger-dashboard-action-btn">
             <img src="../src/images/map-icon.png" class="passenger-dashboard-icon">
             <span class="passenger-dashboard-label">Browse Rides</span>
         </a>
