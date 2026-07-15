@@ -28,7 +28,7 @@
             header("Location: ../../frontEnd/admin/adminDashboard.php");
             exit();
         } else if ($user["role"] == "driver") {
-            header("Location: ../../frontEnd/driver/driverDashboard.html");
+            header("Location: ../../frontEnd/driver/driverDashboard.php");
             exit();
         } else {
             header("Location: ../../frontEnd/passenger/passengerDashboard.php");
