@@ -1,5 +1,5 @@
 <?php
-define('KATRIP_UPLOAD_ROOT', getenv('KATRIP_UPLOAD_ROOT') ?: dirname(__DIR__) . '/storage/private');
+define('KATRIP_UPLOAD_ROOT', getenv('KATRIP_UPLOAD_ROOT') ?: dirname(__DIR__) . '/storage/uploads');
 
 function uploadJsonResponse(int $status, array $payload): void {
     http_response_code($status);
@@ -28,7 +28,7 @@ function storeValidatedUpload(array $file, string $category, int $ownerId, array
     $fullDir = KATRIP_UPLOAD_ROOT . DIRECTORY_SEPARATOR . $subDir;
     
     if (!is_dir($fullDir) && !mkdir($fullDir, 0700, true) && !is_dir($fullDir)) {
-        throw new RuntimeException('Private upload storage is unavailable.');
+        throw new RuntimeException('Upload storage is unavailable.');
     }
 
     $fileName = $fileBaseName ?: bin2hex(random_bytes(24));
@@ -47,7 +47,7 @@ function storeValidatedUpload(array $file, string $category, int $ownerId, array
     ];
 }
 
-function privateUploadPath(string $storedName): ?string {
+function uploadPath(string $storedName): ?string {
     $root = realpath(KATRIP_UPLOAD_ROOT);
     $path = KATRIP_UPLOAD_ROOT . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $storedName);
     $realPath = realpath($path);
@@ -58,8 +58,8 @@ function privateUploadPath(string $storedName): ?string {
     return $realPath;
 }
 
-function removePrivateUpload(?string $storedName): void {
-    if ($storedName && $path = privateUploadPath($storedName)) {
+function removeUpload(?string $storedName): void {
+    if ($storedName && $path = uploadPath($storedName)) {
         @unlink($path);
     }
 }

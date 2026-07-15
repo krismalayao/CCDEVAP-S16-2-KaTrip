@@ -119,10 +119,13 @@
                 $stmt->bind_param('isssi', $driver_id, $type, $stored['stored_name'], $stored['mime_type'], $stored['file_size']);
             }
             if (!$stmt->execute()) {
-                removePrivateUpload($stored['stored_name']);
+                removeUpload($stored['stored_name']);
                 throw new RuntimeException('Unable to save an uploaded driver document.');
             }
-            removePrivateUpload($existing['file'] ?? null);
+            $oldFile = $existing['file'] ?? null;
+            if ($oldFile && $oldFile !== $stored['stored_name']) {
+                removeUpload($oldFile);
+            }
         }
     }
 

@@ -11,6 +11,45 @@ body {
   min-height: 100vh;
 }
 
+html[data-theme="dark"] body {
+  background: #2d2434;
+  color: #f7f2fa;
+}
+
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .chart-card {
+  background: #55465f;
+  color: #f7f2fa;
+  border-color: #62536c;
+}
+
+html[data-theme="dark"] .quick-actions-container {
+  background: #2d2434;
+  color: #f7f2fa;
+  border-color: transparent;
+}
+
+#admin-theme-toggle {
+  border: none;
+  outline: none;
+}
+
+html[data-theme="dark"] .topbar h1,
+html[data-theme="dark"] .chart-card h3,
+html[data-theme="dark"] .quick-actions-heading {
+  color: #fffaff;
+}
+
+html[data-theme="dark"] .topbar .topbar-subtitle,
+html[data-theme="dark"] .stat-card .label,
+html[data-theme="dark"] .stat-card .sub {
+  color: #eee5f2;
+}
+
+html[data-theme="dark"] .bar-label {
+  color: #eee5f2;
+}
+
 /* FIX: Replaced legacy fixed sidebar spacing with a centralized layout wrapper.
   This centers your content elegantly and gives it responsive breathing room on larger screens.
 */

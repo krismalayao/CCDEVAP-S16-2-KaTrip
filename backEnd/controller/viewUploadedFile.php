@@ -44,7 +44,7 @@ if ($type === 'profile') {
     exit('Invalid file request.');
 }
 
-$path = $storedName ? privateUploadPath($storedName) : null;
+$path = $storedName ? uploadPath($storedName) : null;
 if (!$path || !file_exists($path)) {
     http_response_code(404);
     exit('File not found.');

@@ -100,6 +100,7 @@
                         <a href="userManagement.php" class="action-btn btn-purple">User Management</a>
                         <a href="tripManagement.php" class="action-btn btn-purple">Driver Verification</a>
                         <a href="driverVerification.php" class="action-btn btn-purple">Driver Verification</a>
+                        <button type="button" class="action-btn btn-purple" id="admin-theme-toggle">Switch to Dark Mode</button>
                         <a href="../../backEnd/controller/logoutController.php" class="action-btn btn-red">Logout</a>
                     </div>
                 </div>
@@ -110,6 +111,49 @@
 
 
         <script>
+            const adminThemeToggle = document.getElementById('admin-theme-toggle');
+
+            function applyAdminTheme(theme) {
+                document.documentElement.dataset.theme = theme;
+                localStorage.setItem('katrip-theme', theme);
+
+                if (theme === 'dark') {
+                    adminThemeToggle.textContent = 'Switch to Light Mode';
+                } else {
+                    adminThemeToggle.textContent = 'Switch to Dark Mode';
+                }
+            }
+
+            function getChartTextColor() {
+                if (document.documentElement.dataset.theme === 'dark') {
+                    return '#f3eaf7';
+                }
+                return '#2f2635';
+            }
+
+            const savedTheme = localStorage.getItem('katrip-theme') || 'light';
+            applyAdminTheme(savedTheme);
+            if (typeof Chart !== 'undefined') {
+                Chart.defaults.color = getChartTextColor();
+            }
+
+            adminThemeToggle.addEventListener('click', function () {
+                let nextTheme = 'dark';
+                if (document.documentElement.dataset.theme === 'dark') {
+                    nextTheme = 'light';
+                }
+
+                applyAdminTheme(nextTheme);
+
+                const themeData = new FormData();
+                themeData.append('theme_only', '1');
+                themeData.append('theme_preference', nextTheme);
+                fetch('../../backEnd/controller/profileController.php', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    body: themeData
+                }).catch(function () {});
+            });
 
             fetch('../../backEnd/controller/adminDashController.php')
                 .then(res => res.json())
@@ -133,7 +177,10 @@
                         },
                         options: {
                             plugins: { legend: { display: false } },
-                            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                            scales: {
+                                x: { ticks: { color: getChartTextColor() }, grid: { color: 'rgba(220, 210, 225, 0.18)' } },
+                                y: { beginAtZero: true, ticks: { precision: 0, color: getChartTextColor() }, grid: { color: 'rgba(220, 210, 225, 0.18)' } }
+                            }
                         }
                     });
 
@@ -149,6 +196,9 @@
                                     data.userBreakdown.pending
                                 ],
                                 backgroundColor: ['#6a0dad', '#a855f7', '#d8b4fe']}]
+                        },
+                        options: {
+                            plugins: { legend: { labels: { color: getChartTextColor() } } }
                         }
                     });
 
@@ -165,7 +215,10 @@
                         },
                         options: {
                             plugins: { legend: { display: false } },
-                            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+                            scales: {
+                                x: { ticks: { color: getChartTextColor() }, grid: { color: 'rgba(220, 210, 225, 0.18)' } },
+                                y: { beginAtZero: true, ticks: { precision: 0, color: getChartTextColor() }, grid: { color: 'rgba(220, 210, 225, 0.18)' } }
+                            }
                         }
                     });
 
@@ -182,6 +235,9 @@
                                     data.tripStatus.cancelled
                                 ],
                                 backgroundColor: ['#6a0dad', '#a855f7', '#22c55e', '#ef4444']}]
+                        },
+                        options: {
+                            plugins: { legend: { labels: { color: getChartTextColor() } } }
                         }
                     });
                 })

@@ -37,7 +37,7 @@ try {
     }
 
     if ($oldName !== $stored['stored_name']) {
-        removePrivateUpload($oldName);
+        removeUpload($oldName);
     }
 
     uploadJsonResponse(200, [
@@ -48,7 +48,7 @@ try {
 
 } catch (RuntimeException $error) {
     if (isset($stored['stored_name'])) {
-        removePrivateUpload($stored['stored_name']);
+        removeUpload($stored['stored_name']);
     }
     uploadJsonResponse(422, ['success' => false, 'message' => $error->getMessage()]);
 }
