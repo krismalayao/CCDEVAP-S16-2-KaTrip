@@ -17,6 +17,46 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
     });
   });
 
+  // Helper: This wil turn a raw departure value into smth like "May 26, 2026 • 7:00 AM" string
+  function formatDeparture(value) {
+    if (!value) return 'TBA';
+
+    const normalized = String(value).replace(' ', 'T');
+    const date = new Date(normalized);
+
+    if (isNaN(date.getTime())) return String(value);
+
+    const datePart = date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric'
+    });
+
+    const timePart = date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    return `${datePart} • ${timePart}`;
+  }
+
+  // Helper: map a booking_status value to a label + a CSS class for the badge
+  function getStatusBadge(status) {
+    const normalized = String(status || '').toLowerCase();
+
+    const statusMap = {
+      pending: { label: 'Pending', className: 'ride-status-pending' },
+      accepted: { label: 'Accepted', className: 'ride-status-accepted' },
+      ongoing: { label: 'Ongoing', className: 'ride-status-ongoing' },
+      completed: { label: 'Completed', className: 'ride-status-completed' },
+      rejected: { label: 'Rejected', className: 'ride-status-cancelled' },
+      cancelled: { label: 'Cancelled', className: 'ride-status-cancelled' }
+    };
+
+    return statusMap[normalized] || { label: status || 'Unknown', className: 'ride-status-pending' };
+  }
+
   // Upcoming Rides Card Generator
   fetch('../../backEnd/controller/passengerDashboardCardsController.php')
   .then(response => response.json())
@@ -39,17 +79,32 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
       return;
     }
 
-    // Dataset has contents
     data.forEach(ride => {
+
+      const status = getStatusBadge(ride.booking_status);
+      const departureLabel = formatDeparture(ride.departure);
+      const seatLabel = Number(ride.seat_reserved) === 1 ? 'Seat Reserved' : 'Seats Reserved';
 
       const card = `
         <div class="passenger-ride-card">
-          <div class="ride-title">${ride.origin} -> ${ride.destination}</div>
-          <div class="ride-info">
-            Departure: ${ride.departure}<br> 
-            Status: ${ride.booking_status}<br>
-            Reserved Seats: ${ride.seat_reserved}
+          <div class="ride-card-top">
+            <span class="ride-card-route">
+              ${ride.origin} <span class="ride-card-arrow">&rarr;</span> ${ride.destination}
+            </span>
+            <span class="ride-card-status ${status.className}">${status.label}</span>
           </div>
+
+          <div class="ride-card-meta">
+            <div class="ride-card-meta-item">
+              <span class="ride-card-meta-label">Departure</span>
+              <span class="ride-card-meta-value">${departureLabel}</span>
+            </div>
+            <div class="ride-card-meta-item">
+              <span class="ride-card-meta-label">${seatLabel}</span>
+              <span class="ride-card-meta-value">${ride.seat_reserved}</span>
+            </div>
+          </div>
+
           <a href="#" class="passenger-dashboard-details-btn" data-ride-id="${ride.ride_id}">View Details</a>
         </div>
       `;
@@ -194,7 +249,3 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
       console.error("Error fetching ride details:", error);
     });
 });
-
-  
-
-  
