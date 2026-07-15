@@ -1,3 +1,4 @@
+// Handles the upcoming rides display
 <?php
 session_start();
 

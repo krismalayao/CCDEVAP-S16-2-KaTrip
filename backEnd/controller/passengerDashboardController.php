@@ -1,3 +1,4 @@
+// Handles the chart in passenger dashboard
 <?php
 session_start();
 include "../../config/db.php";

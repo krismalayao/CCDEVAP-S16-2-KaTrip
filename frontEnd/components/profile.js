@@ -2,6 +2,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const endpoint = "../../backEnd/controller/profileController.php";
     const isDriverProfile = document.body.classList.contains("driver-profile-body");
     const saveButton = document.getElementById("profile-save-btn");
+    const themeToggle = document.getElementById("theme-toggle-checkbox");
+
+    const applyProfileTheme = (theme) => {
+        const isDark = theme === "dark";
+        document.documentElement.dataset.theme = isDark ? "dark" : "light";
+        if (themeToggle) {
+            themeToggle.checked = isDark;
+            themeToggle.setAttribute("aria-label", isDark ? "Switch to light mode" : "Switch to dark mode");
+        }
+    };
+
+    applyProfileTheme(localStorage.getItem("katrip-theme") || "light");
+
+    themeToggle?.addEventListener("change", () => {
+        const nextTheme = themeToggle.checked ? "dark" : "light";
+        localStorage.setItem("katrip-theme", nextTheme);
+        applyProfileTheme(nextTheme);
+
+        const themeData = new FormData();
+        themeData.append("theme_only", "1");
+        themeData.append("theme_preference", nextTheme);
+        fetch(endpoint, { method: "POST", body: themeData, credentials: "same-origin" }).catch(() => {});
+    });
+
     const fields = {
         name: document.getElementById("profile-name"),
         phone: document.getElementById("profile-phone"),
@@ -11,7 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
         createdAt: document.getElementById("profile-created-at"),
         vehicleModel: document.getElementById("profile-vehicle-model"),
         plateNumber: document.getElementById("profile-license-plate"),
-        status: document.getElementById("profile-status")
+        status: document.getElementById("profile-status"),
+        showFullName: document.getElementById("profile-show-full-name")
     };
 
     const showMessage = (message, isError = false) => {
@@ -52,6 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const populateProfile = (profile) => {
+        if (profile.theme_preference) {
+            localStorage.setItem("katrip-theme", profile.theme_preference);
+            applyProfileTheme(profile.theme_preference);
+        }
         if (fields.name) fields.name.textContent = `${profile.first_name || ""} ${profile.last_name || ""}`.trim() || "KaTrip User";
         const initials = `${profile.first_name?.[0] || ""}${profile.last_name?.[0] || ""}`.toUpperCase() || "K";
         document.querySelectorAll(".nav-profile-initials").forEach((element) => {
@@ -71,6 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fields.createdAt.textContent = Number.isNaN(created.getTime()) ? "Created date unavailable" : `Created at ${created.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" })}`;
         }
         if (isDriverProfile) {
+            if (fields.showFullName) fields.showFullName.checked = Boolean(Number(profile.show_full_name));
             if (fields.vehicleModel) fields.vehicleModel.value = profile.vehicle_model || "";
             if (fields.plateNumber) fields.plateNumber.value = profile.plate_number || "";
             if (fields.status) {
@@ -100,9 +130,11 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("email", fields.email?.value.trim() || "");
         formData.append("gender", fields.gender?.value || "");
         formData.append("password", fields.password?.value || "");
+        formData.append("theme_preference", document.documentElement.dataset.theme || "light");
         if (isDriverProfile) {
             formData.append("vehicle_model", fields.vehicleModel?.value.trim() || "");
             formData.append("plate_number", fields.plateNumber?.value.trim() || "");
+            formData.append("show_full_name", fields.showFullName?.checked ? "1" : "0");
         }
 
         saveButton.disabled = true;
@@ -154,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             await fetch("../../backEnd/controller/logoutController.php", { method: "POST", credentials: "same-origin" });
         } finally {
+            localStorage.removeItem("katrip-theme");
             localStorage.removeItem("authToken");
             sessionStorage.clear();
             window.location.href = "../public/loginPage.php";

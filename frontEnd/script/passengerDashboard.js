@@ -4,6 +4,8 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
   .then(totals => {
 
     const ridesCtx = document.getElementById('rides-chart');
+    const chartTextColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--text-primary').trim();
 
     new Chart(ridesCtx, {
       type: 'bar',
@@ -13,6 +15,21 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
           label: 'Rides Completed',
           data: totals
         }]
+      },
+      options: {
+        plugins: {
+          legend: { labels: { color: chartTextColor } }
+        },
+        scales: {
+          x: {
+            ticks: { color: chartTextColor },
+            grid: { color: 'rgba(255, 255, 255, 0.12)' }
+          },
+          y: {
+            ticks: { color: chartTextColor },
+            grid: { color: 'rgba(255, 255, 255, 0.12)' }
+          }
+        }
       }
     });
   });

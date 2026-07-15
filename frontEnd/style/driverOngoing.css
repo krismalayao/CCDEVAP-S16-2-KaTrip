@@ -20,6 +20,106 @@
     --danger:           #ed1c24;
 }
 
+/* Dark Mode */
+html[data-theme="dark"] {
+    --bg: #2D2033;
+    --bg-card: #37253D;
+    --purple-faint: #331F36;
+    --grey-text: #eee9f3;
+    --text-primary: #f5efff;
+    --icon-muted: #aaa0b2;
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .trip-header,
+html[data-theme="dark"] .modal {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .card-title,
+html[data-theme="dark"] .driver-name,
+html[data-theme="dark"] .route-label,
+html[data-theme="dark"] .route-label.bold,
+html[data-theme="dark"] .fare-row,
+html[data-theme="dark"] .fare-row.total,
+html[data-theme="dark"] .trip-header .route-label,
+html[data-theme="dark"] .trip-header .fare,
+html[data-theme="dark"] .pax-chip .chip-name,
+html[data-theme="dark"] .next-stop-name,
+html[data-theme="dark"] .modal-title,
+html[data-theme="dark"] .modal-body,
+html[data-theme="dark"] .modal-summary .ms-row,
+html[data-theme="dark"] .modal-summary .ms-row.total {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .driver-sub,
+html[data-theme="dark"] .pax-chip .chip-stop,
+html[data-theme="dark"] .next-stop-eta {
+    color: var(--grey-text);
+}
+
+html[data-theme="dark"] .trip-header .fare,
+html[data-theme="dark"] .fare-block {
+    border-color: #775280;
+}
+
+html[data-theme="dark"] .pax-chip,
+html[data-theme="dark"] .pax-chip.dropped {
+    background: #4f3458;
+}
+
+html[data-theme="dark"] .pax-chip.dropped .chip-name {
+    color: var(--grey-text);
+}
+
+html[data-theme="dark"] .next-stop-card {
+    background: #4f3458;
+    border-color: #775280;
+}
+
+html[data-theme="dark"] .next-stop-label {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .stop-badge.done {
+    background: #1f5b35;
+    color: #b9f6cc;
+}
+
+html[data-theme="dark"] .stop-badge.current {
+    background: #6437a0;
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .stop-badge.next {
+    background: #7a4a1a;
+    color: #ffd9a3;
+}
+
+html[data-theme="dark"] .modal-summary {
+    background: #4f3458;
+}
+
+html[data-theme="dark"] .btn-keep-going {
+    background: #4f3458;
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .back-control a {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .r-dot {
+    background: var(--bg-card);
+}
+
+html[data-theme="dark"] .panel {
+    background: var(--bg);
+}
+
 body {
     margin: 0;
     font-family: 'Helvetica Now', system-ui, sans-serif;

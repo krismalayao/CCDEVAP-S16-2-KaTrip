@@ -71,8 +71,8 @@
 }
 
 .filter-icon {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
 }
 
@@ -151,6 +151,7 @@
     gap: 10px;
     font-size: 0.95rem;
     color: var(--text-grey);
+    min-width: 0;
 }
 
 .route-point strong {
@@ -161,6 +162,7 @@
 .dot {
     width: 10px;
     height: 10px;
+    flex: 0 0 10px;
     border-radius: 50%;
     display: inline-block;
 }

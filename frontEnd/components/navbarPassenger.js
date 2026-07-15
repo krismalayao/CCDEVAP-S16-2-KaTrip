@@ -1,3 +1,5 @@
+document.documentElement.dataset.theme = localStorage.getItem('katrip-theme') || 'light';
+
 document.getElementById('navbar-mount').innerHTML = `
 <header class="nav">
     <div class="nav-inner">
@@ -59,6 +61,10 @@ fetch('../../backEnd/controller/profileController.php', { credentials: 'same-ori
     .then(response => response.ok ? response.json() : null)
     .then(data => {
         if (!data?.success) return;
+        if (data.profile.theme_preference) {
+            localStorage.setItem('katrip-theme', data.profile.theme_preference);
+            document.documentElement.dataset.theme = data.profile.theme_preference;
+        }
         const initials = `${data.profile.first_name?.[0] || ''}${data.profile.last_name?.[0] || ''}`.toUpperCase() || 'K';
         document.querySelectorAll('.nav-profile-initials').forEach(element => {
             element.textContent = initials;

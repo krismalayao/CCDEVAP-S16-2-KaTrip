@@ -1,3 +1,5 @@
+// Serves as the data access for browse rides display, only shows rides that havent been booked and not full 
+
 <?php
 
 function getAvailableRides($conn, $passengerId = null)

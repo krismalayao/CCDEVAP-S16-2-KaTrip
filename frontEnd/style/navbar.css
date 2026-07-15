@@ -178,6 +178,10 @@
     color: var(--purple);
 }
 
+html[data-theme="dark"] .nav-profile-initials {
+    color: var(--text-primary);
+}
+
 /* Dropdown */
 .nav-dropdown {
     display: none;

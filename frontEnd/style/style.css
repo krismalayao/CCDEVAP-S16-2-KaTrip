@@ -14,10 +14,166 @@
     --bg-card:          #ffffff;
     --icon-muted:       #b4b4b4;
     --grey-text:        #2d2d2d;
+    --text-primary:     #2d2d2d;
 
   /* Status */
     --success:          #0fbf00;
     --danger:           #ed1c24;
+}
+
+/* Dark Mode */ 
+html[data-theme="dark"] {
+    --bg: #2D2033;
+    --bg-card: #37253D;
+    --purple-faint: #331F36;
+    --grey-text: #eee9f3;
+    --text-primary: #f5efff;
+    --icon-muted: #aaa0b2;
+}
+
+html[data-theme="dark"] body {
+    color: var(--grey-text);
+}
+
+/* Dark mode: Browse Rides */
+html[data-theme="dark"] .browserides-card,
+html[data-theme="dark"] .bookings-tabs {
+    background: #775280;
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .browserides-card .browserides-meta-label,
+html[data-theme="dark"] .browserides-card .browserides-meta-value,
+html[data-theme="dark"] .browserides-card .browserides-filter-hint,
+html[data-theme="dark"] .browserides-card p,
+html[data-theme="dark"] .browserides-card span,
+html[data-theme="dark"] .browserides-card .browserides-filter-btn {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .browserides-suggestion {
+    color: var(--grey-text);
+}
+
+/* Dark mode: View Bookings */
+html[data-theme="dark"] .bookings-container {
+    background: #775280;
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .booking-card-item {
+    background: #906b99;
+}
+
+html[data-theme="dark"] .driver-info-snippet {
+    background-color: #4f3458;
+    border-color: #b98ac4;
+}
+
+html[data-theme="dark"] .driver-info-snippet .driver-name,
+html[data-theme="dark"] .driver-info-snippet .vehicle-plate {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .status-badge.pending {
+    background-color: #6b5520;
+    color: #ffe8a3;
+}
+
+html[data-theme="dark"] .status-badge.approved {
+    background-color: #1f5b35;
+    color: #b9f6cc;
+}
+
+html[data-theme="dark"] .status-badge.completed {
+    background-color: #3f4448;
+    color: #e6e8ea;
+}
+
+html[data-theme="dark"] .status-badge.cancelled,
+html[data-theme="dark"] .status-badge.rejected {
+    background-color: #70252d;
+    color: #ffc1c7;
+}
+
+html[data-theme="dark"] .badge-green {
+    background-color: #1f5b35;
+    color: #b9f6cc;
+}
+
+html[data-theme="dark"] .badge-orange {
+    background-color: #7a4a1a;
+    color: #ffd9a3;
+}
+
+html[data-theme="dark"] .badge-red {
+    background-color: #70252d;
+    color: #ffc1c7;
+}
+
+html[data-theme="dark"] .bookings-content .empty-state {
+    color: var(--text-primary) !important;
+}
+
+html[data-theme="dark"] .bookings-card p,
+html[data-theme="dark"] .bookings-card span,
+html[data-theme="dark"] .booking-card-item p,
+html[data-theme="dark"] .booking-card-item span,
+html[data-theme="dark"] .booking-card-item strong,
+html[data-theme="dark"] .browserides-heading,
+html[data-theme="dark"] .bookings-heading {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .bookings-tabs .tab-btn {
+    color: #ffffff;
+    border: 1.5px solid var(--purple-light);
+}
+
+html[data-theme="dark"] .bookings-tabs .tab-btn.active {
+    color: #ffffff;
+    border-color: var(--purple-dark);
+}
+
+html[data-theme="dark"] .charts h4 {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .ride-card-arrow {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .view-details-modal-card {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .view-details-modal-route,
+html[data-theme="dark"] .view-details-modal-route-point,
+html[data-theme="dark"] .view-details-modal-route-point strong,
+html[data-theme="dark"] .view-details-modal-value,
+html[data-theme="dark"] .view-details-modal-driver-name,
+html[data-theme="dark"] .view-details-modal-vehicle,
+html[data-theme="dark"] .view-details-modal-price {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .view-details-modal-close {
+    color: var(--text-primary);
+}
+
+/* Dark mode: Passenger Dashboard */
+html[data-theme="dark"] .passenger-ride-card {
+    background-color: #775280;
+}
+
+html[data-theme="dark"] .charts,
+html[data-theme="dark"] .passenger-dashboard-card-actions {
+    background: #775280;
+}
+
+/* Dark mode: Shared Navigation */
+html[data-theme="dark"] .nav-profile-initials {
+    color: var(--text-primary);
 }
 
 body {
@@ -180,7 +336,7 @@ body {
 .passenger-dashboard-body {
     font-family: 'Helvetica Now', sans-serif;
     background: var(--bg);
-    color: var(--purple-dark);
+    color: var(--text-primary);
 }
 
 .container {
@@ -216,7 +372,7 @@ body {
 .charts h4 {
     margin: 0 0 18px;
     font-size: 22px;
-    color: var(--purple-dark);
+    color: var(--text-primary);
     font-family: 'Bloc';
     letter-spacing: 1px;
 }
@@ -256,7 +412,7 @@ body {
     flex: 1;
     padding: 18px 10px;
     text-decoration: none;
-    color: var(--purple-dark);
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -344,7 +500,7 @@ body {
     font-size: 16px;
     font-weight: 400;
     letter-spacing: 0.4px;
-    color: var(--purple-dark);
+    color: var(--text-primary);
     line-height: 1.3;
 }
 
@@ -405,14 +561,14 @@ body {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.4px;
-    color: var(--purple);
+    color: var(--text-primary);
     text-transform: uppercase;
 }
 
 .ride-card-meta-value {
     font-size: 13px;
     font-weight: 600;
-    color: var(--purple-dark);
+    color: var(--text-primary);
 }
 
 .passenger-dashboard-details-btn {
@@ -1354,6 +1510,7 @@ body {
 .view-details-modal-dot {
     width: 11px;
     height: 11px;
+    flex: 0 0 11px;
     border-radius: 50%;
 }
 
@@ -1609,12 +1766,12 @@ body {
   text-align: center;
   font-family: 'Bloc';
   font-size: 18px;
-  color: var(--purple-dark);
+  color: var(--text-primary);
 }
 
 .passenger-ride-card.empty .ride-info {
   font-size: 14px;
-  color: var(--grey-text);
+  color: var(--text-primary);
   opacity: 0.8;
 }
 /* END OF UPCOMING RIDES */

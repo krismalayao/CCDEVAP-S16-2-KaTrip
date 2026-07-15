@@ -1,4 +1,70 @@
 /* User Profile CSS */
+html[data-theme="dark"] {
+    --bg: #2D2033;
+    --bg-card: #37253D;
+    --purple-faint: #331F36;
+    --grey-text: #eee9f3;
+    --icon-muted: #aaa0b2;
+}
+
+html[data-theme="dark"] body {
+    color: var(--grey-text);
+}
+
+html[data-theme="dark"] .profile-container,
+html[data-theme="dark"] .profile-save-modal-card,
+html[data-theme="dark"] .driver-docs-modal-content,
+html[data-theme="dark"] .driver-doc-item,
+html[data-theme="dark"] .driver-doc-lightbox-panel {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .name-display h2,
+html[data-theme="dark"] .profile-field-group label,
+html[data-theme="dark"] .driver-profile-group label,
+html[data-theme="dark"] .profile-metadata,
+html[data-theme="dark"] .driver-docs-modal-desc,
+html[data-theme="dark"] .driver-doc-hint,
+html[data-theme="dark"] .driver-doc-empty {
+    color: var(--grey-text);
+}
+
+html[data-theme="dark"] .profile-input-wrapper input,
+html[data-theme="dark"] .profile-input-wrapper select,
+html[data-theme="dark"] .profile-status-static {
+    background-color: #1c1724;
+    color: var(--grey-text);
+    border-color: #493b58;
+}
+
+html[data-theme="dark"] .avatar-edit-label,
+html[data-theme="dark"] .driver-doc-preview,
+html[data-theme="dark"] .driver-doc-lightbox-image-wrap {
+    background-color: #1c1724;
+    border-color: #493b58;
+}
+
+html[data-theme="dark"] .profile-heading,
+html[data-theme="dark"] .driver-doc-item {
+    border-color: #493b58;
+}
+
+html[data-theme="dark"] .profile-avatar {
+    border-color: #000000;
+}
+
+html[data-theme="dark"] .profile-metadata p {
+    color: var(--text-primary);
+}
+
+html[data-theme="dark"] .avatar-edit-label {
+    background-image: url('../src/images/camera-icon-dark.png');
+}
+
+html[data-theme="dark"] .profile-field-edit-btn {
+    background-image: url('../src/images/pen-icon-dark.png');
+}
+
 .profile-container {
     max-width: 900px;
     width: 90%;
@@ -73,7 +139,9 @@
 .theme-switch input:checked + .theme-slider:before {
     transform: translateX(22px);
     background-image: url('../src/images/moon-icon.png');
-    background-size: 75%;
+    background-size: cover;
+    background-color: #000000;
+    overflow: hidden;
 }
 
 .profile-avatar {
@@ -202,6 +270,30 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.profile-privacy-setting {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: var(--purple-faint);
+    border-radius: 10px;
+    color: var(--grey-text);
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.profile-privacy-setting input {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--purple);
+    cursor: pointer;
+}
+
+.profile-privacy-setting label {
+    cursor: pointer;
 }
 
 .profile-metadata p {
