@@ -1,113 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="description" content="KaTrip User Registration Page">
-        <meta name="keywords" content="Register, KaTrip, User, Car Ride">
-        <meta name="author" content="Team 2">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="KaTrip User Registration Page">
+  <meta name="keywords" content="Register, KaTrip, User, Car Ride">
+  <meta name="author" content="Team 2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KaTrip - Registration Page</title>
+  <link rel="stylesheet" href="../style/publicPages.css">
+  <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
 
-        <title>KaTrip - Registration Page</title>
+<body class="reg-body">
+  <div class="reg-container">
 
-        <link rel="stylesheet" href="../style/publicPages.css">
-        <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
-        <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    </head>
+    <!-- LEFT BRAND PANEL -->
+    <div class="reg-left">
+      <div class="reg-left-logo">
+        <div class="reg-left-logo-box">
+          <img src="../src/images/katrip_logo.svg" alt="KaTrip Logo">
+        </div>
+        <span class="reg-left-brand">KaTrip</span>
+      </div>
+      <div class="reg-left-headline">Join the ride.</div>
+      <div class="reg-left-sub">Create your account and start sharing rides with your community.</div>
+    </div>
 
-    <body class="reg-body">
-        <div class="reg-container">
-            <div class="reg-header">
-                <img src="../src/images/katrip_logo.svg" alt="KaTrip Logo">
-                <h2>KaTrip</h2>
-            </div>
+    <!-- RIGHT FORM PANEL -->
+    <div class="reg-right">
+      <div class="reg-form-title">Create account</div>
+      <div class="reg-form-sub">Join KaTrip today — it's free</div>
 
-            <form id="registration-form" action="" method="POST">
-                <div class="reg-col">
-                    <h2>Get Started</h2>
+      <form id="registration-form" action="" method="POST">
 
-                    <label for="phone_number">Phone Number <span class="asterisk">*</span></label>
-                    <div class="reg-phone-feature">
-                        <input type="tel" id="country_code" name="country_code" value="+63" readonly>
-                        <input type="tel" id="phone_number" name="phone_number" placeholder="9XX-XXX-XXXX" inputmode="numeric" maxlength="12" pattern="9[0-9]{2}-[0-9]{3}-[0-9]{4}" title="Enter a complete Philippine mobile number starting with 9" required>
-                    </div>
+        <!-- SECTION: Personal Information -->
+        <div class="reg-section-label">Personal information</div>
 
-                    <label for="email">Email <span class="asterisk">*</span></label>
-                    <input type="email" id="email" name="email" placeholder="username@email.com" required>
-
-                    <label for="password">Password <span class="asterisk">*</span></label>
-                    <div class="reg-password-feature">
-                        <input type="password" id="password" name="password" placeholder="Input Password" required>
-                        <button type="button" id="toggle-button" class="toggle-button">
-                            <i id="toggle-icon" class="bx bxs-lock-alt"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="reg-col">
-                    <h2>Personal Information</h2>
-                    <div class="reg-row">
-                        <div>
-                            <label for="gender">Gender <span class="asterisk">*</span></label>
-                            <select id="gender" name="gender" required>
-                                <option value="" disabled selected>Select</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
-                                <option value="rather_not_say">Rather not say</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label for="birthdate">Birthdate <span class="asterisk">*</span></label>
-                            <input type="date" id="birthdate" name="birthdate" required>
-                        </div>
-                    </div>
-
-                    <div class="reg-row">
-                        <div>
-                            <label for="first_name">First Name <span class="asterisk">*</span></label>
-                            <input type="text" id="first_name" name="first_name" placeholder="Juan" required>
-                        </div>
-
-                        <div>
-                            <label for="last_name">Last Name <span class="asterisk">*</span></label>
-                            <input type="text" id="last_name" name="last_name" placeholder="Dela Cruz" required>
-                        </div>
-                    </div>
-
-                    <div class="reg-driver-option">
-                        <input type="checkbox" id="katrip_driver" name="katrip_driver">
-                        <label for="katrip_driver">Become a <b>KaTrip Driver</b><br><small>Additional Requirements are Expected</small></label>
-                    </div>
-                </div>
-
-                <div class="reg-footer">
-                    <p>Already have an account? <a href="loginPage.php">Login</a></p>
-                    <button type="submit" class="reg-button">Register</button>
-                </div>
-            </form>
+        <div class="reg-row">
+          <div class="reg-field">
+            <label for="first_name">First name <span class="asterisk">*</span></label>
+            <input type="text" id="first_name" name="first_name" placeholder="Juan" required>
+          </div>
+          <div class="reg-field">
+            <label for="last_name">Last name <span class="asterisk">*</span></label>
+            <input type="text" id="last_name" name="last_name" placeholder="Dela Cruz" required>
+          </div>
         </div>
 
-        <div id="otp-modal" class="modal-overlay">
-            <div class="modal-content">
-                <h2>Verify Your Email</h2>
-                <p>We sent a 6-digit verification code to your email. Please enter it below to complete registration.</p>
-                
-                <form id="otp-form">
-                    <div class="otp-input-container">
-                        <input type="text" id="otp-code" name="otp_code" maxlength="6" placeholder="000000" required autocomplete="off">
-                    </div>
-                    
-                    <div class="modal-buttons">
-                        <button type="button" id="close-modal-btn" class="btn-secondary">Cancel</button>
-                        <button type="submit" class="btn-primary">Verify</button>
-                    </div>
-                </form>
-            </div>
+        <div class="reg-row">
+          <div class="reg-field">
+            <label for="gender">Gender <span class="asterisk">*</span></label>
+            <select id="gender" name="gender" required>
+              <option value="" disabled selected>Select</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+              <option value="rather_not_say">Rather not say</option>
+            </select>
+          </div>
+          <div class="reg-field">
+            <label for="birthdate">Birthdate <span class="asterisk">*</span></label>
+            <input type="date" id="birthdate" name="birthdate" required>
+          </div>
         </div>
 
-        <div id="toast-container"></div>
+        <!-- SECTION: Account Information -->
+        <div class="reg-section-label" style="margin-top: 20px;">Account information</div>
 
-        <script src="../../backEnd/script/registerVerification.js"></script>
-    </body>
+        <label for="phone_number">Phone number <span class="asterisk">*</span></label>
+        <div class="reg-phone-feature">
+          <input type="tel" id="country_code" name="country_code" value="+63" readonly>
+          <input type="tel" id="phone_number" name="phone_number" placeholder="9XX-XXX-XXXX"
+            inputmode="numeric" maxlength="12"
+            pattern="9[0-9]{2}-[0-9]{3}-[0-9]{4}"
+            title="Enter a complete Philippine mobile number starting with 9" required>
+        </div>
+
+        <label for="email">Email <span class="asterisk">*</span></label>
+        <input type="email" id="email" name="email" placeholder="username@email.com" required>
+
+        <label for="password">Password <span class="asterisk">*</span></label>
+        <div class="reg-password-feature">
+          <input type="password" id="password" name="password" placeholder="Create a password" required>
+          <button type="button" id="toggle-button" class="toggle-button">
+            <i id="toggle-icon" class="bx bxs-lock-alt"></i>
+          </button>
+        </div>
+
+        <!-- DRIVER OPTION -->
+        <div class="reg-driver-option">
+          <input type="checkbox" id="katrip_driver" name="katrip_driver">
+          <label for="katrip_driver">
+            Register as a <b>KaTrip Driver</b>
+            <small>Additional requirements are expected</small>
+          </label>
+        </div>
+
+        <!-- FOOTER -->
+        <button type="submit" class="reg-button">Create account</button>
+        <p class="reg-login-link">Already have an account? <a href="loginPage.php">Sign in</a></p>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- OTP MODAL -->
+  <div id="otp-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h2>Verify your email</h2>
+      <p>We sent a 6-digit verification code to your email. Enter it below to complete registration.</p>
+      <form id="otp-form">
+        <div class="otp-input-container">
+          <input type="text" id="otp-code" name="otp_code" maxlength="6" placeholder="000000" required autocomplete="off">
+        </div>
+        <div class="modal-buttons">
+          <button type="button" id="close-modal-btn" class="btn-secondary">Cancel</button>
+          <button type="submit" class="btn-primary">Verify</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="../../backEnd/script/registerVerification.js"></script>
+</body>
 </html>
