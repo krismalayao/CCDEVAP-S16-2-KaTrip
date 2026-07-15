@@ -237,4 +237,19 @@ html[data-theme="dark"] .nav-profile-initials {
     .nav-menu-btn {
         display: flex;
     }
+
+    .nav-inner {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .nav-brand {
+        justify-self: unset;
+    }
+
+    .nav-actions {
+        justify-self: unset;
+        margin-left: 0;
+    }
 }

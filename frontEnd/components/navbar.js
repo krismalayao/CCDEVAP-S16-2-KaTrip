@@ -13,7 +13,7 @@ document.getElementById('navbar-mount').innerHTML = `
                 Requests
                 <span class="nav-badge" id="nav-badge" style="display:none;">0</span>
             </a>
-            <a class="nav-link" href="driverCreateTrip.php">Create Ride</a>
+            <a class="nav-link" href="driverCreateTrip.php">Create Trip</a>
         </nav>
         <div class="nav-actions">
             <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Open menu" aria-expanded="false">
