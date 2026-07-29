@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require "../../config/db.php";
+    require_once "../../config/db.php";
     header("Content-Type: application/json");
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -28,7 +28,7 @@
                 echo json_encode(["status" => "success", "message" => "Email verified. Please complete your driver application."]);
                 exit;
             }
-            require "../../config/db.php";
+            require_once "../../config/db.php";
 
             $stmt = $conn->prepare("INSERT INTO users(first_name, last_name, gender, birthdate,
                                     phone_number, email, role, status, password)
