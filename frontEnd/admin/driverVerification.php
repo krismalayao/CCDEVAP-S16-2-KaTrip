@@ -27,33 +27,28 @@
         <script src="../components/navbarAdmin.js"></script>
 
         <div class="management-container">
-            <aside class="management-features">
-                <div class="management-actions">
-                    <h3>ACTIONS</h3>
-                    <button type="button" onclick="openAddModal()" id="addButton">Add Application</button>
-                    <button type="button" onclick="openEditModal()" id="editButton">Edit Application</button>
-                    <button type="button" onclick="deleteApplication()" id="deleteButton">Delete Application</button>
-                </div>
-
-                <div class="management-filters">
-                    <h3>FILTERS</h3>
-                    <input type="text" placeholder="Search Applicant" onkeyup="searchApplicants()" id="searchInput">
-                    <select id="statusFilter" onchange="filterApplicants()">
-                        <option value="all">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="verified">Verified</option>
-                        <option value="denied">Denied</option>
-                    </select>
-                </div>
-            </aside>
-
             <main class="management-applicants">
                 <h2>Driver Applications</h2>
+                <div class="top-action-bar">
+                    <div class="management-actions">
+                        <button class="add-user-button" onclick="openAddModal()">
+                            <span class="plus">+</span>
+                            <span class="text">Add Application</span>
+                        </button>
+                        
+                        <button type="button" onclick="openEditModal()" id="editButton" disabled>Edit Application</button>
+                        <button type="button" onclick="deleteApplication()" id="deleteButton" disabled>Delete Application</button>
+                    </div>
+
+                    <div class="management-search">
+                        <input type="text" placeholder="Search Applicant" onkeyup="searchApplicants()" id="searchInput">
+                    </div>
+                </div>
+
                 <div class="responsive-table">
                     <table id="applicantTable">
                         <thead>
                             <tr>
-                                <th>SELECT</th>
                                 <th>NAME</th>
                                 <th>STATUS</th>
                                 <th>DATE APPLIED</th>
@@ -63,23 +58,34 @@
                         <tbody>
                             <?php if (empty($listOfApplicants)): ?>
                                 <tr>
-                                    <td colspan="4">No applicants have registered.</td>
+                                    <td colspan="3">No applicants have registered.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach($listOfApplicants as $applicant): ?>
-                                    <tr class="applicant-card" data-driver-id="<?= $applicant["user_id"] ?>" data-gender="<?= $applicant["gender"] ?>" data-birthdate="<?= $applicant["birthdate"] ?>" data-phone="<?= $applicant["phone_number"] ?>" 
-                                                data-license="<?= $applicant["license_number"] ?>" data-vehicle="<?= $applicant["vehicle_model"] ?>" data-status="<?= $applicant["status"] ?>"
-                                                data-plate="<?= $applicant["plate_number"] ?>" data-color="<?= $applicant["vehicle_color"] ?>" data-verification="<?= $applicant["verification_status"] ?>" 
-                                                data-email="<?= $applicant["email"] ?>" data-license-file="<?= $applicant["license_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["license_file"] : '' ?>" data-vehicle-file="<?= $applicant["vehicle_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["vehicle_file"] : '' ?>" data-registration-file="<?= $applicant["registration_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["registration_file"] : '' ?>"
-                                                data-insurance-file="<?= $applicant["insurance_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["insurance_file"] : '' ?>">
-                                        <td><input type="radio" class="selectedApplicant" name="selectedApplicant" value="<?= $applicant["user_id"]; ?>" onchange="updateActionButtons()"></td>
+                                    <tr class="applicant-card" 
+                                        data-driver-id="<?= $applicant["user_id"] ?>" 
+                                        data-gender="<?= $applicant["gender"] ?>" 
+                                        data-birthdate="<?= $applicant["birthdate"] ?>" 
+                                        data-phone="<?= $applicant["phone_number"] ?>" 
+                                        data-license="<?= $applicant["license_number"] ?>" 
+                                        data-vehicle="<?= $applicant["vehicle_model"] ?>" 
+                                        data-status="<?= $applicant["status"] ?>"
+                                        data-plate="<?= $applicant["plate_number"] ?>" 
+                                        data-color="<?= $applicant["vehicle_color"] ?>" 
+                                        data-verification="<?= $applicant["verification_status"] ?>" 
+                                        data-email="<?= $applicant["email"] ?>" 
+                                        data-license-file="<?= $applicant["license_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["license_file"] : '' ?>" 
+                                        data-vehicle-file="<?= $applicant["vehicle_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["vehicle_file"] : '' ?>" 
+                                        data-registration-file="<?= $applicant["registration_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["registration_file"] : '' ?>"
+                                        data-insurance-file="<?= $applicant["insurance_file"] ? '../../backEnd/controller/viewUploadedFile.php?type=document&amp;id=' . (int)$applicant["insurance_file"] : '' ?>">
+                                        
                                         <td><?= $applicant["first_name"] . " " . $applicant["last_name"]; ?></td>
                                         <td class="<?php if ($applicant["verification_status"] == 'verified'): echo 'status-active'; 
                                                         elseif($applicant["verification_status"] == 'pending'): echo 'status-pending'; 
                                                         elseif ($applicant["verification_status"] == 'denied'): echo 'status-rejected'; endif; ?>">
                                             <?= ucfirst($applicant["verification_status"]) ?>
                                         </td>
-                                         <td data-date="<?= date("Y-m-d", strtotime($applicant["created_at"])) ?>"><?= date("F, j Y", strtotime($applicant["created_at"])); ?></td>
+                                        <td data-date="<?= date("Y-m-d", strtotime($applicant["created_at"])) ?>"><?= date("F j, Y", strtotime($applicant["created_at"])); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>
@@ -96,7 +102,7 @@
                     <p>Select an applicant from the table to view profile information and uploaded documents.</p>
                 </div>
 
-                <div class="decision-buttons" id="decisionButtons">
+                <div class="decision-buttons" id="decisionButtons" style="display: none;">
                     <form action="../../backEnd/controller/driverVerificationController.php" method="POST">
                         <input type="hidden" name="action" value="approveDriver">
                         <input type="hidden" name="driver_id" id="approveDriverId">
@@ -170,10 +176,8 @@
                 <label for="vehicleFile">Vehicle Picture</label>
                 <input type="file" name="vehicle_file" id="vehicleFile">
 
-
                 <label for="registrationFile">Vehicle Registration</label>
                 <input type="file" name="registration_file" id="registrationFile">
-
 
                 <label for="insuranceFile">Vehicle Insurance</label>
                 <input type="file" name="insurance_file" id="insuranceFile">
