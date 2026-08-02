@@ -1,36 +1,70 @@
 <?php
     require "../../config/db.php";
 
-    function getAllTrips($conn) {
-        $stmt = $conn->query("SELECT r.ride_id, CONCAT(u.first_name, ' ', u.last_name) AS driver,
-                                r.origin, r.destination, r.departure, CONCAT((r.total_seats - r.available_seats), '/', r.total_seats) AS seats,
-                                r.ride_status
-                              FROM rides AS r
-
-                              JOIN driver_profiles AS d ON r.driver_id = d.driver_id
-                              JOIN users AS u ON d.driver_id = u.user_id;");
-        
-        return $stmt->fetch_all(MYSQLI_ASSOC);
+    function getAllTrips($conn, $search) {
+        if ($search == "") {
+            $query = $conn->query("SELECT r.ride_id, r.driver_id, CONCAT(u.first_name, ' ', u.last_name) AS driver_name, 
+                                   r.origin, r.destination, r.departure, r.departure_date, r.total_seats,
+                                   r.available_seats, r.cost, r.ride_status
+                                   FROM rides AS r
+                                   JOIN users AS u ON r.driver_id = u.user_id
+                                   ORDER BY r.ride_id DESC");
+            return $query->fetch_all(MYSQLI_ASSOC);
+        } else {
+            $searchFilter = "%" . $search . "%";
+            $stmt = $conn->prepare("SELECT r.ride_id, r.driver_id, CONCAT(u.first_name, ' ', u.last_name) AS driver_name,
+                                    r.origin, r.destination, r.departure, r.departure_date, r.total_seats,
+                                    r.available_seats, r.cost, r.ride_status
+                                    FROM rides AS r
+                                    JOIN users AS u ON r.driver_id = u.user_id
+                                    WHERE u.first_name LIKE ?
+                                       OR u.last_name LIKE ?
+                                       OR r.origin LIKE ?
+                                       OR r.destination LIKE ?
+                                    ORDER BY r.ride_id DESC");
+            $stmt->bind_param("ssss", $searchFilter, $searchFilter, $searchFilter, $searchFilter);
+            $stmt->execute();
+            $query = $stmt->get_result();
+            return $query->fetch_all(MYSQLI_ASSOC);
+        }
     }
 
-    function getAllBookings($conn, $ride_id) {
-        $stmt = $conn->prepare("SELECT b.booking_id, CONCAT(u.first_name, ' ', u.last_name) AS passenger,
-                                b.seat_reserved, b.booking_status FROM bookings AS b
-                                JOIN users AS u ON b.passenger_id = u.user_id
-                                WHERE b.ride_id = ?;");
-        $stmt->bind_param("i", $ride_id);
-        $stmt->execute();
+    function addTrip($conn, $driver_id, $origin, $destination, $departure_date, $departure, $total_seats, $available_seats, $cost, $ride_status) {
+        // Prevent exact schedule duplicates for the same driver on the same day/time
+        $check = $conn->prepare("SELECT ride_id FROM rides WHERE driver_id = ? AND departure_date = ? AND departure = ?");
+        $check->bind_param("iss", $driver_id, $departure_date, $departure);
+        $check->execute();
+        $result = $check->get_result();
 
-        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            return false; // Duplicate found
+        }
 
-        return $result->fetch_all(MYSQLI_ASSOC);
+        $stmt = $conn->prepare("INSERT INTO rides (driver_id, origin, destination, departure_date, departure, total_seats, available_seats, cost, ride_status)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("issssidds", $driver_id, $origin, $destination, $departure_date, $departure, $total_seats, $available_seats, $cost, $ride_status);
+        return $stmt->execute();
     }
 
-    function updateTripStatus($conn, $ride_id, $ride_status) {
-        $stmt = $conn->prepare("UPDATE rides
-                                SET ride_status = ?
+    function editTrip($conn, $ride_id, $driver_id, $origin, $destination, $departure_date, $departure, $total_seats, $available_seats, $cost, $ride_status) {
+        $check = $conn->prepare("SELECT ride_id FROM rides WHERE driver_id = ? AND departure_date = ? AND departure = ? AND ride_id != ?");
+        $check->bind_param("issi", $driver_id, $departure_date, $departure, $ride_id);
+        $check->execute();
+        $result = $check->get_result();
+
+        if ($result->num_rows > 0) {
+            return false; // Conflict found with existing trip
+        }
+
+        $stmt = $conn->prepare("UPDATE rides SET driver_id = ?, origin = ?, destination = ?, departure_date = ?, departure = ?, total_seats = ?, available_seats = ?, cost = ?, ride_status = ?
                                 WHERE ride_id = ?");
-        $stmt->bind_param("si", $ride_status, $ride_id);
+        $stmt->bind_param("issssiddsi", $driver_id, $origin, $destination, $departure_date, $departure, $total_seats, $available_seats, $cost, $ride_status, $ride_id);
+        return $stmt->execute();
+    }
+
+    function deleteTrip($conn, $ride_id) {
+        $stmt = $conn->prepare("DELETE FROM rides WHERE ride_id = ?");
+        $stmt->bind_param("i", $ride_id);
         return $stmt->execute();
     }
 ?>

@@ -1,232 +1,262 @@
-let filters = {
-    search: "",
-    status: "all",
-    fromTime: "",
-    toTime: ""
-};
+let confirmCallback = null;
 
-const rowsPerPage = 7;
-let currentPage = 1;
+/* ROW SELECTION VIA HOVER & CLICK */
+function selectRow(row) {
+    const isSelected = row.classList.contains("selected-row");
+    
+    document.querySelectorAll("#tripTable tbody tr").forEach(r => r.classList.remove("selected-row"));
 
-/* SEARCH */
-function searchTrips() {
-    filters.search =
-        document.getElementById("searchInput")
-        .value
-        .toLowerCase();
+    if (!isSelected) {
+        row.classList.add("selected-row");
+    }
 
-    currentPage = 1;
-    applyFilters();
+    updateActionButtons();
 }
 
-/* STATUS FILTER */
-function filterByStatus() {
-
-    const status =
-        document.getElementById("statusFilter")
-        .value
-        .toLowerCase();
-
-    filters.status =
-        status === "all status"
-        ? "all"
-        : status;
-
-    currentPage = 1;
-    applyFilters();
-}
-
-/* TIME FILTER */
-function filterTime() {
-
-    filters.fromTime = document.getElementById("fromTime").value;
-    filters.toTime = document.getElementById("toTime").value;
-
-    currentPage = 1;
-    applyFilters();
-}
-
-/* SELECTED TRIP */
 function getSelectedRow() {
-
-    const selected =
-        document.querySelector(
-            "input[name='selectedTrip']:checked"
-        );
-
-    return selected
-        ? selected.closest("tr")
-        : null;
+    return document.querySelector("#tripTable tbody tr.selected-row");
 }
 
-/* CHANGE STATUS */
-function updateTripStatus() {
+function updateActionButtons() {
+    const selectedRow = getSelectedRow();
+    const editButton = document.getElementById("editButton");
+    const deleteButton = document.getElementById("deleteButton");
 
+    const hasSelection = selectedRow !== null;
+    if (editButton) editButton.disabled = !hasSelection;
+    if (deleteButton) deleteButton.disabled = !hasSelection;
+}
+
+/* MODAL CONTROLS */
+function openAddModal() {
+    const modal = document.getElementById("tripModal");
+    document.getElementById("modalTitle").textContent = "Add Trip";
+    document.getElementById("formAction").value = "addTrip";
+    document.getElementById("tripForm").reset();
+    modal.classList.add("show");
+}
+
+function openEditModal() {
     const row = getSelectedRow();
 
     if (!row) {
-        alert("Please select a trip.");
+        alert("Please select a trip first.");
         return;
     }
 
-    const rideId = row.cells[1].textContent.trim();
+    const modal = document.getElementById("tripModal");
+    document.getElementById("modalTitle").textContent = "Edit Trip";
+    document.getElementById("formAction").value = "editTrip";
 
-    document.getElementById("selectedRideId").value = rideId;
-    document.getElementById("statusModal").classList.add("show");
+    // Populate using dataset attributes for precision
+    document.getElementById("ride_id").value = row.dataset.rideId;
+    document.getElementById("driver_id").value = row.dataset.driverId;
+    document.getElementById("origin").value = row.dataset.origin;
+    document.getElementById("destination").value = row.dataset.destination;
+    document.getElementById("departure_date").value = row.dataset.departureDate;
+    document.getElementById("departure").value = row.dataset.departure;
+    document.getElementById("total_seats").value = row.dataset.totalSeats;
+    document.getElementById("available_seats").value = row.dataset.availableSeats;
+    document.getElementById("cost").value = row.dataset.cost;
+    document.getElementById("ride_status").value = row.dataset.status;
+
+    modal.classList.add("show");
 }
 
 function closeModal() {
-
-    document
-        .getElementById("statusModal")
-        .classList
-        .remove("show");
+    const modal = document.getElementById("tripModal");
+    if (modal) modal.classList.remove("show");
 }
 
-/* VIEW RESERVATIONS */
-function viewBookings() {
+/* CONFIRM DELETE MODAL */
+function openConfirmModal(title, message, onConfirm) {
+    const titleEl = document.getElementById("confirmTitle");
+    const msgEl = document.getElementById("confirmMessage");
+    const modal = document.getElementById("confirmModal");
 
-    const row = getSelectedRow();
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+    
+    confirmCallback = onConfirm;
 
-    if (!row) {
-        alert("Please select a trip.");
+    if (modal) modal.classList.add("show");
+}
+
+function closeConfirmModal() {
+    const modal = document.getElementById("confirmModal");
+    if (modal) modal.classList.remove("show");
+    confirmCallback = null;
+}
+
+function deleteTrip() {
+    const selectedRow = getSelectedRow();
+
+    if (!selectedRow) {
+        alert("Please select a trip first.");
         return;
     }
 
-    const rideId = row.cells[1].textContent;
+    const rideId = selectedRow.dataset.rideId;
+    const message = `Are you sure you want to delete Trip ID: ${rideId}?`;
 
-    fetch("../../backEnd/controller/tripManagementController.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
-        body:
-            "action=viewBookings&ride_id=" + rideId
-    })
+    openConfirmModal("Confirm Delete", message, function() {
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "../../backEnd/controller/tripManagementController.php";
 
-    .then(response => response.json())
+        const actionInput = document.createElement("input");
+        actionInput.type = "hidden";
+        actionInput.name = "action";
+        actionInput.value = "deleteTrip";
 
-    .then(bookings => {
-        const body = document.getElementById("reservationBody");
-        body.innerHTML = "";
+        const idInput = document.createElement("input");
+        idInput.type = "hidden";
+        idInput.name = "ride_id";
+        idInput.value = rideId;
 
-        if (bookings.length === 0) {
-            body.innerHTML = `
-                <tr>
-                    <td colspan="2">
-                        No bookings found.
-                    </td>
-                </tr>
-            `;
-        } else {
-            bookings.forEach(b => {
-                body.innerHTML += `
+        form.appendChild(actionInput);
+        form.appendChild(idInput);
 
-                    <tr>
-                        <td>${b.passenger}</td>
-                        <td class="capitalize">${b.booking_status}</td>
-                    </tr>
-                `;
-            });
-
-        }
-
-        document
-            .getElementById("reservationModal")
-            .classList
-            .add("show");
+        document.body.appendChild(form);
+        form.submit();
     });
 }
 
-function closeReservations() {
+/* CORE FILTER SYSTEM */
+let filters = {
+    search: "",
+    status: "all",
+    from: "",
+    to: ""
+};
 
-    document
-        .getElementById("reservationModal")
-        .classList
-        .remove("show");
+const rowsPerPage = 10;
+let currentPage = 1;
+
+function searchTrips() {
+    const searchInput = document.getElementById("searchInput");
+    filters.search = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    currentPage = 1;
+    applyFilters();
 }
 
-/* FILTERS */
+function filterByStatus() {
+    const statusSelect = document.getElementById("statusFilter");
+    if (statusSelect) {
+        const statusValue = statusSelect.value.toLowerCase().trim();
+        filters.status = (statusValue === "all" || statusValue === "all status") ? "all" : statusValue;
+    }
+    currentPage = 1;
+    applyFilters();
+}
+
+function filterDates() {
+    const fromInput = document.getElementById("fromDate");
+    const toInput = document.getElementById("toDate");
+    filters.from = fromInput ? fromInput.value : "";
+    filters.to = toInput ? toInput.value : "";
+    currentPage = 1;
+    applyFilters();
+}
+
 function applyFilters() {
+    const table = document.getElementById("tripTable");
+    if (!table) return;
 
-    const rows =
-        Array.from(
-            document.querySelectorAll(
-                "#tripTable tbody tr"
-            )
-        );
+    const tbody = table.querySelector("tbody");
+    if (!tbody) return;
 
-    const filtered = rows.filter(row => {
+    const allRows = Array.from(tbody.querySelectorAll("tr"));
 
-        const text =
-            row.textContent.toLowerCase();
+    const filteredRows = allRows.filter(row => {
+        if (!row.cells || row.cells.length < 7) return false;
 
-        const status =
-            row.cells[7]
-            .textContent
-            .toLowerCase();
+        const driverText = row.cells[1].textContent.toLowerCase();
+        const originText = row.cells[2].textContent.toLowerCase();
+        const destText = row.cells[3].textContent.toLowerCase();
 
-        const rowTime = row.dataset.time;
+        const matchesSearch = driverText.includes(filters.search) || 
+                              originText.includes(filters.search) || 
+                              destText.includes(filters.search);
 
-        const matchesSearch = text.includes(filters.search);
-        const matchesStatus = filters.status === "all" || status === filters.status;
-        const matchesFromTime = !filters.fromTime || rowTime >= filters.fromTime;
-        const matchesToTime = !filters.toTime || rowTime <= filters.toTime;
+        const status = row.dataset.status ? row.dataset.status.toLowerCase() : "";
+        const matchesStatus = (filters.status === "all" || status === filters.status);
 
-        return matchesSearch && matchesStatus && matchesFromTime && matchesToTime;
+        const rowDate = row.dataset.departureDate || "";
+        let matchesDateFrom = true;
+        let matchesDateTo = true;
+
+        if (filters.from) matchesDateFrom = (rowDate >= filters.from);
+        if (filters.to)   matchesDateTo = (rowDate <= filters.to);
+
+        return matchesSearch && matchesStatus && matchesDateFrom && matchesDateTo;
     });
 
-    rows.forEach(row => {
-        row.style.display = "none";
-    });
+    const totalPages = Math.ceil(filteredRows.length / rowsPerPage) || 1;
+    if (currentPage > totalPages) currentPage = 1;
 
-    const totalPages =
-        Math.ceil(filtered.length / rowsPerPage) || 1;
+    allRows.forEach(r => (r.style.display = "none"));
 
-    const start =
-        (currentPage - 1) * rowsPerPage;
-
-    filtered
-        .slice(start, start + rowsPerPage)
-        .forEach(row => {
-            row.style.display = "";
-        });
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    filteredRows.slice(start, end).forEach(r => (r.style.display = ""));
 
     renderPagination(totalPages);
 }
 
 /* PAGINATION */
 function renderPagination(totalPages) {
-
-    const pagination =
-        document.getElementById("pagination");
-
-    pagination.innerHTML = "";
+    const container = document.getElementById("pagination");
+    if (!container) return;
+    container.innerHTML = "";
 
     if (totalPages <= 1) return;
 
-    pagination.innerHTML = `
-        <button
-            ${currentPage === 1 ? "disabled" : ""}
-            onclick="currentPage--;applyFilters();"
-        >
-            <
-        </button>
+    const wrapper = document.createElement("div");
 
-        <span>
-            ${currentPage} of ${totalPages}
-        </span>
+    const prev = document.createElement("button");
+    prev.textContent = "<";
+    prev.disabled = currentPage === 1;
+    prev.onclick = () => {
+        currentPage--;
+        applyFilters();
+    };
 
-        <button
-            ${currentPage === totalPages ? "disabled" : ""}
-            onclick="currentPage++;applyFilters();"
-        >
-            >
-        </button>
-    `;
+    const label = document.createElement("span");
+    label.textContent = ` ${currentPage} of ${totalPages} `;
+
+    const next = document.createElement("button");
+    next.textContent = ">";
+    next.disabled = currentPage === totalPages;
+    next.onclick = () => {
+        currentPage++;
+        applyFilters();
+    };
+
+    wrapper.append(prev, label, next);
+    container.appendChild(wrapper);
 }
 
-document.addEventListener(
-    "DOMContentLoaded",
-    applyFilters
-);
+document.addEventListener("DOMContentLoaded", () => {
+    const confirmYesBtn = document.getElementById("confirmYesBtn");
+    if (confirmYesBtn) {
+        confirmYesBtn.onclick = function () {
+            if (typeof confirmCallback === "function") confirmCallback();
+            closeConfirmModal();
+        };
+    }
+
+    applyFilters();
+
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get("message");
+
+    if (message === "duplicateAdd") alert("Cannot add trip, a duplicate schedule already exists for this driver.");
+    if (message === "duplicateEdit") alert("Cannot edit trip, a duplicate schedule conflicts with another trip.");
+    if (message === "successfulAdd") alert("Trip successfully added.");
+    if (message === "successfulEdit") alert("Trip successfully edited.");
+
+    if (message) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
