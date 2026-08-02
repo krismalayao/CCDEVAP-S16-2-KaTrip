@@ -53,11 +53,19 @@
                     
                     <div class="top-action-buttons">
                         <button class="add-user-button" onclick="openAddModal()">
-                            <span class="plus">+</span>
+                            <span class="icon">+</span>
                             <span class="text">Add Trip</span>
                         </button>
-                        <button id="editButton" onclick="openEditModal()" disabled>Edit Trip</button>
-                        <button id="deleteButton" onclick="deleteTrip()" disabled>Delete Trip</button>
+
+                        <button id="editButton" class="edit-user-button" onclick="openEditModal()" disabled>
+                            <span class="icon">✎</span>
+                            <span class="text">Edit Trip</span>
+                        </button>
+
+                        <button id="deleteButton" class="delete-user-button" onclick="deleteTrip()" disabled>
+                            <span class="icon">🗑</span>
+                            <span class="text">Delete Trip</span>
+                        </button>
                     </div>
                 </div>
                 

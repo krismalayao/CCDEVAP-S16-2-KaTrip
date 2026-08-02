@@ -51,12 +51,20 @@
                     <h2>User Management</h2>
                     
                     <div class="top-action-buttons">
-                        <button class="add-user-button" onclick="openAddModal()">
-                            <span class="plus">+</span>
+                        <button id="addButton" class="add-user-button" onclick="openAddModal()">
+                            <span class="icon">+</span>
                             <span class="text">Add User</span>
                         </button>
-                        <button id="editButton" onclick="openEditModal()" disabled>Edit User</button>
-                        <button id="deleteButton" onclick="deleteUser()" disabled>Delete User</button>
+
+                        <button id="editButton" class="edit-user-button" onclick="openEditModal()" disabled>
+                            <span class="icon">✎</span>
+                            <span class="text">Edit User</span>
+                        </button>
+                        
+                        <button id="deleteButton" class="delete-user-button" onclick="deleteUser()" disabled>
+                            <span class="icon">🗑</span>
+                            <span class="text">Delete User</span>
+                        </button>
                     </div>
                 </div>
                 

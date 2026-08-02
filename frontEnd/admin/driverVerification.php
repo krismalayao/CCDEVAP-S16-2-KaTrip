@@ -31,17 +31,24 @@
                 <h2>Driver Applications</h2>
                 <div class="top-action-bar">
                     <div class="management-actions">
-                        <button class="add-user-button" onclick="openAddModal()">
-                            <span class="plus">+</span>
+                        <button id="addButton" class="add-user-button" onclick="openAddModal()">
+                            <span class="icon">+</span>
                             <span class="text">Add Application</span>
                         </button>
                         
-                        <button type="button" onclick="openEditModal()" id="editButton" disabled>Edit Application</button>
-                        <button type="button" onclick="deleteApplication()" id="deleteButton" disabled>Delete Application</button>
+                        <button id="editButton" class="edit-user-button" onclick="openEditModal()" disabled>
+                            <span class="icon">✎</span>
+                            <span class="text">Edit Application</span>
+                        </button>
+
+                        <button id="deleteButton" class="delete-user-button" onclick="deleteApplication()" disabled>
+                            <span class="icon">🗑</span>
+                            <span class="text">Delete Application</span>
+                        </button>
                     </div>
 
                     <div class="management-search">
-                        <input type="text" placeholder="Search Applicant" onkeyup="searchApplicants()" id="searchInput">
+                        <input type="text" placeholder="Search Applicant..." onkeyup="searchApplicants()" id="searchInput">
                     </div>
                 </div>
 

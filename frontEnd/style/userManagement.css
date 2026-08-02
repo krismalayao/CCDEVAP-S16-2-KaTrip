@@ -110,7 +110,8 @@
 }
 
 .top-action-buttons button,
-.add-user-button {
+.add-user-button, .edit-user-button, 
+.delete-user-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -139,7 +140,7 @@
     background: #a0a0a0;
 }
 
-.add-user-button .plus {
+.add-user-button .icon {
     font-size: 14px;
     font-weight: bold;
 }

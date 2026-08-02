@@ -26,29 +26,44 @@
     align-items: center;
     gap: 15px;
     margin-bottom: 20px;
-    flex-wrap: wrap;
+    width: 100%;
 }
 
+/* BUTTON ACTION CONTAINER */
 .management-actions {
     display: flex;
     gap: 10px;
     align-items: center;
+    flex-shrink: 0; /* Prevents buttons from squishing */
 }
 
-.management-actions button {
-    height: 35px;
-    padding: 0 15px;
+/* BUTTON STYLES & SIDE-BY-SIDE ICON LAYOUT */
+.management-actions button,
+.add-user-button,
+.edit-user-button,
+.delete-user-button {
+    display: inline-flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    height: 38px !important;
+    padding: 0 16px !important;
     border: none;
     border-radius: 8px;
     background: var(--purple);
     color: white;
     font-family: 'Helvetica Now', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
+    font-weight: 500;
     cursor: pointer;
+    white-space: nowrap !important; /* Prevents text from wrapping into two lines */
     transition: background 0.2s ease, opacity 0.2s ease;
+    width: auto !important;
 }
 
-.management-actions button:hover:not(:disabled) {
+.management-actions button:hover:not(:disabled),
+.add-user-button:hover {
     background: var(--purple-dark);
 }
 
@@ -57,21 +72,31 @@
     cursor: not-allowed;
 }
 
+.management-actions .plus,
+.management-actions .icon,
+.add-user-button .plus {
+    font-size: 14px;
+    line-height: 1;
+    display: inline-block;
+}
+
+/* SEARCH BAR (EXPANDS TO FILL REMAINING SPACE) */
 .management-search {
-    flex: 1;
-    max-width: 280px;
+    flex: 1; /* Automatically stretches to fill available space */
+    width: 100%;
 }
 
 .management-search input {
     width: 100%;
-    height: 35px;
-    padding: 0 12px;
+    height: 38px;
+    padding: 0 14px;
     border: 1px solid var(--purple-light);
     border-radius: 8px;
     background: var(--bg-card);
     color: var(--grey-text);
     font-family: 'Helvetica Now', sans-serif;
-    font-size: 12px;
+    font-size: 13px;
+    box-sizing: border-box;
 }
 
 .management-search input:focus {
@@ -132,7 +157,6 @@
     background: var(--purple-faint);
 }
 
-
 /* GENERAL TABLE CELL STYLES */
 .management-data th,
 .management-applicants th {
@@ -184,22 +208,6 @@
 .management-applicants tbody tr.selected-row,
 .management-applicants tbody tr.selected {
     background: var(--purple-faint);
-}
-
-/* COLUMN RATIOS (3 Columns: Name, Status, Date) */
-.management-applicants th:nth-child(1),
-.management-applicants td:nth-child(1) { 
-    width: 45%; 
-}
-
-.management-applicants th:nth-child(2),
-.management-applicants td:nth-child(2) { 
-    width: 25%; 
-}
-
-.management-applicants th:nth-child(3),
-.management-applicants td:nth-child(3) { 
-    width: 30%; 
 }
 
 .management-files {
@@ -584,33 +592,28 @@ html[data-theme="dark"] .document-modal-close {
     .top-action-bar {
         flex-direction: column;
         align-items: stretch;
+        gap: 12px;
     }
 
     .management-actions {
         width: 100%;
         display: flex;
-        gap: 6px; 
-        flex-wrap: nowrap; 
+        gap: 8px; 
+        overflow-x: auto;
+        padding-bottom: 4px;
     }
 
     .management-actions button,
     .add-user-button {
         flex: 1;
-        min-width: 0;
-        height: auto;
-        min-height: 38px;
-        padding: 6px 4px;
-        font-size: 10px;
-        text-align: center;
-        line-height: 1.2;
-    }
-
-    .add-user-button .plus {
-        font-size: 11px;
+        min-width: max-content;
+        height: 38px !important;
+        padding: 0 12px !important;
+        font-size: 12px !important;
     }
 
     .management-search {
-        max-width: 100%;
+        width: 100%;
     }
 
     .management-applicants,
@@ -638,32 +641,4 @@ html[data-theme="dark"] .document-modal-close {
     .cancel-button {
         width: 100%;
     }
-}
-
-/* PLUS & TEXT BUTTON */
-.add-user-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    height: 35px;
-    padding: 0 16px;
-    border: none;
-    border-radius: 8px;
-    background: var(--purple);
-    color: white;
-    font-family: 'Helvetica Now';
-    font-size: 12px;
-    cursor: pointer;
-    transition: 0.2s ease;
-    width: auto;
-}
-
-.add-user-button:hover {
-    background: var(--purple-dark);
-}
-
-.add-user-button .plus {
-    font-size: 14px;
-    font-weight: bold;
 }
