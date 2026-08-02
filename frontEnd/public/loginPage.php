@@ -62,7 +62,7 @@
                 <div class="login-password-feature <?= $loginError ? 'login-input-error' : '' ?>">
                 <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 <button type="button" id="toggle-button" class="toggle-button">
-                    <i id="toggle-icon" class="bx bxs-lock-alt"></i>
+                    <i id="toggle-icon" class="bx bxs-show"></i>
                 </button>
                 </div>
                 <?php if ($loginError): ?>

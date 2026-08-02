@@ -20,10 +20,10 @@ function initPasswordToggle() {
     toggleButton.addEventListener('click', function () {
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            toggleIcon.className = 'bx bxs-lock-open-alt';
+            toggleIcon.className = 'bx bx-hide';
         } else {
             passwordInput.type = 'password';
-            toggleIcon.className = 'bx bxs-lock-alt';
+            toggleIcon.className = 'bx bx-show';
         }
     });
 }
