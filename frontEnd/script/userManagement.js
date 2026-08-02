@@ -1,5 +1,34 @@
 let confirmCallback = null;
 
+/* ROW SELECTION VIA HOVER & CLICK */
+function selectRow(row) {
+    const isSelected = row.classList.contains("selected-row");
+    
+    // Clear selection from all rows
+    document.querySelectorAll("#userTable tbody tr").forEach(r => r.classList.remove("selected-row"));
+
+    // Toggle selection on clicked row
+    if (!isSelected) {
+        row.classList.add("selected-row");
+    }
+
+    updateActionButtons();
+}
+
+function getSelectedRow() {
+    return document.querySelector("#userTable tbody tr.selected-row");
+}
+
+function updateActionButtons() {
+    const selectedRow = getSelectedRow();
+    const editButton = document.getElementById("editButton");
+    const deleteButton = document.getElementById("deleteButton");
+
+    const hasSelection = selectedRow !== null;
+    if (editButton) editButton.disabled = !hasSelection;
+    if (deleteButton) deleteButton.disabled = !hasSelection;
+}
+
 /* MODAL CONTROL */
 function openAddModal() {
     const modal = document.getElementById("userModal");
@@ -10,7 +39,6 @@ function openAddModal() {
 }
 
 function openEditModal() {
-
     const row = getSelectedRow();
 
     if (!row) {
@@ -18,22 +46,20 @@ function openEditModal() {
         return;
     }
 
-    console.log(row.dataset);
-
     const modal = document.getElementById("userModal");
     document.getElementById("modalTitle").textContent = "Edit User";
     document.getElementById("formAction").value = "editUser";
 
     const cells = row.cells;
-    document.getElementById("user_id").value = cells[1].textContent.trim();
+    document.getElementById("user_id").value = cells[0].textContent.trim();
 
-    let fullName = cells[2].textContent.trim().split(" ");
+    let fullName = cells[1].textContent.trim().split(" ");
     document.querySelector("input[name='first_name']").value = fullName[0];
     document.querySelector("input[name='last_name']").value = fullName.slice(1).join(" ");
 
-    document.querySelector("input[name='email']").value = cells[3].textContent.trim();
-    document.querySelector("#role").value = cells[4].textContent.trim().toLowerCase();
-    document.querySelector("select[name='status']").value = cells[5].textContent.trim().toLowerCase();
+    document.querySelector("input[name='email']").value = cells[2].textContent.trim();
+    document.querySelector("#role").value = cells[3].textContent.trim().toLowerCase();
+    document.querySelector("select[name='status']").value = cells[4].textContent.trim().toLowerCase();
 
     document.querySelector("#gender").value = row.dataset.gender;
     document.querySelector("#birthdate").value = row.dataset.birthdate;
@@ -67,84 +93,39 @@ function closeConfirmModal() {
     confirmCallback = null;
 }
 
-/* HELPERS */
-function getSelectedRow() {
-    const selected = document.querySelector(".selectedUser:checked");
-    return selected ? selected.closest("tr") : null;
-}
-
-function getSelectedUsers() { // For Delete
-    return document.querySelectorAll(".selectedUser:checked");
-}
-
-function updateActionButtons() {
-
-    const selectedUsers = document.querySelectorAll(".selectedUser:checked");
-
-    const editButton = document.getElementById("editButton");
-    const deleteButton = document.getElementById("deleteButton");
-
-    const count = selectedUsers.length;
-
-    editButton.disabled = count !== 1;
-    deleteButton.disabled = count === 0;
-
-}
-
-/* DELETE */
 function deleteUser() {
+    const selectedRow = getSelectedRow();
 
-    const selectedUsers = getSelectedUsers();
-
-    if (selectedUsers.length === 0) {
+    if (!selectedRow) {
         alert("Please select a user first.");
         return;
     }
 
-    let message = "";
+    const userId = selectedRow.cells[0].textContent.trim();
+    const userName = selectedRow.cells[1].textContent.trim();
+    const message = `Are you sure you want to delete ${userName}?`;
 
-    if (selectedUsers.length === 1) {
-        const row = selectedUsers[0].closest("tr");
-        const userName = row.cells[2].textContent.trim();
+    openConfirmModal("Confirm Delete", message, function() {
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "../../backEnd/controller/userManagementController.php";
 
-        message = `Are you sure you want to delete ${userName}?`;
-    } else {
-        message = "Are you sure you want to delete these users?";
-    }
+        const actionInput = document.createElement("input");
+        actionInput.type = "hidden";
+        actionInput.name = "action";
+        actionInput.value = "deleteUser";
 
+        const idInput = document.createElement("input");
+        idInput.type = "hidden";
+        idInput.name = "user_id";
+        idInput.value = userId;
 
-    openConfirmModal("Confirm Delete", message,
-        function() {
+        form.appendChild(actionInput);
+        form.appendChild(idInput);
 
-            let userIds = [];
-
-            selectedUsers.forEach(user => {
-                userIds.push(user.value);
-            });
-
-            const form = document.createElement("form");
-
-            form.method = "POST";
-            form.action = "../../backEnd/controller/userManagementController.php";
-
-            const actionInput = document.createElement("input");
-            actionInput.type = "hidden";
-            actionInput.name = "action";
-            actionInput.value = "deleteUser";
-
-            const idsInput = document.createElement("input");
-            idsInput.type = "hidden";
-            idsInput.name = "user_ids";
-            idsInput.value = JSON.stringify(userIds); // Ito yung nagstostore ng maraming IDs if maraming user ids ang idedelete
-
-            form.appendChild(actionInput);
-            form.appendChild(idsInput);
-
-            document.body.appendChild(form);
-
-            form.submit();
-        }
-    );
+        document.body.appendChild(form);
+        form.submit();
+    });
 }
 
 /* CORE FILTER SYSTEM FOR STATIC */
@@ -155,7 +136,7 @@ let filters = {
     to: ""
 };
 
-const rowsPerPage = 5;
+const rowsPerPage = 10;
 let currentPage = 1;
 
 function searchUsers() {
@@ -169,11 +150,7 @@ function filterByRole() {
     const roleSelect = document.getElementById("roleFilter");
     if (roleSelect) {
         const roleValue = roleSelect.value.toLowerCase().trim();
-        if (roleValue === "all" || roleValue === "all roles") {
-            filters.role = "all";
-        } else {
-            filters.role = roleValue;
-        }
+        filters.role = (roleValue === "all" || roleValue === "all roles") ? "all" : roleValue;
     }
     currentPage = 1;
     applyFilters();
@@ -200,14 +177,14 @@ function applyFilters() {
     const filteredRows = allRows.filter(row => {
         if (!row.cells || row.cells.length < 6) return false;
 
-        const nameText = row.cells[2].textContent.toLowerCase();
-        const emailText = row.cells[3].textContent.toLowerCase();
+        const nameText = row.cells[1].textContent.toLowerCase();
+        const emailText = row.cells[2].textContent.toLowerCase();
         const matchesSearch = nameText.includes(filters.search) || emailText.includes(filters.search);
 
-        const role = row.cells[4].textContent.trim().toLowerCase();
+        const role = row.cells[3].textContent.trim().toLowerCase();
         const matchesRole = (filters.role === "all" || role === filters.role);
 
-        const rowDate = row.cells[6].dataset.date || "";
+        const rowDate = row.cells[5].dataset.date || "";
         let matchesDateFrom = true;
         let matchesDateTo = true;
 
@@ -272,31 +249,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     applyFilters();
-});
-
-document.addEventListener("DOMContentLoaded", () => {
 
     const params = new URLSearchParams(window.location.search);
     const message = params.get("message");
 
-    if (message === "duplicateAdd") {
-        alert("Cannot add user, the email or phone number already exists.");
-    }
-
-    if (message === "duplicateEdit") {
-        alert("Cannot edit user, the email or phone number already exists.");
-    }
-
-    if (message === "successfulAdd") {
-        alert("User successfully added.");
-    }
-
-    if (message === "successfulEdit") {
-        alert("User successfully edited.");
-    }
+    if (message === "duplicateAdd") alert("Cannot add user, the email or phone number already exists.");
+    if (message === "duplicateEdit") alert("Cannot edit user, the email or phone number already exists.");
+    if (message === "successfulAdd") alert("User successfully added.");
+    if (message === "successfulEdit") alert("User successfully edited.");
 
     if (message) {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
-
 });

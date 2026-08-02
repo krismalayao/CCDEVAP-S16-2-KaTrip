@@ -50,12 +50,11 @@
                 header("Location: ../../frontEnd/admin/userManagement.php?message=duplicateEdit");
                 exit();
             }
-        } elseif ($action == "deleteUser") { // Delete User/s
-            $userIds = json_decode($_POST["user_ids"]);
-            
-            foreach ($userIds as $user) {
-                deleteUser($conn, $user);
-            }
+        } elseif ($action == "deleteUser") { // Delete User
+            if (isset($_POST["user_id"])) {
+                $userId = $_POST["user_id"];
+                deleteUser($conn, $userId);
+            } 
         }
 
         header("Location: ../../frontEnd/admin/userManagement.php");
