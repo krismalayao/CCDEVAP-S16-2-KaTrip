@@ -1,51 +1,111 @@
-// Chart Data Distribution
+function formatCurrency(value) {
+  const amount = Number(value || 0);
+  return `PHP ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 fetch("../../backEnd/controller/passengerDashboardController.php")
   .then(res => res.json())
-  .then(totals => {
+  .then(payload => {
+    const monthlySpend = Array.isArray(payload?.monthly_spend) ? payload.monthly_spend : Array(12).fill(0);
+    const locationSpend = Array.isArray(payload?.location_spend) ? payload.location_spend : [];
 
-    const ridesCtx = document.getElementById('rides-chart');
+    const avgTripEl = document.getElementById('avg-per-trip');
+    const avgLocationEl = document.getElementById('avg-per-location');
+
+    if (avgTripEl) avgTripEl.textContent = formatCurrency(payload?.average_per_trip);
+    if (avgLocationEl) avgLocationEl.textContent = formatCurrency(payload?.average_per_location);
+
     const rootStyles = getComputedStyle(document.documentElement);
     const chartTextColor = rootStyles.getPropertyValue('--text-primary').trim();
     const chartPurple = rootStyles.getPropertyValue('--purple').trim();
     const chartPurpleDark = rootStyles.getPropertyValue('--purple-dark').trim();
+    const chartFaint = rootStyles.getPropertyValue('--purple-faint').trim();
     const isDarkMode = document.documentElement.dataset.theme === 'dark';
     const chartGridColor = isDarkMode
       ? 'rgba(255, 255, 255, 0.12)'
       : 'rgba(100, 55, 160, 0.12)';
 
-    new Chart(ridesCtx, {
-      type: 'bar',
-      data: {
-        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
-        datasets: [{
-          label: 'Rides Completed',
-          data: totals,
-          backgroundColor: chartPurple,
-          borderColor: chartPurpleDark,
-          borderWidth: 1,
-          borderRadius: 5
-        }]
-      },
-      options: {
-        plugins: {
-          legend: { labels: { color: chartTextColor } }
+    const spendCtx = document.getElementById('spend-chart');
+    if (spendCtx) {
+      new Chart(spendCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          datasets: [{
+            label: 'Amount Spent',
+            data: monthlySpend,
+            backgroundColor: isDarkMode ? '#7aa2ff' : '#4f7cff',
+            borderColor: isDarkMode ? '#95b6ff' : '#2f5ad9',
+            borderWidth: 1,
+            borderRadius: 5
+          }]
         },
-        scales: {
-          x: {
-            ticks: { color: chartTextColor },
-            grid: { color: chartGridColor }
+        options: {
+          plugins: {
+            legend: { labels: { color: chartTextColor } }
           },
-          y: {
-            ticks: { color: chartTextColor },
-            beginAtZero: true,
-            grid: { color: chartGridColor }
+          scales: {
+            x: {
+              ticks: { color: chartTextColor },
+              grid: { color: chartGridColor }
+            },
+            y: {
+              ticks: {
+                color: chartTextColor,
+                callback: value => `PHP ${Number(value).toLocaleString()}`
+              },
+              beginAtZero: true,
+              grid: { color: chartGridColor }
+            }
           }
         }
-      }
-    });
+      });
+    }
+
+    const locationCtx = document.getElementById('location-chart');
+    if (locationCtx) {
+      const labels = locationSpend.length ? locationSpend.map(item => item.location) : ['No Data'];
+      const values = locationSpend.length ? locationSpend.map(item => Number(item.total_spent || 0)) : [1];
+
+      new Chart(locationCtx, {
+        type: 'doughnut',
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: locationSpend.length
+              ? [
+                  '#4f7cff',
+                  '#2aa8a1',
+                  '#ff8f5a',
+                  '#7a6bff',
+                  '#f4c95d'
+                ]
+              : [chartFaint],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: chartTextColor }
+            },
+            tooltip: {
+              callbacks: {
+                label: context => {
+                  if (!locationSpend.length) return 'No completed rides yet';
+                  return `${context.label}: ${formatCurrency(context.raw)}`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
   })
   .catch(error => {
-    console.error('Unable to load passenger ride chart:', error);
+    console.error('Unable to load passenger analytics:', error);
   });
 
   // Helper: build a human readable departure label from date + time
@@ -99,7 +159,6 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
     const rides = Array.isArray(payload)
       ? payload
       : (Array.isArray(payload?.rides) ? payload.rides : []);
-    const hasMore = Array.isArray(payload) ? false : Boolean(payload?.has_more);
 
     const container = document.querySelector('.passenger-ride-list');
     container.innerHTML = '';
@@ -152,15 +211,6 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
 
       container.innerHTML += card;
     });
-
-    // if more than 3 upcoming rides, lead to mybookings page with creation of button
-    if (hasMore) {
-      container.innerHTML += `
-        <div class="passenger-ride-card">
-          <a href="myBookings.php" class="passenger-dashboard-details-btn">View All Bookings</a>
-        </div>
-      `;
-    }
 
   })
   .catch(err => console.log(err));
