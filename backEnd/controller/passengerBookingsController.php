@@ -10,6 +10,14 @@ echo json_encode(["error" => "Unauthorized"]);
 exit();
 }
 
+$autoCancelSql = "UPDATE rides
+                  SET ride_status = 'cancelled'
+                  WHERE ride_status = 'scheduled'
+                  AND departure_date IS NOT NULL
+                  AND departure IS NOT NULL
+                  AND TIMESTAMP(departure_date, departure) < NOW()";
+$conn->query($autoCancelSql);
+
 $sql = "SELECT b.booking_id, b.booking_status, b.seat_reserved, r.ride_id, 
         r.origin, r.destination, r.departure, r.departure_date, 
         r.ride_status, r.cost,
