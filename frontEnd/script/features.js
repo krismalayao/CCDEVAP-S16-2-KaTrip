@@ -267,7 +267,7 @@ function renderRides(list) {
     const destinationLabel = ride.destination_name || ride.destination || 'Unknown';
     const routeLabel = `${originLabel} → ${destinationLabel}`.toUpperCase();
     const timeLabel = formatRideTime(ride.departure_time || ride.departure);
-    const dateLabel = formatRideDate(ride.start_date || ride.departure_date);
+    const dateLabel = formatRideDate(ride.departure_date || ride.start_date);
 
     return `
       <div class="browserides-ride-card">
@@ -323,16 +323,19 @@ function getFilteredRides() {
   });
 }
 
-// Sorts rides in browserides by departure time
-
-function sortByTime() {
-  const sorted = [...browseRidesData];
+function sortByDepartureDateTime(list = []) {
+  const sorted = [...list];
   sorted.sort(function(a, b) {
-    const aTime = String(a.departure_time || a.departure || '00:00');
-    const bTime = String(b.departure_time || b.departure || '00:00');
+    const aDate = String(a.departure_date || a.start_date || '').trim();
+    const bDate = String(b.departure_date || b.start_date || '').trim();
+    const aTime = String(a.departure || a.departure_time || '00:00:00').trim();
+    const bTime = String(b.departure || b.departure_time || '00:00:00').trim();
 
-    if (aTime < bTime) return -1;
-    if (aTime > bTime) return 1;
+    const aDateTime = `${aDate}T${aTime}`;
+    const bDateTime = `${bDate}T${bTime}`;
+
+    if (aDateTime < bDateTime) return -1;
+    if (aDateTime > bDateTime) return 1;
     return 0;
   });
   return sorted;
@@ -354,7 +357,7 @@ function openRideDetailsModal(rideId) {
       const destinationLabel = ride.destination_name || ride.destination || 'Unknown';
       const pickupPoints = ride.pickup_points || 'No pickup points listed';
       const departureTime = ride.departure_time || ride.departure || 'TBA';
-      const departureDate = ride.start_date || ride.departure_date || 'TBA';
+      const departureDate = ride.departure_date || ride.start_date || 'TBA';
       const driverPhone = ride.phone_number || 'N/A';
       const totalSeats = Number(ride.total_seats || 0);
       const availableSeats = Number(ride.available_seats || 0);
@@ -727,7 +730,7 @@ function initBrowseRidesAutocomplete() {
           document.getElementById(`panel-${this.dataset.filter}`).classList.remove('hidden');
 
           if (this.dataset.filter === 'departure') {
-            renderRides(sortByTime());
+            renderRides(sortByDepartureDateTime(getFilteredRides()));
           } else {
             renderRides(getFilteredRides());
           }
