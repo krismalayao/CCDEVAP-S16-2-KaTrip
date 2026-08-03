@@ -237,16 +237,17 @@ function formatRideDate(value) {
 function getCapacityDetails(ride) {
   const available = Number(ride.available_seats || 0);
   const total = Number(ride.total_seats || 0);
+  const occupied = Math.max(0, total - available);
 
-  if (available <= 0) {
-    return { label: `${available} / ${total}`, color: '#ef4444' };
+  if (occupied >= total && total > 0) {
+    return { label: `${occupied} / ${total}`, color: '#ef4444' };
   }
 
-  if (available <= total / 2) {
-    return { label: `${available} / ${total}`, color: '#f97316' };
+  if (occupied >= total / 2) {
+    return { label: `${occupied} / ${total}`, color: '#f97316' };
   }
 
-  return { label: `${available} / ${total}`, color: '#22c55e' };
+  return { label: `${occupied} / ${total}`, color: '#22c55e' };
 }
 
 // Generates / loads rides
@@ -284,7 +285,7 @@ function renderRides(list) {
             <span class="browserides-meta-value">${dateLabel}</span>
           </div>
           <div class="browserides-meta-item">
-            <span class="browserides-meta-label">SEATS LEFT:</span>
+            <span class="browserides-meta-label">SEATS OCCUPIED:</span>
             <span class="browserides-capacity-badge" style="background:${capacity.color}">${capacity.label}</span>
           </div>
           <div class="browserides-meta-item">
@@ -355,6 +356,9 @@ function openRideDetailsModal(rideId) {
       const departureTime = ride.departure_time || ride.departure || 'TBA';
       const departureDate = ride.start_date || ride.departure_date || 'TBA';
       const driverPhone = ride.phone_number || 'N/A';
+      const totalSeats = Number(ride.total_seats || 0);
+      const availableSeats = Number(ride.available_seats || 0);
+      const occupiedSeats = Math.max(0, totalSeats - availableSeats);
       const modal = document.createElement('div');
       modal.classList.add('view-details-modal-overlay');
 
@@ -397,8 +401,8 @@ function openRideDetailsModal(rideId) {
               <span class="view-details-modal-value">${driverPhone}</span>
             </div>
             <div class="view-details-modal-meta-item">
-              <span class="view-details-modal-label">Seats Left</span>
-              <span class="view-details-modal-seat">${ride.available_seats || 0} / ${ride.total_seats || 0}</span>
+              <span class="view-details-modal-label">Seats Occupied</span>
+              <span class="view-details-modal-seat">${occupiedSeats} / ${totalSeats}</span>
             </div>
           </div>
           <div class="view-details-modal-driver">
