@@ -175,6 +175,21 @@ html[data-theme="dark"] .passenger-dashboard-card-actions {
     background: #775280;
 }
 
+html[data-theme="dark"] .analytics-panel {
+    background: #5f3f69;
+    border-color: #8f6c99;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+html[data-theme="dark"] .analytics-metric-card {
+    background: linear-gradient(180deg, #5a3a63 0%, #4f3458 100%);
+    border-color: #896292;
+}
+
+html[data-theme="dark"] .analytics-metric-value {
+    color: #ffffff;
+}
+
 /* Dark mode: Shared Navigation */
 html[data-theme="dark"] .nav-profile-initials {
     color: var(--text-primary);
@@ -364,35 +379,92 @@ body {
 }
 
 .charts {
-    max-width: 720px;
+    max-width: 940px;
     width: 90%;
     margin: 0 auto 30px auto;
-    padding: 22px 20px 18px;
+    padding: 28px 26px 24px;
     background: var(--bg-card);
-    border-radius: 18px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-radius: 20px;
+    border: 1px solid #e8d9f5;
+    box-shadow: 0 10px 24px rgba(80, 35, 120, 0.10);
     text-align: center;
 }
 
+.analytics-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.analytics-top {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.analytics-metric-card {
+    background: linear-gradient(180deg, #f6eeff 0%, #fdf8ff 100%);
+    border: 1px solid #e7d6f9;
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: left;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.55);
+}
+
+.analytics-metric-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    opacity: 0.9;
+}
+
+.analytics-metric-value {
+    display: block;
+    margin-top: 8px;
+    font-family: 'Bloc';
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--purple-dark);
+}
+
+.analytics-row {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.analytics-panel {
+    background: #ffffff;
+    border: 1px solid #eadcf8;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 8px 18px rgba(100, 55, 160, 0.08);
+}
+
 .charts h4 {
-    margin: 0 0 18px;
-    font-size: 22px;
+    margin: 0 0 14px;
+    font-size: 19px;
     color: var(--purple-dark);
     font-family: 'Bloc';
     letter-spacing: 1px;
 }
 
-#rides-chart {
+#spend-chart,
+#location-chart {
     width: 100%;
-    max-width: 660px;
+    max-width: 100%;
     height: 260px;
     margin: 0 auto;
     display: block;
 }
 
 .charts {
-    width: 700px;
-    min-height: 220px;
+    width: 920px;
+    min-height: 280px;
 }
 
 .rides-chart {
@@ -647,10 +719,23 @@ body {
 
     .charts {
         width: calc(100% - 24px);
-        min-height: 180px;
+        min-height: 200px;
         margin-bottom: 16px;
-        padding: 14px 12px;
+        padding: 16px 14px;
         border-radius: 14px;
+    }
+
+    .analytics-top,
+    .analytics-row {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-panel {
+        padding: 12px;
+    }
+
+    .analytics-metric-value {
+        font-size: 22px;
     }
 
     .charts h4 {
@@ -658,8 +743,9 @@ body {
         margin-bottom: 10px;
     }
 
-    #rides-chart {
-        height: 150px !important;
+    #spend-chart,
+    #location-chart {
+        height: 180px !important;
         max-width: 100%;
     }
 
