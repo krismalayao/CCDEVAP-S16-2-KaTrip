@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     panels.forEach(p => p.classList.toggle('active', p.id === tab.dataset.tab));
   }));
 
+  // This escapes HTML special charavters for clean html injection
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const date = (scheduled, booked) => {
     const value = scheduled || (booked ? String(booked).slice(0, 10) : '');
