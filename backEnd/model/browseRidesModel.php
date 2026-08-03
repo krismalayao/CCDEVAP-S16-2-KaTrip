@@ -28,6 +28,9 @@ function getAvailableRides($conn, $passengerId = null)
             ON r.schedule_id = rs.schedule_id
         WHERE r.ride_status = 'scheduled'
         AND r.available_seats > 0
+        AND r.departure_date IS NOT NULL
+        AND r.departure IS NOT NULL
+        AND TIMESTAMP(r.departure_date, r.departure) > NOW()
     ";
 
     $params = [];
@@ -48,7 +51,7 @@ function getAvailableRides($conn, $passengerId = null)
     }
 
     $sql .= "
-        ORDER BY rs.start_date ASC, rs.departure_time ASC, r.departure ASC
+        ORDER BY TIMESTAMP(r.departure_date, r.departure) ASC
     ";
 
     $stmt = $conn->prepare($sql);
