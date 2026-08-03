@@ -28,6 +28,7 @@ async function loadTrips() {
                   pickups:    (r.landmarks || []).map(l => l.landmark_name)
               };
           });
+            renderEarningsCharts(data.earnings); //For Driver charts
         } else {
             showToast(data.message || 'Failed to load trips.', 'error');
         }
@@ -37,6 +38,40 @@ async function loadTrips() {
     }
     updateStats();
     renderTrips();
+}
+
+// ── Render earnings charts ─────────────────────────────────────────────────────
+function renderEarningsCharts(earnings) {
+  if (!earnings || typeof Chart === 'undefined') return;
+
+  //Earnings by month chart - Used Bar, felt like the best option.
+  new Chart(document.getElementById('chartEarningsMonth'), {
+    type: 'bar',
+    data: {
+      labels: Object.keys(earnings.byMonth),
+      datasets: [{
+        label: 'Earnings (PHP)',
+        data: Object.values(earnings.byMonth),
+        backgroundColor: '#7c3aed'
+      }]
+    },
+    options: {
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  //Earnings by destination chart - Doughnut, change if you want to.
+  new Chart(document.getElementById('chartEarningsDestination'), {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(earnings.byDestination),
+      datasets: [{
+        data: Object.values(earnings.byDestination),
+        backgroundColor: ['#7c3aed', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff', '#f3e8ff'] //Regular use
+}]
+    }
+  });
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
