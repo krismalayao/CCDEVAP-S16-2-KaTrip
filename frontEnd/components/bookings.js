@@ -37,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const departureTime = ride.departure_time || ride.departure || 'TBA';
         const departureDate = ride.start_date || ride.departure_date || 'TBA';
         const driverPhone = ride.phone_number || 'N/A';
+        const totalSeats = Number(ride.total_seats || 0);
+        const availableSeats = Number(ride.available_seats || 0);
+        const occupiedSeats = Math.max(0, totalSeats - availableSeats);
 
         const modal = document.createElement('div');
         modal.classList.add('view-details-modal-overlay');
@@ -88,8 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
 
               <div class="view-details-modal-meta-item">
-                <span class="view-details-modal-label">Seats</span>
-                <span class="view-details-modal-seat">${ride.available_seats || 0} / ${ride.total_seats || 0}</span>
+                <span class="view-details-modal-label">Seats Occupied</span>
+                <span class="view-details-modal-seat">${occupiedSeats} / ${totalSeats}</span>
               </div>
             </div>
 
