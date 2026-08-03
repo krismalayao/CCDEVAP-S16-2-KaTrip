@@ -28,6 +28,7 @@
         <link rel="stylesheet" href="../style/navbar.css">
         <link rel="stylesheet" href="../style/driverDashboard.css">
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </head>
     <body>
 
@@ -60,6 +61,18 @@
             <div class="stat-label">Total Earned</div>
             <div class="stat-value" id="stat-earned">PHP 0</div>
             <div class="stat-sub">From completed trips</div>
+            </div>
+        </div>
+
+        <!-- EARNINGS -->
+        <div class="charts-row">
+            <div class="chart-card">
+                <h3>Earnings This Month</h3>
+                <canvas id="chartEarningsMonth"></canvas>
+            </div>
+            <div class="chart-card">
+                <h3>Earnings by Destination</h3>
+                <canvas id="chartEarningsDestination"></canvas>
             </div>
         </div>
 
