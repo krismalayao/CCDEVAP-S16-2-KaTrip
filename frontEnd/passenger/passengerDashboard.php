@@ -34,9 +34,28 @@
         <h1>What do you want to do?</h1>
     </div>
 
-    <div class="charts">
-        <h4>Rides Per Month</h4>
-    <canvas id="rides-chart"></canvas>
+    <div class="charts analytics-shell">
+        <div class="analytics-top">
+            <div class="analytics-metric-card">
+                <span class="analytics-metric-label">Average Per Trip</span>
+                <span class="analytics-metric-value" id="avg-per-trip">PHP 0.00</span>
+            </div>
+            <div class="analytics-metric-card">
+                <span class="analytics-metric-label">Average Per Location</span>
+                <span class="analytics-metric-value" id="avg-per-location">PHP 0.00</span>
+            </div>
+        </div>
+
+        <div class="analytics-row">
+            <div class="analytics-panel">
+                <h4>Monthly Spend</h4>
+                <canvas id="spend-chart"></canvas>
+            </div>
+            <div class="analytics-panel">
+                <h4>Spend By Location</h4>
+                <canvas id="location-chart"></canvas>
+            </div>
+        </div>
     </div>
 
     <div class="passenger-dashboard-card-actions">
