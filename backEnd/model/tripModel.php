@@ -288,3 +288,52 @@ function getPendingBookingsByDriver($conn, $driverId) {
     $stmt->execute();
     return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 }
+
+// ─── Get driver earnings by month ──────────────── 01/08/2026
+
+function getDriverEarningsByMonth($conn, $driverId) {
+    $months = [];
+    for ($i = 5; $i >= 0; $i--) {
+        $months[] = date('Y-m', strtotime("-$i months"));
+    }
+
+    $result = [];
+    foreach ($months as $ym) {
+        $stmt = $conn->prepare("
+            SELECT COALESCE(SUM(cost), 0) AS total
+            FROM rides
+            WHERE driver_id = ? AND ride_status = 'completed'
+            AND DATE_FORMAT(departure_date, '%Y-%m') = ?");
+
+        $stmt->bind_param("is", $driverId, $ym);
+        $stmt->execute();
+        $total = $stmt->get_result()->fetch_assoc()['total'];
+
+        $label = date('M', strtotime($ym . '-01'));
+        $result[$label] = (float) $total;
+    }
+
+    return $result;
+}
+
+// ─── Get driver earnings by destination ──────────────── 01/08/2026
+
+function getDriverEarningsByDestination($conn, $driverId) {
+    $stmt = $conn->prepare("
+        SELECT COALESCE(destination_name, destination) AS dest, SUM(cost) AS total
+        FROM rides
+        WHERE driver_id = ? AND ride_status = 'completed'
+        GROUP BY dest
+        ORDER BY total DESC");
+
+    $stmt->bind_param("i", $driverId);
+    $stmt->execute();
+    $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+    $result = [];
+    foreach ($rows as $row) {
+        $result[$row['dest']] = (float) $row['total'];
+    }
+
+    return $result;
+}
