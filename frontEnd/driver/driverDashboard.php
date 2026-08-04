@@ -25,11 +25,12 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>KaTrip - Driver</title>
+        <link rel="stylesheet" href="../style/style.css">          <!-- For Retyling of Dashboard Charts -->
         <link rel="stylesheet" href="../style/navbar.css">
         <link rel="stylesheet" href="../style/driverDashboard.css">
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
+</head>
     <body>
 
     <div id="navbar-mount"></div>
@@ -64,17 +65,19 @@
             </div>
         </div>
 
-        <!-- EARNINGS -->
-        <div class="charts-row">
-            <div class="chart-card">
-                <h3>Earnings This Month</h3>
-                <canvas id="chartEarningsMonth"></canvas>
+    <!-- EARNINGS - ADDED: chart styling, similar to Passenger, change nalang if needed -->
+    <div class="charts analytics-shell">
+        <div class="analytics-row">
+            <div class="analytics-panel">
+                <h4>Earnings This Month</h4>
+                <canvas id="chartEarningsMonth" style="width:100%;max-width:100%;height:260px;"></canvas>
             </div>
-            <div class="chart-card">
-                <h3>Earnings by Destination</h3>
-                <canvas id="chartEarningsDestination"></canvas>
+            <div class="analytics-panel">
+            <h4>Earnings by Destination</h4>
+            <canvas id="chartEarningsDestination" style="width:100%;max-width:100%;height:260px;"></canvas>
             </div>
         </div>
+    </div>
 
         <!-- SEARCH -->
         <div class="search-wrap">
