@@ -1,5 +1,4 @@
 <?php
-<?php
 // =============================================================================
 // ENDPOINT — GET /backEnd/model/getTrips.php
 // Returns all rides for the logged-in driver
