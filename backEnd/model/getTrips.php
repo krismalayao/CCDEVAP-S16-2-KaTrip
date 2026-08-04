@@ -18,7 +18,7 @@ $driverId = $_SESSION['user_id'];
 $rides    = getRidesByDriver($conn, $driverId);
 
 echo json_encode(["status" => "success", "rides" => $rides]);
-
+exit;
 
 $driverId = $_SESSION['user_id'];
 $rides    = getRidesByDriver($conn, $driverId);
