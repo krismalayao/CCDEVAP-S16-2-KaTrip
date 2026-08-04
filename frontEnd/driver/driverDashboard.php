@@ -70,11 +70,15 @@
         <div class="analytics-row">
             <div class="analytics-panel">
                 <h4>Earnings This Month</h4>
-                <canvas id="chartEarningsMonth" style="width:100%;max-width:100%;height:260px;"></canvas>
+                <div class="chart-canvas-wrap">
+                    <canvas id="chartEarningsMonth"></canvas>
+                </div>
             </div>
             <div class="analytics-panel">
-            <h4>Earnings by Destination</h4>
-            <canvas id="chartEarningsDestination" style="width:100%;max-width:100%;height:260px;"></canvas>
+                <h4>Earnings by Destination</h4>
+                <div class="chart-canvas-wrap">
+                    <canvas id="chartEarningsDestination"></canvas>
+                </div>
             </div>
         </div>
     </div>
