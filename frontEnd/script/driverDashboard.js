@@ -56,6 +56,7 @@ function renderEarningsCharts(earnings) {
       }]
     },
     options: {
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true } }
     }
@@ -65,11 +66,14 @@ function renderEarningsCharts(earnings) {
   new Chart(document.getElementById('chartEarningsDestination'), {
     type: 'doughnut',
     data: {
-      labels: Object.keys(earnings.byDestination),
-      datasets: [{
-        data: Object.values(earnings.byDestination),
-        backgroundColor: ['#7c3aed', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff', '#f3e8ff'] //Regular use
-}]
+    labels: Object.keys(earnings.byDestination),
+    datasets: [{
+      data: Object.values(earnings.byDestination),
+      backgroundColor: ['#7c3aed', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff', '#f3e8ff']
+      }]
+    },
+  options: {
+    maintainAspectRatio: false        // Keep the chart responsive and maintain aspect ratio
     }
   });
 }
