@@ -154,6 +154,43 @@ body {
   .stat-value { font-size: 1.4rem; font-weight: 800; color: #2d1a4e; }
   .stat-sub { font-size: 0.78rem; color: #a855f7; margin-top: 2px; font-weight: 500; }
 
+  /* EARNINGS CHARTS  - 04/08/2026 - change if needed.*/
+  .analytics-shell {
+    margin-bottom: 24px;
+  }
+
+  .analytics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .analytics-panel {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    position: relative;
+    height: 300px;
+  }
+
+  .analytics-panel h4 {
+    margin: 0 0 12px 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--purple-dark);
+  }
+
+  .analytics-panel canvas {
+    max-height: 240px !important;
+  }
+
+  html[data-theme="dark"] .analytics-panel {
+    background: var(--bg-card);
+    color: var(--text-primary);
+  }
+
+
   /* FILTER TABS */
   .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
   .filter-tab {
@@ -308,4 +345,5 @@ body {
     .stats-row .stat-card:last-child { grid-column: 1 / -1; }
     .trip-meta { gap: 14px; }
     .page-title { font-size: 1.3rem; }
+    .analytics-row { grid-template-columns: 1fr; } /* For Driver Charts */
   }
