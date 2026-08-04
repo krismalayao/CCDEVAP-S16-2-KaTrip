@@ -172,15 +172,6 @@ body {
     box-shadow: 0 1px 6px rgba(0,0,0,0.06);
   }
 
-  #chartEarningsMonth,
-  #chartEarningsDestination {
-    width: 100%;
-    max-width: 100%;
-    height: 260px;
-    margin: 0 auto;
-    display: block;
-  }
-
   html[data-theme="dark"] .analytics-panel {
     background: var(--bg-card);
     color: var(--text-primary);
