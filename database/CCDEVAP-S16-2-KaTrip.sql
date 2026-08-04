@@ -354,6 +354,120 @@ INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `gender`, `birthdate`
 (21, 'Super', 'Admin', 'rather_not_say', '1985-04-01', '09179999999', 'admin@katrip.com', 'admin', 'active', '$2a$12$MYcMrT3u6VnoA69TxT2Jk.ka8xawexJvj9EebbDTOAtaK7rTP6kU2', NULL, '2026-07-13 21:11:58'),
 (22, 'Francis', 'Reyes', 'male', '2006-05-17', '947-767-0996', 'hans_reyes@dlsu.edu.ph', 'driver', 'pending', '$2y$10$M4ZTO7euDwh/y9uiUcLCK.NWJ3o2qF4HlMCaIlBIzPKGYmbT8BU5O', NULL, '2026-07-13 21:13:06');
 
+-- --------------------------------------------------------
+ -- SUPPLEMENTAL RECORDS FOR DATABASE 
+--
+-- Dumping data for table `rides`
+--
+ 
+INSERT INTO `rides`
+(`ride_id`, `driver_id`, `schedule_id`, `destination`, `departure`, `origin`, `total_seats`, `available_seats`, `cost`, `ride_status`, `origin_lat`, `origin_lng`, `dest_lat`, `dest_lng`, `departure_date`, `origin_name`, `destination_name`) VALUES
+ 
+-- Completed rides (John's trip history, before 2026-08-04)
+(21, 9,  NULL, 'Manila Airport, Metro Manila, Philippines', '05:30:00', 'Fairview, Quezon City, Philippines', 4, 1, 300.00, 'completed', 14.7333000, 121.0500000, 14.5086000, 121.0198000, '2026-07-22', 'Fairview', 'Manila Airport'),
+(22, 10, NULL, 'Batangas Port, Batangas, Philippines', '20:00:00', 'Alabang, Muntinlupa, Philippines', 4, 2, 450.00, 'completed', 14.4189000, 121.0417000, 13.7565000, 121.0583000, '2026-07-25', 'Alabang', 'Batangas Port'),
+(23, 2,  NULL, 'Makati CBD, Makati, Philippines', '07:00:00', 'Quezon City, Metro Manila, Philippines', 4, 1, 150.00, 'completed', 14.6760000, 121.0437000, 14.5547000, 121.0244000, '2026-07-29', 'Quezon City', 'Makati CBD'),
+(24, 5,  NULL, 'Quezon City, Metro Manila, Philippines', '07:00:00', 'Pandi, Bulacan, Philippines', 4, 2, 180.00, 'completed', 14.9333000, 120.8833000, 14.6760000, 121.0437000, '2026-08-01', 'Pandi', 'Quezon City'),
+ 
+-- Upcoming rides already booked by John (after 2026-08-07)
+(25, 2,  NULL, 'Makati CBD, Makati, Philippines', '07:00:00', 'Quezon City, Metro Manila, Philippines', 4, 2, 150.00, 'scheduled', 14.6760000, 121.0437000, 14.5547000, 121.0244000, '2026-08-10', 'Quezon City', 'Makati CBD'),
+(26, 5,  NULL, 'Manila, Metro Manila, Philippines', '08:00:00', 'Pandi, Bulacan, Philippines', 4, 3, 200.00, 'scheduled', 14.9333000, 120.8833000, 14.5995000, 120.9842000, '2026-08-14', 'Pandi', 'Manila'),
+ 
+-- Future rides by Mark (driver_id 5), after 2026-08-07
+(27, 5,  NULL, 'Baliuag, Bulacan, Philippines', '07:00:00', 'Pandi, Bulacan, Philippines', 4, 4, 90.00,  'scheduled', 14.9333000, 120.8833000, 14.9563000, 120.8985000, '2026-08-08', 'Pandi', 'Baliuag'),
+(28, 5,  NULL, 'Manila, Metro Manila, Philippines', '08:30:00', 'Malolos, Bulacan, Philippines', 4, 3, 220.00, 'scheduled', 14.8433000, 120.8114000, 14.5995000, 120.9842000, '2026-08-09', 'Malolos', 'Manila'),
+(29, 5,  NULL, 'Cubao, Quezon City, Philippines', '07:30:00', 'Pandi, Bulacan, Philippines', 4, 3, 150.00, 'scheduled', 14.9333000, 120.8833000, 14.6197000, 121.0529000, '2026-08-11', 'Pandi', 'Cubao'),
+(30, 5,  NULL, 'Makati, Metro Manila, Philippines', '05:30:00', 'Bocaue, Bulacan, Philippines', 4, 2, 250.00, 'scheduled', 14.7947000, 120.9358000, 14.5547000, 121.0244000, '2026-08-13', 'Bocaue', 'Makati'),
+(31, 5,  NULL, 'Trinoma, Quezon City, Philippines', '06:45:00', 'Pandi, Bulacan, Philippines', 4, 4, 175.50, 'scheduled', 14.9333000, 120.8833000, 14.6547000, 121.0322000, '2026-08-15', 'Pandi', 'Trinoma'),
+(32, 5,  NULL, 'Fairview, Quezon City, Philippines', '09:00:00', 'Pandi, Bulacan, Philippines', 4, 3, 160.00, 'scheduled', 14.9333000, 120.8833000, 14.7333000, 121.0500000, '2026-08-18', 'Pandi', 'Fairview'),
+(33, 5,  NULL, 'Cubao, Quezon City, Philippines', '07:45:00', 'San Jose del Monte, Bulacan, Philippines', 4, 4, 150.00, 'scheduled', 14.8139000, 121.0453000, 14.6197000, 121.0529000, '2026-08-20', 'San Jose del Monte', 'Cubao'),
+(34, 5,  NULL, 'Quezon City, Metro Manila, Philippines', '07:00:00', 'Pandi, Bulacan, Philippines', 4, 3, 180.00, 'scheduled', 14.9333000, 120.8833000, 14.6760000, 121.0437000, '2026-08-22', 'Pandi', 'Quezon City'),
+(35, 5,  NULL, 'Manila, Metro Manila, Philippines', '08:30:00', 'Malolos, Bulacan, Philippines', 4, 4, 220.00, 'scheduled', 14.8433000, 120.8114000, 14.5995000, 120.9842000, '2026-08-25', 'Malolos', 'Manila'),
+ 
+-- Future rides by other drivers, after 2026-08-07
+(36, 2,  NULL, 'Makati CBD, Makati, Philippines', '07:00:00', 'Quezon City, Metro Manila, Philippines', 4, 3, 150.00, 'scheduled', 14.6760000, 121.0437000, 14.5547000, 121.0244000, '2026-08-12', 'Quezon City', 'Makati CBD'),
+(37, 9,  NULL, 'Manila Airport, Metro Manila, Philippines', '05:30:00', 'Fairview, Quezon City, Philippines', 4, 2, 300.00, 'scheduled', 14.7333000, 121.0500000, 14.5086000, 121.0198000, '2026-08-09', 'Fairview', 'Manila Airport'),
+(38, 10, NULL, 'Batangas Port, Batangas, Philippines', '20:00:00', 'Alabang, Muntinlupa, Philippines', 4, 4, 450.00, 'scheduled', 14.4189000, 121.0417000, 13.7565000, 121.0583000, '2026-08-16', 'Alabang', 'Batangas Port'),
+(39, 14, NULL, 'Clark, Pampanga, Philippines', '16:00:00', 'Trinoma, Quezon City, Philippines', 6, 5, 400.00, 'scheduled', 14.6547000, 121.0322000, 15.1856000, 120.5600000, '2026-08-14', 'Trinoma', 'Clark'),
+(40, 16, NULL, 'Manila Airport, Metro Manila, Philippines', '05:30:00', 'Fairview, Quezon City, Philippines', 4, 3, 300.00, 'scheduled', 14.7333000, 121.0500000, 14.5086000, 121.0198000, '2026-08-11', 'Fairview', 'Manila Airport'),
+(41, 18, NULL, 'Batangas Port, Batangas, Philippines', '20:00:00', 'Alabang, Muntinlupa, Philippines', 4, 4, 450.00, 'scheduled', 14.4189000, 121.0417000, 13.7565000, 121.0583000, '2026-08-30', 'Alabang', 'Batangas Port'),
+(42, 12, NULL, 'Antipolo, Rizal, Philippines', '19:00:00', 'BGC, Taguig, Philippines', 3, 3, 200.00, 'scheduled', 14.5507000, 121.0475000, 14.5849000, 121.1751000, '2026-08-19', 'BGC', 'Antipolo');
+ 
+-- --------------------------------------------------------
+ 
+--
+-- Dumping data for table `ride_landmarks`
+--
+ 
+INSERT INTO `ride_landmarks` (`landmark_id`, `ride_id`, `landmark_name`, `landmark_number`, `lat`, `lng`, `stop_order`) VALUES
+(24, 21, 'Commonwealth Avenue', 1, NULL, NULL, NULL),
+(25, 22, 'South Luzon Expressway', 1, NULL, NULL, NULL),
+(26, 23, 'Cubao MRT Station', 1, NULL, NULL, NULL),
+(27, 24, 'SM City Marilao', 1, 14.7575000, 120.9502000, NULL),
+(28, 25, 'Cubao MRT Station', 1, NULL, NULL, NULL),
+(29, 26, 'Marilao Terminal', 1, 14.7573000, 120.9490000, NULL);
+ 
+-- --------------------------------------------------------
+ 
+--
+-- Dumping data for table `bookings`
+--
+ 
+INSERT INTO `bookings` (`booking_id`, `ride_id`, `passenger_id`, `seat_reserved`, `booking_status`, `created_at`) VALUES
+(23, 21, 1,  1, 'accepted', '2026-07-20 05:00:00'),
+(24, 21, 6,  1, 'accepted', '2026-07-20 05:00:00'),
+(25, 21, 8,  1, 'accepted', '2026-07-20 05:00:00'),
+(26, 22, 1,  1, 'accepted', '2026-07-24 10:00:00'),
+(27, 22, 11, 1, 'accepted', '2026-07-24 10:00:00'),
+(28, 23, 1,  1, 'accepted', '2026-07-28 06:00:00'),
+(29, 23, 13, 1, 'accepted', '2026-07-28 06:00:00'),
+(30, 23, 15, 1, 'accepted', '2026-07-28 06:00:00'),
+(31, 24, 1,  1, 'accepted', '2026-07-31 09:00:00'),
+(32, 24, 17, 1, 'accepted', '2026-07-31 09:00:00'),
+(33, 25, 1,  1, 'accepted', '2026-08-03 08:00:00'),
+(34, 25, 19, 1, 'pending',  '2026-08-03 09:00:00'),
+(35, 26, 1,  1, 'accepted', '2026-08-04 07:00:00'),
+(36, 28, 3,  1, 'pending',  '2026-08-05 12:00:00'),
+(37, 29, 20, 1, 'accepted', '2026-08-06 08:00:00'),
+(38, 30, 6,  2, 'accepted', '2026-08-06 09:00:00'),
+(39, 32, 8,  1, 'pending',  '2026-08-07 07:00:00'),
+(40, 34, 11, 1, 'accepted', '2026-08-07 08:00:00'),
+(41, 36, 13, 1, 'accepted', '2026-08-07 10:00:00'),
+(42, 37, 15, 2, 'accepted', '2026-08-07 11:00:00'),
+(43, 39, 17, 1, 'accepted', '2026-08-07 12:00:00'),
+(44, 40, 19, 1, 'accepted', '2026-08-07 13:00:00');
+ 
+-- --------------------------------------------------------
+ 
+--
+-- Dumping data for table `transactions`
+--
+ 
+INSERT INTO `transactions` (`transaction_id`, `booking_id`, `amount`, `payment_method`, `reference_number`, `payment_status`) VALUES
+(11, 23, 300.00, 'gcash', 'REF210722A1', 'completed'),
+(12, 24, 300.00, 'cash',  NULL,           'completed'),
+(13, 25, 300.00, 'gcash', 'REF210722A2', 'completed'),
+(14, 26, 450.00, 'gcash', 'REF250725B1', 'completed'),
+(15, 27, 450.00, 'cash',  NULL,           'completed'),
+(16, 28, 150.00, 'gcash', 'REF290729C1', 'completed'),
+(17, 29, 150.00, 'cash',  NULL,           'completed'),
+(18, 30, 150.00, 'gcash', 'REF290729C2', 'completed'),
+(19, 31, 180.00, 'gcash', 'REF010801D1', 'completed'),
+(20, 32, 180.00, 'cash',  NULL,           'completed'),
+(21, 33, 150.00, 'gcash', 'REF030810E1', 'completed'),
+(22, 34, 150.00, 'cash',  NULL,           'pending'),
+(23, 35, 200.00, 'gcash', 'REF040814F1', 'completed'),
+(24, 36, 220.00, 'cash',  NULL,           'pending'),
+(25, 37, 150.00, 'gcash', 'REF060811G1', 'completed'),
+(26, 38, 500.00, 'cash',  NULL,           'pending'),
+(27, 39, 160.00, 'cash',  NULL,           'pending'),
+(28, 40, 180.00, 'gcash', 'REF070822H1', 'completed'),
+(29, 41, 150.00, 'gcash', 'REF070812I1', 'completed'),
+(30, 42, 600.00, 'cash',  NULL,           'pending'),
+(31, 43, 400.00, 'gcash', 'REF070814J1', 'completed'),
+(32, 44, 300.00, 'cash',  NULL,           'pending');
+-- END OF SUPPLEMENTAL RECORDS
+
 --
 -- Indexes for dumped tables
 --
