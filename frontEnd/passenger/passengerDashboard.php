@@ -48,30 +48,18 @@
 
         <div class="analytics-row">
             <div class="analytics-panel">
-                <h4>Monthly Spend</h4>
+                <h4>Monthly Spending</h4>
                 <canvas id="spend-chart"></canvas>
             </div>
             <div class="analytics-panel">
-                <h4>Spend By Location</h4>
+                <h4>Spending By Location</h4>
                 <canvas id="location-chart"></canvas>
             </div>
         </div>
     </div>
-
-    <div class="passenger-dashboard-card-actions">
-        <a href="myBookings.php" class="passenger-dashboard-action-btn">
-            <img src="../src/images/calendar-icon.png" class="passenger-dashboard-icon">
-            <span class="passenger-dashboard-label">View Bookings</span>
-        </a>
-
-        <a href="browseRides.php" class="passenger-dashboard-action-btn">
-            <img src="../src/images/map-icon.png" class="passenger-dashboard-icon">
-            <span class="passenger-dashboard-label">Browse Rides</span>
-        </a>
-    </div>
         
     <div class="passenger-dashboard-upcoming-rides">
-        <h3>Upcoming Rides</h3>
+        <h3>Your Next Ride</h3>
 
         <div class="passenger-ride-list">
         </div>
