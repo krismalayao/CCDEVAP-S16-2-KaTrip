@@ -170,26 +170,15 @@ body {
     border-radius: 14px;
     padding: 16px 18px;
     box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-    box-sizing: border-box;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* panel doesn't overflow */
   }
 
-  .analytics-panel h4 {
-    margin: 0 0 12px 0;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--purple-dark);
-    flex-shrink: 0;
-  }
-
-  .chart-canvas-wrap {
-    position: relative;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden; /* panel doesn't overflow */
+  #chartEarningsMonth,
+  #chartEarningsDestination {
+    width: 100%;
+    max-width: 100%;
+    height: 260px;
+    margin: 0 auto;
+    display: block;
   }
 
   html[data-theme="dark"] .analytics-panel {
