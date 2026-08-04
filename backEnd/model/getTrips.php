@@ -1,4 +1,5 @@
 <?php
+<?php
 // =============================================================================
 // ENDPOINT — GET /backEnd/model/getTrips.php
 // Returns all rides for the logged-in driver
@@ -17,14 +18,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'driver') {
 $driverId = $_SESSION['user_id'];
 $rides    = getRidesByDriver($conn, $driverId);
 
-echo json_encode(["status" => "success", "rides" => $rides]);
-exit;
-
-$driverId = $_SESSION['user_id'];
-$rides    = getRidesByDriver($conn, $driverId);
-
 //Calls tripModel.php functions to get earnings by month and destination for the logged-in driver.
-//
 $earnings = [
     "byMonth"       => getDriverEarningsByMonth($conn, $driverId),
     "byDestination" => getDriverEarningsByDestination($conn, $driverId)];
