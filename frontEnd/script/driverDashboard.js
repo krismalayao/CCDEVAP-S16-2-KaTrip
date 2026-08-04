@@ -56,6 +56,7 @@ function renderEarningsCharts(earnings) {
       }]
     },
     options: {
+      aspectRatio: 2.2,
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true } }
     }
@@ -70,6 +71,9 @@ function renderEarningsCharts(earnings) {
         data: Object.values(earnings.byDestination),
         backgroundColor: ['#7c3aed', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff', '#f3e8ff'] //Regular use
 }]
+    },
+    options: {
+      aspectRatio: 1.8
     }
   });
 }
