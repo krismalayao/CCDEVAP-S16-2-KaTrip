@@ -369,7 +369,7 @@ async function createRide() {
     minDeparture.setMinutes(minDeparture.getMinutes() + 30);
 
     if (departure < minDeparture) {
-      showToast('Departure must be at least 30 minutes from now.', 'error');
+      showToast('Please set departure to 30+ min.', 'error');
       return;
     }
 
@@ -545,7 +545,7 @@ if (editRideId) {
 
   const now = new Date();
 
-  now.setMinutes(now.getMinutes() + 30);
+  now.setMinutes(now.getMinutes() + 33);
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
   document.getElementById('ride-time').value = `${hh}:${mm}`;
