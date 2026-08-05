@@ -52,7 +52,7 @@
 
         <div class="analytics-row">
             <div class="analytics-panel">
-                <h4>Monthly Spending <span id="spend-trend-badge" class="spend-trend-badge"></span></h4>
+                <h4>Monthly Spending <span id="spend-trend-badge" class="spend-trend-badge"> </span></h4>
                 <canvas id="spend-chart"></canvas>
             </div>
             <div class="analytics-panel">

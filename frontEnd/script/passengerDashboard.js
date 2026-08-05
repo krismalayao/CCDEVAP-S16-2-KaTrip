@@ -71,47 +71,86 @@ const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.mo
 
     const spendCtx = document.getElementById('spend-chart');
     if (spendCtx) {
+      const now = new Date();
+      const last3Months = [2, 1, 0].map(offset => {
+        const d = new Date(now.getFullYear(), now.getMonth() - offset, 1);
+        return {
+          label: d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }),
+          value: monthlySpend[d.getMonth()]
+        };
+      });
+
       new Chart(spendCtx, {
         type: 'bar',
         data: {
-          labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          labels: last3Months.map(m => m.label),
           datasets: [{
             label: 'Amount Spent',
-            data: monthlySpend,
-            backgroundColor: isDarkMode ? '#9854cb' : '#6437a0',
+            data: last3Months.map(m => m.value),
+            backgroundColor: last3Months.map((m, i) =>
+              i === 2
+                ? (isDarkMode ? '#c9a4f5' : '#6437a0')       // current month — darker
+                : (isDarkMode ? 'rgba(201,164,245,0.4)' : 'rgba(100,55,160,0.35)') // past — muted
+            ),
             borderRadius: 6,
             borderSkipped: false,
-            maxBarThickness: 36
+            maxBarThickness: 32
           }]
         },
         options: {
+          indexAxis: 'y',
           plugins: {
             legend: { display: false },
             tooltip: {
               callbacks: {
-                label: context => ` ${formatCurrency(context.raw)}`
+                label: ctx => ` PHP ${Number(ctx.raw).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
               }
-            }
+            },
+            datalabels: false
           },
           scales: {
             x: {
-              ticks: { color: chartTextColor },
-              grid: { display: false },
-              border: { display: false }
-            },
-            y: {
+              display: false,
+              beginAtZero: true,
               ticks: {
                 color: chartTextColor,
                 callback: value => `₱${Number(value).toLocaleString()}`
               },
-              beginAtZero: true,
               grid: { color: chartGridColor },
               border: { display: false }
+            },
+            y: {
+              ticks: { color: chartTextColor },
+              grid: { display: false },
+              border: { display: false }
             }
+          }
+        },
+          animation: {
+          onComplete: function() {
+            const chart = this;
+            const ctx = chart.ctx;
+            ctx.font = 'bold 12px Helvetica Now, system-ui';
+            ctx.fillStyle = chartTextColor;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'middle';
+            chart.data.datasets.forEach((dataset, i) => {
+              chart.getDatasetMeta(i).data.forEach((bar, idx) => {
+                const value = dataset.data[idx];
+                if (value > 0) {
+                  ctx.fillText(
+                    `PHP ${Number(value).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`,
+                    bar.x + 6,
+                    bar.y
+                  );
+                }
+              });
+            });
           }
         }
       });
     }
+    
 
     // Combo chart: rides per month (bars) + average fare per month (line)
     const locationCtx = document.getElementById('location-chart');
@@ -258,7 +297,7 @@ const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.mo
     if (!rides || rides.length === 0) {
       const emptyCard = `
         <div class="passenger-ride-card empty">
-          <img src="../../frontEnd/src/images/no-car1.svg" alt="No Upcoming Rides" class="empty-state-image" width="50%" height="auto">
+          <img src="../../frontEnd/src/images/no-car1.svg" alt="No Upcoming Rides" class="empty-state-image" width="30%" height="auto">
           <div class="ride-title">No Upcoming Rides</div>
           <div class="ride-info">
             You don't have any rides scheduled yet.

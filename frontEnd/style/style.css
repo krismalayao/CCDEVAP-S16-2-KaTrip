@@ -737,7 +737,7 @@ body {
 
 .analytics-row {
     display: grid;
-    grid-template-columns: 1.25fr 1fr;
+    grid-template-columns: 1fr 1.6fr;
     gap: 16px;
     align-items: stretch;
 }
@@ -750,6 +750,10 @@ body {
     box-shadow: 0 8px 18px rgba(100, 55, 160, 0.08);
 }
 
+.analytics-panel:first-child {
+  align-self: start;
+}
+
 .charts h4 {
     margin: 0 0 14px;
     font-size: 16px;
@@ -757,13 +761,18 @@ body {
     letter-spacing: 1px;
 }
 
-#spend-chart,
-#location-chart {
+#spend-chart {
     width: 100%;
     max-width: 100%;
-    height: 260px;
     margin: 0 auto;
-    display: block;
+    display: block; 
+    height: 120px !important;
+}
+
+#location-chart {
+    margin: 0 auto;
+    display: block;  
+    height: 280px !important;
 }
 
 .charts {
@@ -853,7 +862,7 @@ body {
     background-color: var(--bg-card);
     border-radius: 14px;
     padding: 18px 20px;
-    width: 33%;
+    width: 100%;
     box-sizing: border-box;
     box-shadow: 0 2px 10px rgba(100, 55, 160, 0.08);
     border: 1px solid var(--purple-faint);
@@ -1006,18 +1015,6 @@ body {
     color: var(--purple-dark) !important;
     }
 
-/* Tablet */
-@media (max-width: 768px) {
-    .passenger-dashboard-card-actions {
-        height: auto;
-        flex-wrap: wrap;
-    }
-
-    .passenger-dashboard-action-btn {
-        flex: 1 1 33%;
-    }
-}
-
 /* Mobile */
 @media (max-width: 480px) {
     .cta-heading {
@@ -1065,28 +1062,12 @@ body {
         border-radius: 14px;
     }
 
-    .analytics-top,
-    .analytics-row {
+    .analytics-top {
         grid-template-columns: 1fr;
     }
 
-    .analytics-panel {
-        padding: 12px;
-    }
-
-    .analytics-metric-value {
-        font-size: 22px;
-    }
-
-    .charts h4 {
-        font-size: 17px;
-        margin-bottom: 10px;
-    }
-
-    #spend-chart,
-    #location-chart {
-        height: 180px !important;
-        max-width: 100%;
+    .analytics-row {
+        display: none;
     }
 
     .passenger-dashboard-upcoming-rides {
