@@ -19,7 +19,6 @@ function initNavbar() {
                 <a class="nav-link" href="userManagement.php">User Management</a>
                 <a class="nav-link" href="tripManagement.php">Trip Management</a>
                 <a class="nav-link" href="driverVerification.php">Driver Verification</a>
-                <button class="nav-link nav-logout-btn" id="nav-logout-desktop">Logout</button>
             </nav>
 
             <div class="nav-actions">
@@ -61,6 +60,18 @@ function initNavbar() {
             }
         });
     }
+
+    window.addEventListener("scroll", () => {
+        const nav = document.querySelector(".nav");
+
+        if (!nav) return;
+
+        if (window.scrollY > 10) {
+            nav.classList.add("nav-scrolled");
+        } else {
+            nav.classList.remove("nav-scrolled");
+        }
+    });
 
     const activeNavPage = window.location.pathname.split('/').pop();
     document.querySelectorAll('.nav-link, .nav-dropdown-link').forEach(link => {
