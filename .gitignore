@@ -1,2 +1,4 @@
 config/db.php
 config/db.php
+
+/vendor/
