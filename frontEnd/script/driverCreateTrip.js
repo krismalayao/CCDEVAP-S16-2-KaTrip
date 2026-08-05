@@ -344,10 +344,17 @@ async function createRide() {
         return;
     }
 
+    const date      = document.getElementById('ride-date').value;
+    const time      = document.getElementById('ride-time').value;
+    const departure = new Date(`${date}T${time}`);
+
+    if (departure <= new Date()) {
+      showToast('Departure time must be in the future.', 'error');
+      return;
+    }
+
     const fare  = parseFloat(document.getElementById('fare-display').textContent.replace('PHP ', '')) || 0;
     const seats = parseInt(document.getElementById('passengers').value) || 4;
-    const date  = document.getElementById('ride-date').value;
-    const time  = document.getElementById('ride-time').value;
 
     const payload = {
         origin:            state.from.display,
@@ -515,6 +522,14 @@ if (editRideId) {
   loadCloneTrip();
 } else {
   document.getElementById('ride-date').value = getLocalDateString();
+
+  // ← add this: set default time to next 30-min slot
+  const now = new Date();
+  now.setMinutes(now.getMinutes() < 30 ? 30 : 60, 0, 0);
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  document.getElementById('ride-time').value = `${hh}:${mm}`;
+
   renderPickups();
 }
 
