@@ -46,14 +46,14 @@
 .bookings-tabs {
     background-color: var(--purple-light);
     border-radius: 14px;
-    padding: 6px;
     display: flex;
     gap: 8px;
 }
 
 .tab-btn {
-    flex: 1;
-    background: transparent;
+    flex: 1 1 0px; 
+    width: 100%;
+    background: white;
     border: none;
     padding: 6px 14px;
     border-radius: 999px;
@@ -68,12 +68,15 @@
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     margin: 0;
+    box-sizing: border-box;
 }
 
 .filter-icon {
     width: 20px;
     height: 20px;
     object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(23%) sepia(85%) saturate(1837%) hue-rotate(248deg) brightness(89%) contrast(92%);
+    transition: filter 0.2s ease-in-out; 
 }
 
 .tab-btn.active {
@@ -84,6 +87,14 @@
 .tab-btn:not(.active):hover {
     background-color: var(--purple);
     color: var(--bg-card);
+}
+
+.tab-btn.active .filter-icon {
+    filter: brightness(0) invert(1);
+}
+
+.tab-btn:not(.active):hover .filter-icon {
+    filter: brightness(0) invert(1);
 }
 
 .bookings-content {
@@ -109,7 +120,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #8b8792 !important;
+    color: var(--purple) !important;
     font-size: 0.95rem;
     padding: 42px 24px;
     margin: 0;

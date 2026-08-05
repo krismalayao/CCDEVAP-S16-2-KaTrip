@@ -855,16 +855,18 @@ body {
     gap: 5px;
     padding: 6px 14px;
     border-radius: 999px;
-    border: 1.5px solid var(--purple-light);
-    background: transparent;
+    border: none;
+    background: white;
     color: var(--purple-dark);
     font-family: 'Helvetica Now', sans-serif;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: 0.2s ease;
-    flex: 1 1 auto;
+    flex: 1 1 0px; 
+    width: 100%;
     min-width: 120px;
+    box-sizing: border-box;
 }
 
 .browserides-filter-btn.active {
@@ -883,6 +885,19 @@ body {
     height: 20px;
     object-fit: contain;
     font-size: 12px;
+}
+
+.browserides-filter-btn .filter-icon {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(85%) saturate(1837%) hue-rotate(248deg) brightness(89%) contrast(92%);
+    transition: filter 0.2s ease;
+}
+
+.browserides-filter-btn.active .filter-icon {
+    filter: brightness(0) invert(1);
+}
+
+.browserides-filter-btn:hover:not(.active) .filter-icon {
+    filter: brightness(0) invert(1);
 }
 
 .browserides-filter-panel {
