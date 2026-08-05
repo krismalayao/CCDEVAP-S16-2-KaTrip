@@ -76,6 +76,10 @@ html[data-theme="dark"] .tab-btn:not(.active):hover {
     color: #17111d;
 }
 
+html[data-theme="dark"] .browserides-ride-card {
+    background: var(--bg-elevated);
+}
+
 html[data-theme="dark"] .filter-icon {
     filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(600%) hue-rotate(220deg) brightness(105%);
 }
