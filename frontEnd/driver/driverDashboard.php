@@ -25,7 +25,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>KaTrip - Driver</title>
-        <!-- <link rel="stylesheet" href="../style/style.css">   -->       <!-- For Retyling of Dashboard Charts -->  
+        <!-- <link rel="stylesheet" href="../style/style.css">   -->       <!-- For Retyling of Dashboard Charts -->
         <link rel="stylesheet" href="../style/navbar.css">
         <link rel="stylesheet" href="../style/driverDashboard.css">
         <link rel="icon" type="image/svg+xml" href="../src/images/katrip_logo.svg">
@@ -109,25 +109,8 @@
         <button onclick="confirmCancel()" style="flex:1;padding:12px;background:#ef4444;border:none;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#fff;font-weight:700;">Cancel Trip</button>
         </div>
 
-        <!-- TRIP LIST -->
-        <div id="trip-list"></div>
-
-        </div>
-
-        <!-- CANCEL MODAL -->
-        <div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;" id="cancel-modal">
-        <div style="background:#fff;border-radius:20px;padding:32px 28px;max-width:360px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-            <div style="font-size:2.2rem;margin-bottom:12px;">⚠️</div>
-            <h2 style="font-size:1.1rem;color:#2d1a4e;font-weight:700;margin-bottom:8px;">Cancel this trip?</h2>
-            <p style="font-size:0.87rem;color:#6b7280;margin-bottom:24px;line-height:1.5;">Passengers who booked this ride will be notified. This cannot be undone.</p>
-            <div style="display:flex;gap:10px;">
-            <button onclick="hideCancelModal()" style="flex:1;padding:12px;border:1.5px solid #e5e7eb;background:#fff;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#374151;font-weight:500;">Keep Trip</button>
-            <button onclick="confirmCancel()" style="flex:1;padding:12px;background:#ef4444;border:none;border-radius:10px;font-size:0.9rem;cursor:pointer;color:#fff;font-weight:700;">Cancel Trip</button>
-            </div>
-        </div>
-        </div>
     </div>
-
+    </div>
     <!-- VIEW SUMMARY MODAL -->
     <div style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;" id="summary-modal">
     <div style="background:#fff;border-radius:20px;max-width:400px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.18);overflow:hidden;">
