@@ -2,29 +2,56 @@
 session_start();
 header("Content-Type: application/json");
 
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 require "../../config/db.php";
 require "tripModel.php";
 
 try {
 
-    // Authentication
-    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'driver') {
-        throw new Exception("Unauthorized.");
+    // ===========================
+    // SESSION DEBUG
+    // ===========================
+    if (!isset($_SESSION['user_id'])) {
+        throw new Exception("Session user_id is missing.");
     }
 
-    // Request method
+    if (!isset($_SESSION['role'])) {
+        throw new Exception("Session role is missing.");
+    }
+
+    if ($_SESSION['role'] !== 'driver') {
+        throw new Exception("User is not a driver.");
+    }
+
+    // ===========================
+    // REQUEST METHOD
+    // ===========================
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        throw new Exception("Invalid request method.");
+        throw new Exception("Request method is not POST.");
     }
 
-    // Read JSON body
-    $body = json_decode(file_get_contents("php://input"), true);
+    // ===========================
+    // RAW BODY
+    // ===========================
+    $raw = file_get_contents("php://input");
 
-    if ($body === null) {
-        throw new Exception("Invalid request data.");
+    if (!$raw) {
+        throw new Exception("Request body is empty.");
     }
 
-    // Validate required fields
+    // ===========================
+    // JSON
+    // ===========================
+    $body = json_decode($raw, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception("Invalid JSON: " . json_last_error_msg());
+    }
+
+    // ===========================
+    // REQUIRED FIELDS
+    // ===========================
     $required = [
         'origin',
         'origin_lat',
@@ -39,60 +66,86 @@ try {
     ];
 
     foreach ($required as $field) {
-        if (!isset($body[$field]) || $body[$field] === '') {
-            throw new Exception("Missing field: {$field}");
+
+        if (!isset($body[$field])) {
+            throw new Exception("Missing field: $field");
+        }
+
+        if ($body[$field] === "") {
+            throw new Exception("Empty field: $field");
         }
     }
 
-    // Prepare ride data
+    // ===========================
+    // BUILD DATA
+    // ===========================
     $driverId = $_SESSION['user_id'];
 
     $data = [
-        'origin'            => $body['origin'],
-        'origin_name'       => $body['origin_name'] ?? null,
-        'origin_lat'        => (float)$body['origin_lat'],
-        'origin_lng'        => (float)$body['origin_lng'],
-        'destination'       => $body['destination'],
-        'destination_name'  => $body['destination_name'] ?? null,
-        'dest_lat'          => (float)$body['dest_lat'],
-        'dest_lng'          => (float)$body['dest_lng'],
-        'departure_date'    => $body['departure_date'],
-        'departure_time'    => $body['departure_time'],
-        'total_seats'       => (int)$body['total_seats'],
-        'cost'              => (float)$body['cost']
+        'origin'           => $body['origin'],
+        'origin_name'      => $body['origin_name'] ?? null,
+        'origin_lat'       => (float)$body['origin_lat'],
+        'origin_lng'       => (float)$body['origin_lng'],
+
+        'destination'      => $body['destination'],
+        'destination_name' => $body['destination_name'] ?? null,
+        'dest_lat'         => (float)$body['dest_lat'],
+        'dest_lng'         => (float)$body['dest_lng'],
+
+        'departure_date'   => $body['departure_date'],
+        'departure_time'   => $body['departure_time'],
+
+        'total_seats'      => (int)$body['total_seats'],
+        'cost'             => (float)$body['cost']
     ];
 
     $landmarks = $body['landmarks'] ?? [];
 
-    // Create ride
+    // ===========================
+    // INSERT RIDE
+    // ===========================
     $rideId = createRide($conn, $driverId, $data);
 
-    if (!$rideId) {
-        throw new Exception("Failed to create ride.");
+    if (!$rideId || is_array($rideId)) {
+
+        throw new Exception(
+            is_array($rideId)
+                ? $rideId['error']
+                : "createRide() returned false."
+        );
     }
 
-    // Save landmarks
+    // ===========================
+    // INSERT LANDMARKS
+    // ===========================
     if (!empty($landmarks)) {
-        createLandmarks($conn, $rideId, $landmarks);
+
+        $ok = createLandmarks($conn, $rideId, $landmarks);
+
+        if (!$ok) {
+            throw new Exception("Failed inserting landmarks.");
+        }
     }
 
     echo json_encode([
         "status" => "success",
-        "message" => "Ride created successfully.",
         "ride_id" => $rideId
     ]);
 
 } catch (Throwable $e) {
 
-    // Log the error on the server
-    error_log($e->getMessage());
-
-    http_response_code(500);
-
     echo json_encode([
+
         "status" => "error",
-        "message" => "An unexpected server error occurred."
+
+        "message" => $e->getMessage(),
+
+        "session" => $_SESSION,
+
+        "raw_body" => isset($raw) ? $raw : null,
+
+        "decoded_body" => isset($body) ? $body : null,
+
+        "mysql_error" => $conn->error
     ]);
 }
-
-exit;
