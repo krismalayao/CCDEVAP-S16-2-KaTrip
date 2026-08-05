@@ -106,10 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div class="view-details-modal-footer">
+            
               <div>
-                <span class="view-details-modal-label">ESTIMATED FARE</span>
-                <span class="view-details-modal-price">PHP ${Number(ride.cost || 0).toFixed(2)}</span>
+                <span class="view-details-modal-label">TOTAL TRIP FARE</span>
+                <span class="view-details-modal-value">PHP ${Number(ride.cost).toFixed(2)}</span>
               </div>
+              <div>
+                <span class="view-details-modal-label">YOUR SHARE</span>
+                <span class="view-details-modal-price">PHP ${Number(ride.passenger_fare ?? 0).toFixed(2)}</span>
+              </div>
+
             </div>
           </div>
         `;
@@ -126,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   };
 
+  
   const card = (booking, group) => {
     const canCancel = group === 'pending' && booking.booking_status === 'pending';
     const showViewDetails = group === 'approved' && booking.booking_status === 'accepted' && ['scheduled', 'ongoing'].includes(booking.ride_status);
@@ -134,7 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return `<div class="booking-card-item ${group === 'history' ? 'history-booking-card' : ''}">
       <div class="booking-card-heading"><span class="status-badge ${esc(badgeClass)}">${esc(statusLabel(booking))}</span><span class="booking-date">${date(booking.departure_date, booking.booking_created_at)} ${esc(time(booking.departure))}</span></div>
       <div class="booking-route"><div class="route-point"><span class="dot pickup"></span><strong>From:</strong> ${esc(booking.origin)}</div><div class="route-point"><span class="dot destination"></span><strong>To:</strong> ${esc(booking.destination)}</div></div>
-      ${driver}<div class="booking-card-footer"><span class="booking-price">PHP ${Number(booking.cost).toFixed(2)}</span>${showViewDetails ? `<button class="passenger-dashboard-details-btn booking-view-details-btn" data-ride-id="${booking.ride_id}">View Details</button>` : ''}${canCancel ? `<button class="cancel-booking-btn" data-booking-id="${booking.booking_id}">Cancel Request</button>` : ''}</div></div>`;
+      ${driver}
+      <div class="booking-card-footer"><span class="booking-price">PHP ${Number(booking.passenger_fare ?? 0).toFixed(2)}</span>${showViewDetails ? `<button class="passenger-dashboard-details-btn booking-view-details-btn" data-ride-id="${booking.ride_id}">View Details</button>` : ''}${canCancel ? `<button class="cancel-booking-btn" data-booking-id="${booking.booking_id}">Cancel Request</button>` : ''}</div></div>`;
   };
   const render = (id, items, group) => {
     const el=document.getElementById(id);

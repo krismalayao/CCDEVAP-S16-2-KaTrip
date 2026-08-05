@@ -20,7 +20,18 @@ $conn->query($autoCancelSql);
 
 $sql = "SELECT b.booking_id, b.booking_status, b.seat_reserved, r.ride_id, 
         r.origin, r.destination, r.departure, r.departure_date, 
-        r.ride_status, r.cost, r.total_seats,
+        r.ride_status, r.cost,
+                r.total_seats,
+
+                (r.cost / NULLIF(
+                (
+                        SELECT SUM(b2.seat_reserved)
+                        FROM bookings b2
+                        WHERE b2.ride_id = r.ride_id
+                        AND b2.booking_status = 'accepted'
+                ),
+                0
+                )) * b.seat_reserved AS passenger_fare,
         CASE WHEN d.show_full_name = 1 THEN u.first_name ELSE CONCAT(UPPER(LEFT(u.first_name, 1)), '.') END AS driver_first_name,
         CASE WHEN d.show_full_name = 1 THEN u.last_name ELSE CONCAT(UPPER(LEFT(u.last_name, 1)), '.') END AS driver_last_name,
         d.vehicle_model, d.plate_number
@@ -42,6 +53,7 @@ $formatRow = function ($row) use ($conn) {
     $row['ride_id']       = (int)$row['ride_id'];
     $row['seat_reserved'] = (int)$row['seat_reserved'];
     $row['cost']          = (float)$row['cost'];
+    $row['passenger_fare'] = (float)$row['passenger_fare'];
 
     $countStmt = $conn->prepare("
         SELECT COALESCE(SUM(seat_reserved), 0) AS total
