@@ -6,7 +6,6 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #f3f0f9;
   color: #1a1a2e;
-  /* FIX: Changed from flex to display block so content stacks underneath your top navbar */
   display: block; 
   min-height: 100vh;
 }
@@ -50,9 +49,10 @@ html[data-theme="dark"] .bar-label {
   color: #eee5f2;
 }
 
-/* FIX: Replaced legacy fixed sidebar spacing with a centralized layout wrapper.
-  This centers your content elegantly and gives it responsive breathing room on larger screens.
-*/
+html[data-theme="dark"] .chart-footnote {
+  color: #eee5f2;
+}
+
 .dashboard-container {
   width: 100%;
   max-width: 1400px;
@@ -60,7 +60,6 @@ html[data-theme="dark"] .bar-label {
   padding: 24px 20px;
 }
 
-/* FIX: Cleaned up margin-left constraint which caused the layout shift */
 .main-content-container {
   width: 100%;
 }
@@ -87,7 +86,6 @@ html[data-theme="dark"] .bar-label {
 /* STAT CARDS LAYOUT */
 .stats-grid {
   display: grid;
-  /* FIX: Swapped to auto-fit layouts so cards dynamically stack smoothly on tablets/mobiles */
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
   margin-bottom: 28px;
@@ -128,6 +126,8 @@ html[data-theme="dark"] .bar-label {
 .stat-card-yellow .value { color: #b45309; }
 .stat-card-red { border-left-color: #ef4444; }
 .stat-card-red .value { color: #b91c1c; }
+.stat-card-teal { border-left-color: #14b8a6; }
+.stat-card-teal .value { color: #0f766e; }
 
 /* VISUAL CHARTS SETTING */
 .charts-row {
@@ -149,6 +149,19 @@ html[data-theme="dark"] .bar-label {
   font-weight: 600;
   color: #4a0080;
   margin-bottom: 16px;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  height: 260px;
+  width: 100%;
+}
+
+.chart-footnote {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+  text-align: center;
 }
 
 /* Bar Chart Graphic Rules */
@@ -235,6 +248,7 @@ html[data-theme="dark"] .bar-label {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 16px;
+  margin-bottom: 28px;
 }
 
 .status-donut-ring {
@@ -353,6 +367,12 @@ html[data-theme="dark"] .bar-label {
   .charts-row, 
   .bottom-row {
     grid-template-columns: 1fr; /* Force charts and tables to form a stack vertically */
+  }
+}
+
+@media (max-width: 700px) {
+  .chart-canvas-wrap {
+    height: 220px;
   }
 }
 
