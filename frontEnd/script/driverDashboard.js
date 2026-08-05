@@ -44,15 +44,18 @@ async function loadTrips() {
 function renderEarningsCharts(earnings) {
   if (!earnings || typeof Chart === 'undefined') return;
 
-  //Earnings by month chart - Used Bar, felt like the best option.
+  //Earnings by month chart - Line graph (formerly bar graph), change if you want to.
   new Chart(document.getElementById('chartEarningsMonth'), {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: Object.keys(earnings.byMonth),
       datasets: [{
         label: 'Earnings (PHP)',
         data: Object.values(earnings.byMonth),
-        backgroundColor: '#7c3aed'
+        borderColor: '#7c3aed',
+        backgroundColor: '#7c3aed',
+        tension: 0.3,
+        fill: false
       }]
     },
     options: {
@@ -62,18 +65,24 @@ function renderEarningsCharts(earnings) {
     }
   });
 
-  //Earnings by destination chart - Doughnut, change if you want to.
+ //Earnings by destination chart - Area chart
   new Chart(document.getElementById('chartEarningsDestination'), {
-    type: 'doughnut',
+    type: 'line',
     data: {
       labels: Object.keys(earnings.byDestination),
       datasets: [{
+        label: 'Earnings (PHP)',
         data: Object.values(earnings.byDestination),
-        backgroundColor: ['#7c3aed', '#a855f7', '#c084fc', '#d8b4fe', '#e9d5ff', '#f3e8ff'] //Regular use
-}]
+        borderColor: '#a855f7',
+        backgroundColor: 'rgba(168, 85, 247, 0.25)',
+        tension: 0.3,
+        fill: true
+      }]
     },
     options: {
-      aspectRatio: 1.8
+      aspectRatio: 1.8,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true } }
     }
   });
 }
