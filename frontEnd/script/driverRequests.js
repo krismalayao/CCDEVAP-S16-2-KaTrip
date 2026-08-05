@@ -20,7 +20,12 @@ function formatDate(d) {
 function renderRequests(requests) {
     const container = document.getElementById('requests-list');
     if (!requests.length) {
-        container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>No pending requests.</p></div>`;
+        container.innerHTML = `
+            <div class="empty-requests">
+                <img src="../../frontEnd/src/images/no-request1.svg" alt="No Pending Requests">
+                <div class="empty-title">No Pending Requests</div>
+                <div class="empty-sub">You don't have any booking requests at the moment.</div>
+            </div>`;
         return;
     }
 
