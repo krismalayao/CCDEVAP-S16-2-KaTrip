@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="view-details-modal-footer">
               <div>
                 <span class="view-details-modal-label">ESTIMATED FARE</span>
-                <span class="view-details-modal-price">₱${Number(ride.cost || 0).toFixed(2)}</span>
+                <span class="view-details-modal-price">PHP ${Number(ride.cost || 0).toFixed(2)}</span>
               </div>
             </div>
           </div>

@@ -3,11 +3,54 @@ function formatCurrency(value) {
   return `PHP ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
+const ROUTE_ARROW_SVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+
+function renderSpendTrend(monthlySpend) {
+  const badgeEl = document.getElementById('spend-trend-badge');
+  if (!badgeEl) return;
+
+  const now = new Date();
+  const currentMonthIdx = now.getMonth();
+  const prevMonthIdx = currentMonthIdx === 0 ? 11 : currentMonthIdx - 1;
+
+  const current = Number(monthlySpend[currentMonthIdx] || 0);
+  const previous = Number(monthlySpend[prevMonthIdx] || 0);
+
+  if (previous === 0) {
+    badgeEl.textContent = current > 0 ? 'New spending this month' : 'No spending yet';
+    badgeEl.className = 'spend-trend-badge neutral';
+    return;
+  }
+
+  const percentChange = ((current - previous) / previous) * 100;
+  const rounded = Math.abs(Math.round(percentChange));
+  const isUp = percentChange > 0;
+  const isFlat = rounded === 0;
+
+  badgeEl.textContent = isFlat
+    ? 'Same as last month'
+    : `${isUp ? '▲' : '▼'} ${rounded}% vs last month`;
+  badgeEl.className = `spend-trend-badge ${isFlat ? 'neutral' : (isUp ? 'up' : 'down')}`;
+}
+
+function renderMostFrequentRoute(route) {
+  const el = document.getElementById('most-frequent-route');
+  if (!el) return;
+
+  if (!route) {
+    el.textContent = 'No rides yet';
+    return;
+  }
+
+  el.innerHTML = `${route.origin} <span class="ride-card-arrow">${ROUTE_ARROW_SVG}</span> ${route.destination}`;
+  el.title = `${route.ride_count} ride${route.ride_count === 1 ? '' : 's'}`;
+}
+
 fetch("../../backEnd/controller/passengerDashboardController.php")
   .then(res => res.json())
   .then(payload => {
     const monthlySpend = Array.isArray(payload?.monthly_spend) ? payload.monthly_spend : Array(12).fill(0);
-    const locationSpend = Array.isArray(payload?.location_spend) ? payload.location_spend : [];
+    const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.monthly_ride_count : Array(12).fill(0);
 
     const avgTripEl = document.getElementById('avg-per-trip');
     const avgLocationEl = document.getElementById('avg-per-location');
@@ -15,10 +58,11 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
     if (avgTripEl) avgTripEl.textContent = formatCurrency(payload?.average_per_trip);
     if (avgLocationEl) avgLocationEl.textContent = formatCurrency(payload?.average_per_location);
 
+    renderSpendTrend(monthlySpend);
+    renderMostFrequentRoute(payload?.most_frequent_route);
+
     const rootStyles = getComputedStyle(document.documentElement);
     const chartTextColor = rootStyles.getPropertyValue('--text-primary').trim();
-    const chartPurple = rootStyles.getPropertyValue('--purple').trim();
-    const chartPurpleDark = rootStyles.getPropertyValue('--purple-dark').trim();
     const chartFaint = rootStyles.getPropertyValue('--purple-faint').trim();
     const isDarkMode = document.documentElement.dataset.theme === 'dark';
     const chartGridColor = isDarkMode
@@ -34,70 +78,117 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
           datasets: [{
             label: 'Amount Spent',
             data: monthlySpend,
-            backgroundColor: isDarkMode ? '#7aa2ff' : '#4f7cff',
-            borderColor: isDarkMode ? '#95b6ff' : '#2f5ad9',
-            borderWidth: 1,
-            borderRadius: 5
+            backgroundColor: isDarkMode ? '#9854cb' : '#6437a0',
+            borderRadius: 6,
+            borderSkipped: false,
+            maxBarThickness: 36
           }]
         },
         options: {
           plugins: {
-            legend: { labels: { color: chartTextColor } }
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: context => ` ${formatCurrency(context.raw)}`
+              }
+            }
           },
           scales: {
             x: {
               ticks: { color: chartTextColor },
-              grid: { color: chartGridColor }
+              grid: { display: false },
+              border: { display: false }
             },
             y: {
               ticks: {
                 color: chartTextColor,
-                callback: value => `PHP ${Number(value).toLocaleString()}`
+                callback: value => `₱${Number(value).toLocaleString()}`
               },
               beginAtZero: true,
-              grid: { color: chartGridColor }
+              grid: { color: chartGridColor },
+              border: { display: false }
             }
           }
         }
       });
     }
 
+    // Combo chart: rides per month (bars) + average fare per month (line)
     const locationCtx = document.getElementById('location-chart');
     if (locationCtx) {
-      const labels = locationSpend.length ? locationSpend.map(item => item.location) : ['No Data'];
-      const values = locationSpend.length ? locationSpend.map(item => Number(item.total_spent || 0)) : [1];
+      const hasAnyRides = monthlyRideCount.some(count => count > 0);
+      const avgFarePerMonth = monthlyRideCount.map((count, i) =>
+        count > 0 ? monthlySpend[i] / count : null
+      );
 
       new Chart(locationCtx, {
-        type: 'doughnut',
         data: {
-          labels,
-          datasets: [{
-            data: values,
-            backgroundColor: locationSpend.length
-              ? [
-                  '#4f7cff',
-                  '#2aa8a1',
-                  '#ff8f5a',
-                  '#7a6bff',
-                  '#f4c95d'
-                ]
-              : [chartFaint],
-            borderWidth: 0
-          }]
+          labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          datasets: [
+            {
+              type: 'bar',
+              label: 'Rides',
+              data: monthlyRideCount,
+              backgroundColor: isDarkMode ? 'rgba(152, 84, 203, 0.55)' : 'rgba(100, 55, 160, 0.55)',
+              borderRadius: 5,
+              maxBarThickness: 28,
+              yAxisID: 'y'
+            },
+            {
+              type: 'line',
+              label: 'Avg Fare',
+              data: avgFarePerMonth,
+              spanGaps: true,
+              borderColor: isDarkMode ? '#f4c95d' : '#e07a1f',
+              backgroundColor: isDarkMode ? '#f4c95d' : '#e07a1f',
+              pointRadius: 3,
+              tension: 0.3,
+              yAxisID: 'y1'
+            }
+          ]
         },
         options: {
           plugins: {
             legend: {
               position: 'bottom',
-              labels: { color: chartTextColor }
+              labels: { color: chartTextColor, usePointStyle: true, pointStyle: 'circle' }
             },
             tooltip: {
               callbacks: {
                 label: context => {
-                  if (!locationSpend.length) return 'No completed rides yet';
-                  return `${context.label}: ${formatCurrency(context.raw)}`;
+                  if (!hasAnyRides) return 'No completed rides yet';
+                  if (context.dataset.type === 'line') {
+                    return context.raw == null ? 'No rides that month' : ` Avg fare: ${formatCurrency(context.raw)}`;
+                  }
+                  return ` ${context.raw} ride${context.raw === 1 ? '' : 's'}`;
                 }
               }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: chartTextColor },
+              grid: { display: false },
+              border: { display: false }
+            },
+            y: {
+              position: 'left',
+              beginAtZero: true,
+              ticks: { color: chartTextColor, precision: 0 },
+              grid: { color: chartGridColor },
+              border: { display: false },
+              title: { display: true, text: 'Rides', color: chartTextColor, font: { size: 11 } }
+            },
+            y1: {
+              position: 'right',
+              beginAtZero: true,
+              ticks: {
+                color: chartTextColor,
+                callback: value => `₱${Number(value).toLocaleString()}`
+              },
+              grid: { display: false },
+              border: { display: false },
+              title: { display: true, text: 'Avg Fare', color: chartTextColor, font: { size: 11 } }
             }
           }
         }
@@ -167,10 +258,12 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
     if (!rides || rides.length === 0) {
       const emptyCard = `
         <div class="passenger-ride-card empty">
+          <img src="../../frontEnd/src/images/no-car1.svg" alt="No Upcoming Rides" class="empty-state-image" width="50%" height="auto">
           <div class="ride-title">No Upcoming Rides</div>
           <div class="ride-info">
-            You don’t have any rides scheduled yet.
+            You don't have any rides scheduled yet.
           </div>
+          <button class="reserve-seat-btn" onclick="window.location.href='browseRides.php'">Browse Rides</button>
         </div>
       `;
       container.innerHTML = emptyCard;
@@ -348,7 +441,7 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
               </span>
 
               <span class="view-details-modal-price">
-                ₱${ride.cost}
+                PHP ${ride.cost}
               </span>
             </div>
 

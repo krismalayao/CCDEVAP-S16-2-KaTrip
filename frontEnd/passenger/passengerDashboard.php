@@ -44,15 +44,19 @@
                 <span class="analytics-metric-label">Average Per Location</span>
                 <span class="analytics-metric-value" id="avg-per-location">PHP 0.00</span>
             </div>
+            <div class="analytics-metric-card">
+                <span class="analytics-metric-label">Most Frequent Route</span>
+                <span class="analytics-metric-value analytics-metric-value-route" id="most-frequent-route">No rides yet</span>
+            </div>
         </div>
 
         <div class="analytics-row">
             <div class="analytics-panel">
-                <h4>Monthly Spending</h4>
+                <h4>Monthly Spending <span id="spend-trend-badge" class="spend-trend-badge"></span></h4>
                 <canvas id="spend-chart"></canvas>
             </div>
             <div class="analytics-panel">
-                <h4>Spending By Location</h4>
+                <h4>Rides &amp; Average Fare</h4>
                 <canvas id="location-chart"></canvas>
             </div>
         </div>

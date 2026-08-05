@@ -178,4 +178,69 @@ function countUpcomingRides($conn, $user_id)
     return (int)($row['total'] ?? 0);
 }
 
+function getPassengerRidesPerMonth($conn, $user_id)
+{
+    $sql = "
+        SELECT 
+            MONTH(r.departure_date) AS month,
+            COUNT(*) AS total
+        FROM bookings b
+        JOIN rides r ON b.ride_id = r.ride_id
+        WHERE b.passenger_id = ?
+        AND b.booking_status = 'accepted'
+        AND r.ride_status = 'completed'
+        AND YEAR(r.departure_date) = YEAR(CURDATE())
+        GROUP BY MONTH(r.departure_date)
+        ORDER BY MONTH(r.departure_date)
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    return $data;
+}
+
+function getPassengerMostFrequentRoute($conn, $user_id)
+{
+    $sql = "
+        SELECT 
+            COALESCE(NULLIF(TRIM(r.origin_name), ''), r.origin) AS origin_label,
+            COALESCE(NULLIF(TRIM(r.destination_name), ''), r.destination) AS destination_label,
+            COUNT(*) AS ride_count
+        FROM bookings b
+        JOIN rides r ON b.ride_id = r.ride_id
+        WHERE b.passenger_id = ?
+        AND b.booking_status = 'accepted'
+        AND r.ride_status = 'completed'
+        GROUP BY origin_label, destination_label
+        ORDER BY ride_count DESC
+        LIMIT 1
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if (!$row) {
+        return null;
+    }
+
+    return [
+        'origin' => $row['origin_label'] ?: 'Unknown',
+        'destination' => $row['destination_label'] ?: 'Unknown',
+        'ride_count' => (int)$row['ride_count']
+    ];
+}
+
 ?>

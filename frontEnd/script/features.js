@@ -272,7 +272,7 @@ function renderRides(list) {
     return `
       <div class="browserides-ride-card">
         <div class="browserides-ride-top">
-          <span class="browserides-ride-route"><b>${routeLabel}</b></span>
+          <span class="browserides-ride-route">${routeLabel}</span>
           <button type="button" class="browserides-view-btn" data-ride-id="${ride.ride_id}">View</button>
         </div>
         <div class="browserides-ride-meta">

@@ -229,7 +229,7 @@
 .booking-price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: #4a154b;
+    color: var(--purple-dark);
 }
 
 .cancel-booking-btn, .contact-driver-btn {
