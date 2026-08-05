@@ -50,7 +50,7 @@ fetch("../../backEnd/controller/passengerDashboardController.php")
   .then(res => res.json())
   .then(payload => {
     const monthlySpend = Array.isArray(payload?.monthly_spend) ? payload.monthly_spend : Array(12).fill(0);
-    const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.monthly_ride_count : Array(12).fill(0);
+const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.monthly_ride_count : Array(12).fill(0);
 
     const avgTripEl = document.getElementById('avg-per-trip');
     const avgLocationEl = document.getElementById('avg-per-location');
