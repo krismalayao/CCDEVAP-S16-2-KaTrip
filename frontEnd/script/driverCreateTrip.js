@@ -329,12 +329,29 @@ function addPickup() {
   renderPickups();
 }
 
-// ─── Date Helper ─────────────────────────────────────────────────────────────
+// ─── Date & Time Helper ─────────────────────────────────────────────────────────────
 function getLocalDateString(date = new Date()) {
     const year  = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day   = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+}
+
+function updateTimeMin() {
+  const dateInput = document.getElementById('ride-date');
+  const timeInput = document.getElementById('ride-time');
+  const today     = getLocalDateString();
+
+  if (dateInput.value === today) {
+    // Only restrict time if today is selected
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 15); // 15 min buffer
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mm = String(now.getMinutes()).padStart(2, '0');
+    timeInput.min = `${hh}:${mm}`;
+  } else {
+    timeInput.min = '';
+  }
 }
 
 // ─── Create Ride ──────────────────────────────────────────────────────────────
@@ -348,8 +365,11 @@ async function createRide() {
     const time      = document.getElementById('ride-time').value;
     const departure = new Date(`${date}T${time}`);
 
-    if (departure <= new Date()) {
-      showToast('Departure time must be in the future.', 'error');
+    const minDeparture = new Date();
+    minDeparture.setMinutes(minDeparture.getMinutes() + 30);
+
+    if (departure < minDeparture) {
+      showToast('Departure must be at least 30 minutes from now.', 'error');
       return;
     }
 
@@ -523,13 +543,14 @@ if (editRideId) {
 } else {
   document.getElementById('ride-date').value = getLocalDateString();
 
-  // ← add this: set default time to next 30-min slot
   const now = new Date();
-  now.setMinutes(now.getMinutes() < 30 ? 30 : 60, 0, 0);
+
+  now.setMinutes(now.getMinutes() + 30);
   const hh = String(now.getHours()).padStart(2, '0');
   const mm = String(now.getMinutes()).padStart(2, '0');
   document.getElementById('ride-time').value = `${hh}:${mm}`;
 
+  updateTimeMin();
   renderPickups();
 }
 

@@ -88,7 +88,7 @@
         <div class="form-grid">
             <div class="form-field">
             <label>Date</label>
-            <input type="date" id="ride-date"/>
+            <input type="date" id="ride-date" onchange="updateTimeMin()"/>
             </div>
             <div class="form-field">
             <label>Departure Time</label>
