@@ -113,9 +113,18 @@
         <div class="modal-title">End Trip?</div>
         <p class="modal-body">Are you sure you want to end this trip?</p>
         <div class="modal-summary">
-        <div class="ms-row"><span>Passengers</span><span>3</span></div>
-        <div class="ms-row"><span>Stops completed</span><span id="modal-stops">1 / 4</span></div>
-        <div class="ms-row total"><span>Total Collected</span><span>PHP 207.75</span></div>
+            <div class="ms-row">
+                <span>Passengers</span>
+                <span id="modal-pax">—</span>
+            </div>
+            <div class="ms-row">
+                <span>Stops completed</span>
+                <span id="modal-stops">— / —</span>
+            </div>
+            <div class="ms-row total">
+                <span>Total Collected</span>
+                <span id="modal-total">PHP —</span>
+            </div>
         </div>
         <button class="btn-confirm-end" onclick="confirmEnd()">Yes, End Trip</button>
         <button class="btn-keep-going" onclick="closeEndModal()">Keep Going</button>

@@ -11,6 +11,7 @@ function initNavbar() {
             <a class="nav-brand" href="adminDashboard.php">
                 <img class="nav-logo-img" src="../src/images/katrip_logo.svg" alt="KaTrip logo" />
                 <span class="nav-logo-text">KaTrip</span>
+                <span class="admin-badge">ADMIN</span>
             </a>
             
             <nav class="nav-links">

@@ -7,7 +7,7 @@ function getPassengerSpendPerMonth($conn, $user_id)
     $sql = "
         SELECT 
             MONTH(r.departure_date) AS month,
-            COALESCE(SUM(r.cost), 0) AS total
+            COALESCE(SUM(r.cost * b.seat_reserved), 0) AS total
         FROM bookings b
         JOIN rides r ON b.ride_id = r.ride_id
         WHERE b.passenger_id = ?
@@ -35,7 +35,7 @@ function getPassengerSpendPerMonth($conn, $user_id)
 function getPassengerAveragePerTrip($conn, $user_id)
 {
     $sql = "
-        SELECT COALESCE(AVG(r.cost), 0) AS avg_per_trip
+        SELECT COALESCE(AVG(r.cost * b.seat_reserved), 0) AS avg_per_trip
         FROM bookings b
         JOIN rides r ON b.ride_id = r.ride_id
         WHERE b.passenger_id = ?
@@ -60,7 +60,7 @@ function getPassengerSpendByLocation($conn, $user_id, $limit = 5)
     $sql = "
         SELECT 
             COALESCE(NULLIF(TRIM(r.destination_name), ''), r.destination) AS location,
-            COALESCE(SUM(r.cost), 0) AS total_spent
+            COALESCE(SUM(r.cost * b.seat_reserved), 0) AS total_spent
         FROM bookings b
         JOIN rides r ON b.ride_id = r.ride_id
         WHERE b.passenger_id = ?
@@ -93,7 +93,7 @@ function getPassengerAveragePerLocation($conn, $user_id)
     $sql = "
         SELECT COALESCE(SUM(loc.location_total) / NULLIF(COUNT(*), 0), 0) AS avg_per_location
         FROM (
-            SELECT COALESCE(SUM(r.cost), 0) AS location_total
+            SELECT COALESCE(SUM(r.cost * b.seat_reserved), 0) AS location_total
             FROM bookings b
             JOIN rides r ON b.ride_id = r.ride_id
             WHERE b.passenger_id = ?

@@ -300,10 +300,11 @@ function getDriverEarningsByMonth($conn, $driverId) {
     $result = [];
     foreach ($months as $ym) {
         $stmt = $conn->prepare("
-            SELECT COALESCE(SUM(cost), 0) AS total
-            FROM rides
-            WHERE driver_id = ? AND ride_status = 'completed'
-            AND DATE_FORMAT(departure_date, '%Y-%m') = ?");
+            SELECT COALESCE(SUM(r.cost * b.seat_reserved), 0) AS total
+            FROM rides r
+            JOIN bookings b ON b.ride_id = r.ride_id AND b.booking_status = 'accepted'
+            WHERE r.driver_id = ? AND r.ride_status = 'completed'
+            AND DATE_FORMAT(r.departure_date, '%Y-%m') = ?");
 
         $stmt->bind_param("is", $driverId, $ym);
         $stmt->execute();
@@ -320,9 +321,11 @@ function getDriverEarningsByMonth($conn, $driverId) {
 
 function getDriverEarningsByDestination($conn, $driverId) {
     $stmt = $conn->prepare("
-        SELECT COALESCE(destination_name, destination) AS dest, SUM(cost) AS total
-        FROM rides
-        WHERE driver_id = ? AND ride_status = 'completed'
+        SELECT COALESCE(r.destination_name, r.destination) AS dest,
+               SUM(r.cost * b.seat_reserved) AS total
+        FROM rides r
+        JOIN bookings b ON b.ride_id = r.ride_id AND b.booking_status = 'accepted'
+        WHERE r.driver_id = ? AND r.ride_status = 'completed'
         GROUP BY dest
         ORDER BY total DESC");
 

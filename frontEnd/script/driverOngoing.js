@@ -147,7 +147,20 @@ function markArrived() {
   showToast(`Arrived at ${stop.label}`);
 }
 
-function openEndModal() { document.getElementById('end-modal').classList.add('visible'); }
+function openEndModal() {
+  const accepted = tripData.passengers.filter(p => p.status === 'accepted');
+  const totalCollected = accepted.reduce((sum, p) => sum + Number(p.fee), 0);
+  const stopsCompleted = tripData.route.filter(s => s.state === 'done').length;
+  const totalStops = tripData.route.length;
+
+  // Update modal values
+  document.getElementById('modal-pax').textContent = accepted.length;
+  document.getElementById('modal-stops').textContent = `${stopsCompleted} / ${totalStops}`;
+  document.getElementById('modal-total').textContent = money(totalCollected);
+
+  document.getElementById('end-modal').classList.add('visible');
+}
+
 function closeEndModal() { document.getElementById('end-modal').classList.remove('visible'); }
 function confirmEnd() {
   closeEndModal();
