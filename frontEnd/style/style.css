@@ -835,7 +835,8 @@ body {
 }
 
 .browserides-card {
-    background: var(--purple-light);
+    background: white;
+    border: 1px solid #eeeeee;
     border-radius: 16px;
     padding: 16px;
 }
@@ -844,6 +845,9 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    padding: 4px;
+    background: var(--bg);
+    border-radius: 20px;
     justify-content: center;
     margin-bottom: 16px;
 }
@@ -959,7 +963,7 @@ body {
     color: var(--purple);
     font-family: 'Helvetica Now', sans-serif;
     padding: 8px 12px;
-    background: var(--bg-card);
+    background: var(--bg);
     border-radius: 8px;
     border-left: 3px solid var(--purple);
 }
@@ -968,10 +972,14 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    border-radius: 20px;
+    background: var(--bg);
+    padding: 12px;
 }
 
 .browserides-ride-card {
-    background: var(--bg-card);
+    background: linear-gradient(160deg, #fff, #fff, #e6e0ff);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 12px;
     border-radius: 10px;
     padding: 18px 20px 16px 20px;
 }
@@ -984,9 +992,8 @@ body {
 }
 
 .browserides-ride-route {
-    font-family: 'Bloc';
-    font-size: 18px;
-    font-weight: 400;
+    font-size: 16px;
+    font-weight: 600;
     letter-spacing: 0.5px;
     color: var(--purple-dark);
 }
@@ -995,17 +1002,18 @@ body {
     display: inline-block;
     text-decoration: none;
     background: var(--purple);
+    border: none;
     color: var(--bg-card);
     padding: 7px 20px;
     border-radius: 999px;
     font-size: 13px;
     font-weight: 700;
     font-family: 'Helvetica Now', sans-serif;
-    transition: 0.2s ease;
+    transition: 0.1s ease;
 }
 
 .browserides-view-btn:hover {
-    background: var(--purple);
+    background: var(--purple-dark);
 }
 
 .browserides-ride-meta {
@@ -1019,21 +1027,19 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-family: 'Bloc', sans-serif;
 }
 
 .browserides-meta-label {
     font-size: 11px;
-    font-weight: 700;
     letter-spacing: 0.5px;
-    color: var(--purple);
+    color: #9ca3af;
     text-transform: uppercase;
 }
 
 .browserides-meta-value {
     font-size: 14px;
     font-weight: 500;
-    color: var(--purple-dark);
+    color: #374151;
 }
 
 .browserides-capacity-badge {
@@ -1042,17 +1048,14 @@ body {
     font-weight: 700;
     padding: 2px 10px;
     border-radius: 6px;
-    font-family: 'BlocHelvetica Now', sans-serif;
     width: fit-content;
 }
 
 .browserides-empty {
     text-align: center;
-    font-size: 14px;
+    font-size: 0.95rem;
     color: var(--purple);
-    font-family: 'Bloc', sans-serif;
-    padding: 20px 0 6px 0;
-    opacity: 0.7;
+    padding: 42px 24px;
 }
 
 /* NEW ADDED */
@@ -1070,9 +1073,8 @@ body {
 .browserides-input {
     width: 100%;
     box-sizing: border-box;
-
     background: var(--bg-card);
-    border: 1.5px solid var(--purple-light);
+    border: 1.5px solid lightgray;
     border-radius: 10px;
 
     padding: 10px 14px;
@@ -1574,8 +1576,8 @@ body {
 .view-details-modal-header {
     display: flex;
     justify-content: space-between;
+    font-weight: 700;
     align-items: center;
-    font-family:'Bloc';
     letter-spacing: 1px;
     padding-right: 40px;
     margin-bottom: 18px;
@@ -1672,7 +1674,6 @@ body {
     align-items: center;
     gap: 12px;
     padding: 12px 0;
-    border-top: 1px solid var(--purple-light);
 }
 
 .view-details-modal-avatar {
@@ -1713,7 +1714,6 @@ body {
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-    box-shadow: 0 4px 12px rgba(152, 84, 203, 0.3);
 }
 
 .reserve-seat-btn:hover {

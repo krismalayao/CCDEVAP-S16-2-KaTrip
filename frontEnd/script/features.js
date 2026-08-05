@@ -272,7 +272,7 @@ function renderRides(list) {
     return `
       <div class="browserides-ride-card">
         <div class="browserides-ride-top">
-          <span class="browserides-ride-route">${routeLabel}</span>
+          <span class="browserides-ride-route"><b>${routeLabel}</b></span>
           <button type="button" class="browserides-view-btn" data-ride-id="${ride.ride_id}">View</button>
         </div>
         <div class="browserides-ride-meta">
@@ -418,7 +418,7 @@ function openRideDetailsModal(rideId) {
           <div class="view-details-modal-footer">
             <div>
               <span class="view-details-modal-label">ESTIMATED FARE</span>
-              <span class="view-details-modal-price">₱${Number(ride.cost || 0).toFixed(2)}</span>
+              <span class="view-details-modal-price">PHP ${Number(ride.cost || 0).toFixed(2)}</span>
             </div>
 
             <button class="reserve-seat-btn" id= "reserve-seat-btn" data-ride-id="${ride.ride_id}">
