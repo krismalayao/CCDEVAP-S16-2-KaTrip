@@ -1,67 +1,98 @@
 <?php
-// =============================================================================
-// ENDPOINT — POST /backEnd/model/createTrip.php
-// Called by driverCreateTrip.js when driver submits the create trip form
-// =============================================================================
 session_start();
 header("Content-Type: application/json");
+
 require "../../config/db.php";
 require "tripModel.php";
 
-// ─── Auth check ──────────────────────────────────────────────────────────────
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'driver') {
-    echo json_encode(["status" => "error", "message" => "Unauthorized."]);
-    exit;
-}
+try {
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(["status" => "error", "message" => "Invalid request method."]);
-    exit;
-}
-
-// ─── Parse and validate input ────────────────────────────────────────────────
-$body = json_decode(file_get_contents("php://input"), true);
-
-$required = ['origin','origin_lat','origin_lng','destination','dest_lat','dest_lng','departure_date','departure_time','total_seats','cost'];
-foreach ($required as $field) {
-    if (empty($body[$field])) {
-        echo json_encode(["status" => "error", "message" => "Missing field: $field"]);
-        exit;
+    // Authentication
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'driver') {
+        throw new Exception("Unauthorized.");
     }
-}
 
-$driverId = $_SESSION['user_id'];
-$data = [
-    'origin'          => $body['origin'],
-    'origin_name'     => $body['origin_name'] ?? null,
-    'origin_lat'      => floatval($body['origin_lat']),
-    'origin_lng'      => floatval($body['origin_lng']),
-    'destination'     => $body['destination'],
-    'destination_name'=> $body['destination_name'] ?? null,
-    'dest_lat'        => floatval($body['dest_lat']),
-    'dest_lng'        => floatval($body['dest_lng']),
-    'departure_date'  => $body['departure_date'],
-    'departure_time'  => $body['departure_time'],
-    'total_seats'     => intval($body['total_seats']),
-    'cost'            => floatval($body['cost']),
-];
-$landmarks = $body['landmarks'] ?? []; // array of { name, lat, lng }
+    // Request method
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception("Invalid request method.");
+    }
 
-// ─── Insert ride ─────────────────────────────────────────────────────────────
-$rideId = createRide($conn, $driverId, $data);
-if (!$rideId || is_array($rideId)) {
+    // Read JSON body
+    $body = json_decode(file_get_contents("php://input"), true);
+
+    if ($body === null) {
+        throw new Exception("Invalid request data.");
+    }
+
+    // Validate required fields
+    $required = [
+        'origin',
+        'origin_lat',
+        'origin_lng',
+        'destination',
+        'dest_lat',
+        'dest_lng',
+        'departure_date',
+        'departure_time',
+        'total_seats',
+        'cost'
+    ];
+
+    foreach ($required as $field) {
+        if (!isset($body[$field]) || $body[$field] === '') {
+            throw new Exception("Missing field: {$field}");
+        }
+    }
+
+    // Prepare ride data
+    $driverId = $_SESSION['user_id'];
+
+    $data = [
+        'origin'            => $body['origin'],
+        'origin_name'       => $body['origin_name'] ?? null,
+        'origin_lat'        => (float)$body['origin_lat'],
+        'origin_lng'        => (float)$body['origin_lng'],
+        'destination'       => $body['destination'],
+        'destination_name'  => $body['destination_name'] ?? null,
+        'dest_lat'          => (float)$body['dest_lat'],
+        'dest_lng'          => (float)$body['dest_lng'],
+        'departure_date'    => $body['departure_date'],
+        'departure_time'    => $body['departure_time'],
+        'total_seats'       => (int)$body['total_seats'],
+        'cost'              => (float)$body['cost']
+    ];
+
+    $landmarks = $body['landmarks'] ?? [];
+
+    // Create ride
+    $rideId = createRide($conn, $driverId, $data);
+
+    if (!$rideId) {
+        throw new Exception("Failed to create ride.");
+    }
+
+    // Save landmarks
+    if (!empty($landmarks)) {
+        createLandmarks($conn, $rideId, $landmarks);
+    }
+
     echo json_encode([
-        "status"  => "error",
-        "message" => "Failed to create ride.",
-        "db_error" => is_array($rideId) ? $rideId['error'] : $conn->error
+        "status" => "success",
+        "message" => "Ride created successfully.",
+        "ride_id" => $rideId
     ]);
-    exit;
+
+} catch (Throwable $e) {
+
+    // Log the error on the server
+    error_log($e->getMessage());
+
+    http_response_code(500);
+
+    echo json_encode([
+        "status" => "error",
+        "message" => "An unexpected server error occurred."
+    ]);
 }
 
-// ─── Insert landmarks ────────────────────────────────────────────────────────
-if (!empty($landmarks)) {
-    createLandmarks($conn, $rideId, $landmarks);
-}
-
-echo json_encode(["status" => "success", "message" => "Ride created!", "ride_id" => $rideId]);
 exit;
