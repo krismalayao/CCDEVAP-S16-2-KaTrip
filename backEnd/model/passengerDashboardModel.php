@@ -137,7 +137,7 @@ function getUpcomingRides($conn, $user_id)
     AND r.departure IS NOT NULL
     AND TIMESTAMP(r.departure_date, r.departure) >= NOW()
     ORDER BY TIMESTAMP(r.departure_date, r.departure) ASC
-    LIMIT 1";
+    LIMIT 5";
 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
