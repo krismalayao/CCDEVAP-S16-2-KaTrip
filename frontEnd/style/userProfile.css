@@ -1,4 +1,4 @@
-/* User Profile CSS */
+User Profile CSS
 html[data-theme="dark"] {
     --bg: #2D2033;
     --bg-card: #37253D;
@@ -132,7 +132,7 @@ html[data-theme="dark"] .driver-docs-modal-actions {
 }
 
 html[data-theme="dark"] .profile-avatar {
-    border-color: #000000;
+    border-color: var(--bg-card);
 }
 
 html[data-theme="dark"] .profile-metadata p {

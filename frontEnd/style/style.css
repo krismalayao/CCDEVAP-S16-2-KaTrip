@@ -21,33 +21,98 @@
     --danger:           #ed1c24;
 }
 
-/* Dark Mode */ 
+/* Dark Mode */
 html[data-theme="dark"] {
-    --bg: #2D2033;
-    --bg-card: #37253D;
-    --purple-faint: #331F36;
-    --grey-text: #eee9f3;
-    --text-primary: #f5efff;
-    --icon-muted: #aaa0b2;
+    /* Surface elevation scale — each step lighter than the last */
+    --bg:            #17111d;   /* page background */
+    --bg-card:       #221a29;   /* base card */
+    --bg-elevated:   #2c2233;   /* nested card / inner panel */
+    --bg-elevated-2: #382a41;   /* modal, popover, highest layer */
+
+    /* Brand purple, lightened for dark backgrounds */
+    --purple-dark:   #b28aeb;
+    --purple:        #c9a4f5;
+    --purple-light:  #e3cdfc;
+    --purple-faint:  #2c2233;
+
+    /* Text */
+    --grey-text:     #e6dcf0;
+    --text-primary:  #f5f0fa;
+    --icon-muted:    #a996b8;
+
+    /* Status colors, brightened for dark contrast */
+    --success:       #4ade80;
+    --danger:        #f87171;
+
+    /* Subtle border, used to separate cards from background */
+    --border-subtle: rgba(255, 255, 255, 0.08);
 }
 
 html[data-theme="dark"] body {
     color: var(--grey-text);
 }
 
-/* Dark mode: Browse Rides */
-html[data-theme="dark"] .browserides-card,
+/* ===================================================== */
+/* Buttons & Filters — unified pill style across all pages */
+/* ===================================================== */
+
+html[data-theme="dark"] .browserides-filter-btn,
+html[data-theme="dark"] .tab-btn {
+    background: var(--bg-elevated);
+    color: var(--purple-light);
+    border-color: transparent;
+}
+
+html[data-theme="dark"] .browserides-filter-btn.active,
+html[data-theme="dark"] .tab-btn.active {
+    background: var(--purple-dark);
+    color: #17111d;
+    border-color: var(--purple-dark);
+}
+
+html[data-theme="dark"] .browserides-filter-btn:hover:not(.active),
+html[data-theme="dark"] .tab-btn:not(.active):hover {
+    background: var(--purple);
+    color: #17111d;
+}
+
+html[data-theme="dark"] .filter-icon {
+    filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(600%) hue-rotate(220deg) brightness(105%);
+}
+
+html[data-theme="dark"] .browserides-filter-btn.active .filter-icon,
+html[data-theme="dark"] .browserides-filter-btn:hover:not(.active) .filter-icon,
+html[data-theme="dark"] .tab-btn.active .filter-icon,
+html[data-theme="dark"] .tab-btn:not(.active):hover .filter-icon {
+    filter: brightness(0);
+}
+
+html[data-theme="dark"] .browserides-filters,
 html[data-theme="dark"] .bookings-tabs {
-    background: #775280;
+    background: var(--bg);
+}
+
+html[data-theme="dark"] .browserides-filter-hint {
+    background: var(--bg-elevated);
+    color: var(--purple-light);
+    border-left-color: var(--purple);
+}
+
+/* ===================================================== */
+/* Browse Rides */
+/* ===================================================== */
+
+html[data-theme="dark"] .browserides-card {
+    background: var(--bg-card);
     color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
 }
 
 html[data-theme="dark"] .browserides-card .browserides-meta-label,
 html[data-theme="dark"] .browserides-card .browserides-meta-value,
 html[data-theme="dark"] .browserides-card .browserides-filter-hint,
 html[data-theme="dark"] .browserides-card p,
-html[data-theme="dark"] .browserides-card span,
-html[data-theme="dark"] .browserides-card .browserides-filter-btn {
+html[data-theme="dark"] .browserides-card span {
     color: var(--text-primary);
 }
 
@@ -55,19 +120,100 @@ html[data-theme="dark"] .browserides-suggestion {
     color: var(--grey-text);
 }
 
-/* Dark mode: View Bookings */
+html[data-theme="dark"] .browserides-heading {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .browserides-destination-select,
+html[data-theme="dark"] .browserides-input {
+    background: var(--bg-elevated);
+    border-color: var(--purple);
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .browserides-destination-select:focus,
+html[data-theme="dark"] .browserides-input:focus {
+    border-color: var(--purple-light);
+}
+
+html[data-theme="dark"] .browserides-select-arrow {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .browserides-suggestions {
+    background: var(--bg-elevated-2);
+    border-color: var(--purple);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+html[data-theme="dark"] .browserides-suggestion:hover,
+html[data-theme="dark"] .browserides-suggestion.active {
+    background: var(--bg-elevated);
+}
+
+html[data-theme="dark"] .browserides-view-btn {
+    background: var(--purple-dark);
+    color: #17111d;
+}
+
+html[data-theme="dark"] .browserides-view-btn:hover {
+    background: var(--purple-light);
+}
+
+/* ===================================================== */
+/* View Bookings */
+/* ===================================================== */
+
 html[data-theme="dark"] .bookings-container {
-    background: #775280;
+    background: var(--bg-card);
     color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+}
+
+html[data-theme="dark"] .bookings-card {
+    background-color: var(--bg-card);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+html[data-theme="dark"] .bookings-heading {
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .tab-panel.active {
+    background-color: var(--bg);
+}
+
+html[data-theme="dark"] .bookings-content .empty-state {
+    color: var(--purple-light) !important;
+}
+
+html[data-theme="dark"] .bookings-card p,
+html[data-theme="dark"] .bookings-card span,
+html[data-theme="dark"] .booking-card-item p,
+html[data-theme="dark"] .booking-card-item span,
+html[data-theme="dark"] .booking-card-item strong {
+    color: #ffffff;
 }
 
 html[data-theme="dark"] .booking-card-item {
-    background: #906b99;
+    background-color: var(--bg-elevated);
+}
+
+html[data-theme="dark"] .booking-date {
+    color: var(--icon-muted);
+}
+
+html[data-theme="dark"] .route-point {
+    color: var(--grey-text);
+}
+
+html[data-theme="dark"] .route-point strong {
+    color: var(--purple-light);
 }
 
 html[data-theme="dark"] .driver-info-snippet {
-    background-color: #4f3458;
-    border-color: #b98ac4;
+    background-color: var(--bg-elevated-2);
+    border-color: var(--purple);
 }
 
 html[data-theme="dark"] .driver-info-snippet .driver-name,
@@ -75,80 +221,170 @@ html[data-theme="dark"] .driver-info-snippet .vehicle-plate {
     color: #ffffff;
 }
 
+html[data-theme="dark"] .driver-avatar-mini {
+    background-color: var(--bg-elevated);
+}
+
+html[data-theme="dark"] .booking-card-footer {
+    border-top: 1px dashed var(--border-subtle);
+}
+
+html[data-theme="dark"] .booking-price {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .cancel-booking-btn {
+    background-color: #3a1f22;
+    color: #ff8b8b;
+    border: 1px solid #5c2d31;
+}
+
+html[data-theme="dark"] .cancel-booking-btn:hover {
+    background-color: #4a262a;
+}
+
+html[data-theme="dark"] .contact-driver-btn {
+    background-color: var(--purple-dark);
+    color: #17111d;
+}
+
+html[data-theme="dark"] .contact-driver-btn:hover {
+    background-color: var(--purple-light);
+}
+
 html[data-theme="dark"] .status-badge.pending {
-    background-color: #6b5520;
+    background-color: #4a3a14;
     color: #ffe8a3;
 }
 
 html[data-theme="dark"] .status-badge.approved {
-    background-color: #1f5b35;
+    background-color: #16452a;
     color: #b9f6cc;
 }
 
 html[data-theme="dark"] .status-badge.completed {
-    background-color: #3f4448;
+    background-color: #35393d;
     color: #e6e8ea;
 }
 
 html[data-theme="dark"] .status-badge.cancelled,
 html[data-theme="dark"] .status-badge.rejected {
-    background-color: #70252d;
+    background-color: #521c22;
     color: #ffc1c7;
 }
 
 html[data-theme="dark"] .badge-green {
-    background-color: #1f5b35;
+    background-color: #16452a;
     color: #b9f6cc;
 }
 
 html[data-theme="dark"] .badge-orange {
-    background-color: #7a4a1a;
+    background-color: #5c3813;
     color: #ffd9a3;
 }
 
 html[data-theme="dark"] .badge-red {
-    background-color: #70252d;
+    background-color: #521c22;
     color: #ffc1c7;
 }
 
-html[data-theme="dark"] .bookings-content .empty-state {
-    color: var(--text-primary) !important;
-}
-
-html[data-theme="dark"] .bookings-card p,
-html[data-theme="dark"] .bookings-card span,
-html[data-theme="dark"] .booking-card-item p,
-html[data-theme="dark"] .booking-card-item span,
-html[data-theme="dark"] .booking-card-item strong,
-html[data-theme="dark"] .browserides-heading,
-html[data-theme="dark"] .bookings-heading {
-    color: #ffffff;
-}
-
-html[data-theme="dark"] .bookings-tabs .tab-btn {
-    color: #ffffff;
-    border: 1.5px solid var(--purple-light);
-}
-
-html[data-theme="dark"] .bookings-tabs .tab-btn.active {
-    color: #ffffff;
-    border-color: var(--purple-dark);
-}
-
-html[data-theme="dark"] .charts h4 {
-    color: #ffffff;
-}
+/* ===================================================== */
+/* Passenger Dashboard */
+/* ===================================================== */
 
 html[data-theme="dark"] .cta-heading h1 {
     color: #ffffff;
 }
 
-html[data-theme="dark"] .ride-card-arrow {
+html[data-theme="dark"] .charts h4 {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .charts,
+html[data-theme="dark"] .passenger-dashboard-card-actions {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+}
+
+html[data-theme="dark"] .passenger-dashboard-action-btn {
     color: var(--text-primary);
 }
 
+html[data-theme="dark"] .passenger-dashboard-action-btn.active,
+html[data-theme="dark"] .passenger-dashboard-action-btn:hover {
+    background: var(--purple-dark);
+    color: #17111d;
+}
+
+html[data-theme="dark"] .passenger-dashboard-action-btn:not(:last-child) {
+    border-right: 1px solid var(--border-subtle);
+}
+
+html[data-theme="dark"] .analytics-panel {
+    background: var(--bg-elevated);
+    border-color: var(--border-subtle);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+html[data-theme="dark"] .analytics-metric-card {
+    background: var(--bg-elevated);
+    border-color: var(--border-subtle);
+}
+
+html[data-theme="dark"] .analytics-metric-value {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .passenger-ride-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 2px 10px rgba(17, 10, 27, 0.79);
+}
+
+html[data-theme="dark"] .passenger-ride-card:hover {
+    box-shadow: 0 8px 20px rgba(17, 10, 27, 0.79);
+}
+
+html[data-theme="dark"] .ride-card-arrow {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .passenger-dashboard-details-btn,
+html[data-theme="dark"] .passenger-browse-rides-btn,
+html[data-theme="dark"] .reserve-seat-btn {
+    background: var(--purple-dark);
+    color: #17111d;
+}
+
+html[data-theme="dark"] .passenger-dashboard-details-btn:hover,
+html[data-theme="dark"] .passenger-browse-rides-btn:hover,
+html[data-theme="dark"] .reserve-seat-btn:hover {
+    background: var(--purple-light);
+}
+
+html[data-theme="dark"] .spend-trend-badge.up {
+    background: #521c22;
+    color: #ffc1c7;
+}
+
+html[data-theme="dark"] .spend-trend-badge.down {
+    background: #16452a;
+    color: #b9f6cc;
+}
+
+html[data-theme="dark"] .spend-trend-badge.neutral {
+    background: var(--bg-elevated);
+    color: var(--purple-light);
+}
+
+/* ===================================================== */
+/* View Details Modal */
+/* ===================================================== */
+
 html[data-theme="dark"] .view-details-modal-card {
+    background: var(--bg-elevated-2);
     color: var(--text-primary);
+    box-shadow: 0 12px 35px rgba(17, 10, 27, 0.79);
 }
 
 html[data-theme="dark"] .view-details-modal-route,
@@ -163,75 +399,100 @@ html[data-theme="dark"] .view-details-modal-price {
 
 html[data-theme="dark"] .view-details-modal-close {
     color: var(--text-primary);
+    background: var(--bg-elevated);
 }
 
-/* Dark mode: Passenger Dashboard */
-html[data-theme="dark"] .passenger-ride-card {
-    background-color: #775280;
+/* ===================================================== */
+/* Reservation Toast */
+/* ===================================================== */
+
+html[data-theme="dark"] .reservation-toast-card {
+    background: var(--bg-elevated-2);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
 }
 
-html[data-theme="dark"] .charts,
-html[data-theme="dark"] .passenger-dashboard-card-actions {
-    background: #775280;
+html[data-theme="dark"] .reservation-toast-content h4 {
+    color: var(--purple-light);
 }
 
-html[data-theme="dark"] .analytics-panel {
-    background: #5f3f69;
-    border-color: #8f6c99;
-    box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+html[data-theme="dark"] .reservation-toast-content p {
+    color: var(--grey-text);
 }
 
-html[data-theme="dark"] .analytics-metric-card {
-    background: linear-gradient(180deg, #5a3a63 0%, #4f3458 100%);
-    border-color: #896292;
+/* ===================================================== */
+/* Create Ride Form */
+/* ===================================================== */
+
+html[data-theme="dark"] .create-ride-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
 }
 
-html[data-theme="dark"] .analytics-metric-value {
-    color: #ffffff;
+html[data-theme="dark"] .create-ride-title,
+html[data-theme="dark"] .create-ride-field-label {
+    color: var(--purple-light);
 }
 
-.spend-trend-badge {
-    display: inline-block;
-    margin-left: 8px;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 9px;
-    border-radius: 999px;
-    vertical-align: middle;
-    letter-spacing: 0.2px;
-}
-.spend-trend-badge.up {
-    background: #fdecec;
-    color: var(--danger);
-}
-.spend-trend-badge.down {
-    background: #eaffea;
-    color: var(--success);
-}
-.spend-trend-badge.neutral {
-    background: var(--purple-faint);
-    color: var(--purple-dark);
-}
-html[data-theme="dark"] .spend-trend-badge.up {
-    background: #70252d;
-    color: #ffc1c7;
-}
-html[data-theme="dark"] .spend-trend-badge.down {
-    background: #1f5b35;
-    color: #b9f6cc;
-}
-html[data-theme="dark"] .spend-trend-badge.neutral {
-    background: var(--purple-faint);
-    color: #ffffff;
+html[data-theme="dark"] .create-ride-select,
+html[data-theme="dark"] .create-ride-input {
+    background: var(--bg-elevated);
+    border-color: var(--purple);
+    color: var(--text-primary);
 }
 
-.analytics-metric-value-route {
-    font-size: 16px;
-    line-height: 1.3;
-    word-break: break-word;
+html[data-theme="dark"] .create-ride-select:focus,
+html[data-theme="dark"] .create-ride-input:focus {
+    border-color: var(--purple-light);
 }
 
-/* Dark mode: Shared Navigation */
+html[data-theme="dark"] .create-ride-select-wrap::after {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .create-ride-est {
+    background: var(--bg-elevated);
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .create-ride-counter-btn {
+    background: var(--bg-elevated);
+    border-color: var(--purple);
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .create-ride-counter-btn:hover {
+    background: var(--bg-elevated-2);
+    border-color: var(--purple-light);
+}
+
+html[data-theme="dark"] .create-ride-counter-val,
+html[data-theme="dark"] .create-ride-fare-label,
+html[data-theme="dark"] .create-ride-fare-amount {
+    color: var(--purple-light);
+}
+
+html[data-theme="dark"] .create-ride-submit-btn {
+    background: var(--purple-dark);
+    color: #17111d;
+}
+
+html[data-theme="dark"] .create-ride-submit-btn:hover {
+    background: var(--purple-light);
+}
+
+html[data-theme="dark"] .create-ride-pickup-handle,
+html[data-theme="dark"] .create-ride-pickup-remove {
+    color: var(--icon-muted);
+}
+
+html[data-theme="dark"] .create-ride-add-pickup-btn {
+    color: var(--purple-light);
+}
+
+/* ===================================================== */
+/* Shared Navigation */
+/* ===================================================== */
+
 html[data-theme="dark"] .nav-profile-initials {
     color: var(--text-primary);
 }
