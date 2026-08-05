@@ -35,7 +35,7 @@ function getRideDetails($conn, $ride_id, $passenger_id)
         dp.plate_number,
 
         b.seat_reserved,
-        (r.cost / NULLIF(r.total_seats, 0)) * b.seat_reserved AS passenger_fare
+        (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0)) * b.seat_reserved AS passenger_fare
 
     FROM rides r
 
