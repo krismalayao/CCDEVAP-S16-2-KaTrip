@@ -335,6 +335,10 @@ const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.mo
               <span class="ride-card-meta-label">${seatLabel}</span>
               <span class="ride-card-meta-value">${ride.seat_reserved}</span>
             </div>
+            <div class="ride-card-meta-item">
+              <span class="ride-card-meta-label">Your Share</span>
+              <span class="ride-card-meta-value">PHP ${Number(ride.passenger_fare).toFixed(2)}</span>
+            </div>
           </div>
 
           <a href="#" class="passenger-dashboard-details-btn" data-ride-id="${ride.ride_id}">View Details</a>
@@ -475,13 +479,12 @@ const monthlyRideCount = Array.isArray(payload?.monthly_ride_count) ? payload.mo
           <div class="view-details-modal-footer">
 
             <div>
-              <span class="view-details-modal-label">
-                ESTIMATED FARE
-              </span>
-
-              <span class="view-details-modal-price">
-                PHP ${ride.cost}
-              </span>
+              <span class="view-details-modal-label">TOTAL TRIP FARE</span>
+              <span class="view-details-modal-value">PHP ${Number(ride.cost).toFixed(2)}</span>
+            </div>
+            <div>
+              <span class="view-details-modal-label">YOUR SHARE</span>
+              <span class="view-details-modal-price">PHP ${Number(ride.passenger_fare ?? 0).toFixed(2)}</span>
             </div>
 
           </div>

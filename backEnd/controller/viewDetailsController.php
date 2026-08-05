@@ -7,6 +7,12 @@ include "../../config/db.php";
 
 header('Content-Type: application/json');
 
+if (!isset($_SESSION['email']) || $_SESSION['role'] !== 'passenger') {
+    http_response_code(403);
+    echo json_encode(["success" => false, "message" => "Unauthorized"]);
+    exit();
+}
+
 // Error msg
 if (!isset($_GET['ride_id'])) 
 {
@@ -19,8 +25,9 @@ if (!isset($_GET['ride_id']))
 }
 
 $ride_id = $_GET['ride_id'];
+$passenger_id = $_SESSION['user_id'];
 
-$data = getRideDetails($conn, $ride_id);
+$data = getRideDetails($conn, $ride_id, $passenger_id);
 
 if ($data) {
     if (!(bool)$data['show_full_name']) {

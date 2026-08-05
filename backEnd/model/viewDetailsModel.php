@@ -1,7 +1,7 @@
 <?php
 // Serves as the data access to properly display ride details
 
-function getRideDetails($conn, $ride_id)
+function getRideDetails($conn, $ride_id, $passenger_id)
 {
     $sql = "
     SELECT
@@ -32,7 +32,10 @@ function getRideDetails($conn, $ride_id)
         ) AS pickup_points,
 
         dp.vehicle_model,
-        dp.plate_number
+        dp.plate_number,
+
+        b.seat_reserved,
+        (r.cost / NULLIF(r.total_seats, 0)) * b.seat_reserved AS passenger_fare
 
     FROM rides r
 
@@ -45,12 +48,17 @@ function getRideDetails($conn, $ride_id)
     LEFT JOIN ride_schedules rs
         ON r.schedule_id = rs.schedule_id
 
+    LEFT JOIN bookings b
+        ON b.ride_id = r.ride_id
+        AND b.passenger_id = ?
+        AND b.booking_status IN ('pending', 'accepted')
+
     WHERE r.ride_id = ?
 ";
 
 $stmt = mysqli_prepare($conn, $sql);
 
-mysqli_stmt_bind_param($stmt, "i", $ride_id);
+mysqli_stmt_bind_param($stmt, "ii", $passenger_id, $ride_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 

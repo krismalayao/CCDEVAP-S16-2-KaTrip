@@ -3,11 +3,13 @@
 
 function getPassengerSpendPerMonth($conn, $user_id)
 {
-
     $sql = "
         SELECT 
             MONTH(r.departure_date) AS month,
-            COALESCE(SUM(r.cost * b.seat_reserved), 0) AS total
+            COALESCE(SUM(
+                (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0))
+                * b.seat_reserved
+            ), 0) AS total
         FROM bookings b
         JOIN rides r ON b.ride_id = r.ride_id
         WHERE b.passenger_id = ?
@@ -17,50 +19,46 @@ function getPassengerSpendPerMonth($conn, $user_id)
         GROUP BY MONTH(r.departure_date)
         ORDER BY MONTH(r.departure_date)
     ";
-
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-
     $result = $stmt->get_result();
-
     $data = [];
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
-    }
-
+    while ($row = $result->fetch_assoc()) { $data[] = $row; }
     return $data;
 }
 
 function getPassengerAveragePerTrip($conn, $user_id)
 {
     $sql = "
-        SELECT COALESCE(AVG(r.cost * b.seat_reserved), 0) AS avg_per_trip
+        SELECT COALESCE(AVG(
+            (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0))
+            * b.seat_reserved
+        ), 0) AS avg_per_trip
         FROM bookings b
         JOIN rides r ON b.ride_id = r.ride_id
         WHERE b.passenger_id = ?
         AND b.booking_status = 'accepted'
         AND r.ride_status = 'completed'
     ";
-
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-
     return (float)($row['avg_per_trip'] ?? 0);
 }
 
 function getPassengerSpendByLocation($conn, $user_id, $limit = 5)
 {
     $limit = max(1, (int)$limit);
-
     $sql = "
         SELECT 
             COALESCE(NULLIF(TRIM(r.destination_name), ''), r.destination) AS location,
-            COALESCE(SUM(r.cost * b.seat_reserved), 0) AS total_spent
+            COALESCE(SUM(
+                (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0))
+                * b.seat_reserved
+            ), 0) AS total_spent
         FROM bookings b
         JOIN rides r ON b.ride_id = r.ride_id
         WHERE b.passenger_id = ?
@@ -70,13 +68,10 @@ function getPassengerSpendByLocation($conn, $user_id, $limit = 5)
         ORDER BY total_spent DESC
         LIMIT $limit
     ";
-
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-
     $result = $stmt->get_result();
-
     $rows = [];
     while ($row = $result->fetch_assoc()) {
         $rows[] = [
@@ -84,7 +79,6 @@ function getPassengerSpendByLocation($conn, $user_id, $limit = 5)
             'total_spent' => (float)$row['total_spent']
         ];
     }
-
     return $rows;
 }
 
@@ -93,7 +87,10 @@ function getPassengerAveragePerLocation($conn, $user_id)
     $sql = "
         SELECT COALESCE(SUM(loc.location_total) / NULLIF(COUNT(*), 0), 0) AS avg_per_location
         FROM (
-            SELECT COALESCE(SUM(r.cost * b.seat_reserved), 0) AS location_total
+            SELECT COALESCE(SUM(
+                (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0))
+                * b.seat_reserved
+            ), 0) AS location_total
             FROM bookings b
             JOIN rides r ON b.ride_id = r.ride_id
             WHERE b.passenger_id = ?
@@ -102,20 +99,16 @@ function getPassengerAveragePerLocation($conn, $user_id)
             GROUP BY COALESCE(NULLIF(TRIM(r.destination_name), ''), r.destination)
         ) loc
     ";
-
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
-
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
-
     return (float)($row['avg_per_location'] ?? 0);
 }
 
 function getUpcomingRides($conn, $user_id) 
 {
-
     $sql = "
     SELECT 
         r.ride_id,
@@ -126,6 +119,9 @@ function getUpcomingRides($conn, $user_id)
         r.departure_date,
         r.departure,
         r.ride_status,
+        r.cost,
+        r.total_seats,
+        (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0)) * b.seat_reserved AS passenger_fare,
         b.seat_reserved,
         b.booking_status
     FROM bookings b
@@ -242,5 +238,4 @@ function getPassengerMostFrequentRoute($conn, $user_id)
         'ride_count' => (int)$row['ride_count']
     ];
 }
-
 ?>

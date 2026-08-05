@@ -20,7 +20,7 @@ $conn->query($autoCancelSql);
 
 $sql = "SELECT b.booking_id, b.booking_status, b.seat_reserved, r.ride_id, 
         r.origin, r.destination, r.departure, r.departure_date, 
-        r.ride_status, r.cost,
+        r.ride_status, r.cost, r.total_seats,
         CASE WHEN d.show_full_name = 1 THEN u.first_name ELSE CONCAT(UPPER(LEFT(u.first_name, 1)), '.') END AS driver_first_name,
         CASE WHEN d.show_full_name = 1 THEN u.last_name ELSE CONCAT(UPPER(LEFT(u.last_name, 1)), '.') END AS driver_last_name,
         d.vehicle_model, d.plate_number
@@ -37,12 +37,26 @@ $stmt->execute();
 
 $data = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
-$formatRow = function ($row) {
-$row['booking_id']    = (int)$row['booking_id'];
-$row['ride_id']       = (int)$row['ride_id'];
-$row['seat_reserved'] = (int)$row['seat_reserved'];
-$row['cost']          = (float)$row['cost'];
-return $row;
+$formatRow = function ($row) use ($conn) {
+    $row['booking_id']    = (int)$row['booking_id'];
+    $row['ride_id']       = (int)$row['ride_id'];
+    $row['seat_reserved'] = (int)$row['seat_reserved'];
+    $row['cost']          = (float)$row['cost'];
+
+    $countStmt = $conn->prepare("
+        SELECT COALESCE(SUM(seat_reserved), 0) AS total
+        FROM bookings
+        WHERE ride_id = ? AND booking_status = 'accepted'
+    ");
+    $countStmt->bind_param("i", $row['ride_id']);
+    $countStmt->execute();
+    $acceptedSeats = (int)$countStmt->get_result()->fetch_assoc()['total'];
+
+    $row['passenger_share'] = $acceptedSeats > 0
+        ? round(($row['cost'] / $acceptedSeats) * $row['seat_reserved'], 2)
+        : $row['cost'];
+
+    return $row;
 };
 
 echo json_encode(array_map($formatRow, $data));

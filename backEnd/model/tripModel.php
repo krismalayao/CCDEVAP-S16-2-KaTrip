@@ -300,20 +300,20 @@ function getDriverEarningsByMonth($conn, $driverId) {
     $result = [];
     foreach ($months as $ym) {
         $stmt = $conn->prepare("
-            SELECT COALESCE(SUM(r.cost * b.seat_reserved), 0) AS total
+            SELECT COALESCE(SUM(
+                (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0))
+                * b.seat_reserved
+            ), 0) AS total
             FROM rides r
             JOIN bookings b ON b.ride_id = r.ride_id AND b.booking_status = 'accepted'
             WHERE r.driver_id = ? AND r.ride_status = 'completed'
             AND DATE_FORMAT(r.departure_date, '%Y-%m') = ?");
-
         $stmt->bind_param("is", $driverId, $ym);
         $stmt->execute();
         $total = $stmt->get_result()->fetch_assoc()['total'];
-
         $label = date('M', strtotime($ym . '-01'));
         $result[$label] = (float) $total;
     }
-
     return $result;
 }
 
@@ -322,21 +322,19 @@ function getDriverEarningsByMonth($conn, $driverId) {
 function getDriverEarningsByDestination($conn, $driverId) {
     $stmt = $conn->prepare("
         SELECT COALESCE(r.destination_name, r.destination) AS dest,
-               SUM(r.cost * b.seat_reserved) AS total
+               SUM(
+                   (r.cost / NULLIF((SELECT SUM(b2.seat_reserved) FROM bookings b2 WHERE b2.ride_id = r.ride_id AND b2.booking_status = 'accepted'), 0))
+                   * b.seat_reserved
+               ) AS total
         FROM rides r
         JOIN bookings b ON b.ride_id = r.ride_id AND b.booking_status = 'accepted'
         WHERE r.driver_id = ? AND r.ride_status = 'completed'
         GROUP BY dest
         ORDER BY total DESC");
-
     $stmt->bind_param("i", $driverId);
     $stmt->execute();
     $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-
     $result = [];
-    foreach ($rows as $row) {
-        $result[$row['dest']] = (float) $row['total'];
-    }
-
+    foreach ($rows as $row) { $result[$row['dest']] = (float) $row['total']; }
     return $result;
 }
