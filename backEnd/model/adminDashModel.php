@@ -42,19 +42,19 @@ function getOverviewStats($conn) {
     $stmt->execute();
     $tripsToday = $stmt->get_result()->fetch_assoc()['c'];
 
-    // Revenue this month, based on completed transactions.
-    // NOTE: transactions has no timestamp column, so we use the linked
-    // booking's created_at as the closest available date proxy.
-    $currentMonth = date('Y-m');
-    $sql = "SELECT COALESCE(SUM(t.amount), 0) AS total
-            FROM transactions t
-            JOIN bookings b ON t.booking_id = b.booking_id
-            WHERE t.payment_status = 'completed'
-            AND DATE_FORMAT(b.created_at, '%Y-%m') = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $currentMonth);
-    $stmt->execute();
-    $revenueThisMonth = $stmt->get_result()->fetch_assoc()['total'];
+    // Revenue this month = sum of rides.cost for rides marked completed
+// this month. No transactions/bookings join needed — cost lives on
+// the ride itself. Filtered on departure_date, matching the same
+// convention as "Trips Completed Over Time" / "Revenue Over Time".
+$currentMonth = date('Y-m');
+$sql = "SELECT COALESCE(SUM(cost), 0) AS total
+        FROM rides
+        WHERE ride_status = 'completed'
+        AND DATE_FORMAT(departure_date, '%Y-%m') = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $currentMonth);
+$stmt->execute();
+$revenueThisMonth = $stmt->get_result()->fetch_assoc()['total'];
 
     return [
         "passengers"       => (int) $passengers,
@@ -153,9 +153,8 @@ function getTripStatusBreakdown($conn) {
 }
 
 /**
- * Revenue over the past 6 months, from completed transactions.
- * NOTE: `transactions` has no date column, so this uses the linked
- * booking's created_at as the closest available date proxy.
+ * Revenue over the past 6 months = sum of rides.cost for rides marked
+ * completed in that month (rides.departure_date).
  */
 function getRevenueOverTime($conn) {
     $months = [];
@@ -165,11 +164,10 @@ function getRevenueOverTime($conn) {
 
     $result = [];
     foreach ($months as $ym) {
-        $sql = "SELECT COALESCE(SUM(t.amount), 0) AS total
-                FROM transactions t
-                JOIN bookings b ON t.booking_id = b.booking_id
-                WHERE t.payment_status = 'completed'
-                AND DATE_FORMAT(b.created_at, '%Y-%m') = ?";
+        $sql = "SELECT COALESCE(SUM(cost), 0) AS total
+                FROM rides
+                WHERE ride_status = 'completed'
+                AND DATE_FORMAT(departure_date, '%Y-%m') = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $ym);
         $stmt->execute();
